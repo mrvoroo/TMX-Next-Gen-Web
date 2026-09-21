@@ -4,6 +4,7 @@ import { useTranslation } from '@/lib/i18n/useTranslation';
 import { DevBlock }       from './services/DevBlock';
 import { AiBlock }        from './services/AiBlock';
 import { MarketingBlock } from './services/MarketingBlock';
+import { ItBlock }        from './services/ItBlock';
 
 export function ServicesSection() {
   const { t } = useTranslation();
@@ -41,7 +42,10 @@ export function ServicesSection() {
         <MarketingBlock />
       </div>
 
-      {/* 5d block will be added in the next commit */}
+      {/* ── 5d: IT & Consulting (glassmorphism + cursor spotlight) ──────── */}
+      <div className="border-t border-white/[0.05]">
+        <ItBlock />
+      </div>
     </section>
   );
 }
