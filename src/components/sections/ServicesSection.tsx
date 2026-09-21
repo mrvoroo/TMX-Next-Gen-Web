@@ -1,8 +1,9 @@
 'use client';
 
 import { useTranslation } from '@/lib/i18n/useTranslation';
-import { DevBlock } from './services/DevBlock';
-import { AiBlock }  from './services/AiBlock';
+import { DevBlock }       from './services/DevBlock';
+import { AiBlock }        from './services/AiBlock';
+import { MarketingBlock } from './services/MarketingBlock';
 
 export function ServicesSection() {
   const { t } = useTranslation();
@@ -35,7 +36,12 @@ export function ServicesSection() {
         <AiBlock />
       </div>
 
-      {/* 5c, 5d blocks will be added here in subsequent commits */}
+      {/* ── 5c: Marketing (SVG beam hub-and-spoke + card grid) ──────────── */}
+      <div className="border-t border-white/[0.05]">
+        <MarketingBlock />
+      </div>
+
+      {/* 5d block will be added in the next commit */}
     </section>
   );
 }
