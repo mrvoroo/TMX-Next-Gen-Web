@@ -95,25 +95,48 @@ export function ItBlock() {
     mouseY.set(-1000);
   }, [mouseX, mouseY]);
 
-  /* Staggered scroll-triggered fade-in */
+  /* Staggered scroll-triggered fade-in
+   *
+   * We defer ScrollTrigger creation by two requestAnimationFrame ticks:
+   *   rAF 1 — browser has committed the current paint (backdrop-blur layers
+   *            are composited, grid has its final height).
+   *   rAF 2 — one more frame to ensure any deferred Lenis/ST setup that also
+   *            runs in the first rAF has completed before we register.
+   * This eliminates the timing race where ST measured the container before
+   * glassmorphism compositing shifted the final layout position.
+   */
   useEffect(() => {
     if (reduced || !containerRef.current) return;
-    const ctx = gsap.context(() => {
-      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-      gsap.from(cards, {
-        opacity: 0,
-        y: 42,
-        duration: 0.65,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 82%',
-          toggleActions: 'play none none none',
-        },
+    let raf1: number, raf2: number;
+    let ctx: ReturnType<typeof gsap.context> | null = null;
+
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!containerRef.current) return;
+        ctx = gsap.context(() => {
+          const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+          gsap.from(cards, {
+            opacity: 0,
+            y: 42,
+            duration: 0.65,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 82%',
+              toggleActions: 'play none none none',
+              invalidateOnRefresh: true,
+            },
+          });
+        }, containerRef);
       });
-    }, containerRef);
-    return () => ctx.revert();
+    });
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      ctx?.revert();
+    };
   }, [reduced]);
 
   return (

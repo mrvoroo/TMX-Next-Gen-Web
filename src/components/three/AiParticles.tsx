@@ -114,9 +114,11 @@ function AmbientNetwork({ reducedMotion }: AmbientNetworkProps) {
 /* ── Exported canvas wrapper (lazy-loaded by AiBlock via next/dynamic) ───── */
 export interface AiParticlesProps {
   reducedMotion?: boolean;
+  /** Called once the WebGL context is created and the canvas has a real size. */
+  onReady?: () => void;
 }
 
-export function AiParticles({ reducedMotion = false }: AiParticlesProps) {
+export function AiParticles({ reducedMotion = false, onReady }: AiParticlesProps) {
   return (
     <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
       <Canvas
@@ -124,6 +126,7 @@ export function AiParticles({ reducedMotion = false }: AiParticlesProps) {
         gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
         dpr={[1, 1]}
         style={{ width: '100%', height: '100%' }}
+        onCreated={onReady}
       >
         <AmbientNetwork reducedMotion={reducedMotion} />
       </Canvas>

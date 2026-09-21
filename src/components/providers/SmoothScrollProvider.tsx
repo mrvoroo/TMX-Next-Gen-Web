@@ -50,7 +50,23 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     // Expose lenis instance on window for scrollTo() calls from other components
     (window as unknown as Record<string, unknown>).lenis = lenis;
 
+    /*
+     * Global ScrollTrigger.refresh() after window 'load'.
+     * Fires once all resources (fonts, images, WebGL canvases) have fully
+     * settled — corrects any scroll-position drift that per-component rAF
+     * deferrals may not have caught if the section was above the fold.
+     */
+    const handleLoad = () => ScrollTrigger.refresh();
+    if (document.readyState === 'complete') {
+      // Already loaded (e.g. HMR re-mount) — schedule for next tick so
+      // any pending ST registrations from this render cycle run first.
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    } else {
+      window.addEventListener('load', handleLoad, { once: true });
+    }
+
     return () => {
+      window.removeEventListener('load', handleLoad);
       if (tickerCbRef.current) {
         gsap.ticker.remove(tickerCbRef.current);
         tickerCbRef.current = null;

@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import {
@@ -68,12 +68,25 @@ export function AiBlock() {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  /*
+   * canvasReady is set to true by the AiParticles onReady callback, which fires
+   * from Canvas.onCreated — i.e. only after the WebGL context is live and the
+   * canvas element has its final rendered size. This guarantees ScrollTrigger
+   * calculates trigger positions against a fully-laid-out section, not a
+   * zero/partial-height container.
+   */
+  const [canvasReady, setCanvasReady] = useState(false);
 
   const items = translations[locale].services.ai.items;
 
-  /* Staggered scroll-triggered fade-in — identical pattern to DevBlock */
+  /* Staggered scroll-triggered fade-in — deferred until canvas has mounted */
   useEffect(() => {
-    if (reduced || !containerRef.current) return;
+    // In reduced-motion mode there's no canvas, so proceed immediately.
+    // Otherwise wait for canvasReady before building the ScrollTrigger so
+    // positions are measured against the fully-rendered container.
+    if (!reduced && !canvasReady) return;
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
       gsap.from(cards, {
@@ -86,11 +99,12 @@ export function AiBlock() {
           trigger: containerRef.current,
           start: 'top 82%',
           toggleActions: 'play none none none',
+          invalidateOnRefresh: true,
         },
       });
     }, containerRef);
     return () => ctx.revert();
-  }, [reduced]);
+  }, [reduced, canvasReady]);
 
   return (
     /*
@@ -99,7 +113,12 @@ export function AiBlock() {
      */
     <div className="relative bg-[#070612] overflow-hidden">
       {/* Ambient particle canvas — absolute, behind cards, pointer-events-none */}
-      {!reduced && <AiParticles reducedMotion={reduced} />}
+      {!reduced && (
+        <AiParticles
+          reducedMotion={reduced}
+          onReady={() => setCanvasReady(true)}
+        />
+      )}
 
       {/* Content sits above the canvas via relative z-10 */}
       <div
