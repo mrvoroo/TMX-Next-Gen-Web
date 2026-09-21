@@ -23,21 +23,23 @@ Reflecting current state after git reset to `a91c5fd`:
 - **Footer / Legal:** Footer legal links and cookie consent routing.
 
 ## 3. Current Git State
-- **Last Commit Hash:** `a91c5fdfd288a82609b36cf17fab488792c32ffa` (fix: LCP opacity and CLS font/layout shifts)
-- **Remote Status:** Local branch is up to date with `origin/main` (GitHub remote was successfully updated/force-pushed to match the reset).
+- **Last Commit Hash:** `d7c4f64` (fix: resolve 5b/5d ScrollTrigger race on German direct load)
+- **Previous:** `a91c5fd` (fix: LCP opacity and CLS font/layout shifts)
+- **Remote Status:** Local branch is ahead of `origin/main` by 1 commit (not pushed — per convention, no push without explicit permission).
 
 ## 4. Known Unresolved Bugs
 - **/impressum and /datenschutz hydration error:** 
   - **Details:** Causes a "removeChild... not a child of this node" error. 
   - **Status:** Confirmed NOT to be caused by browser extensions. The root cause is not yet fixed. A previous fix attempt broke other sections and was therefore reverted. It must be tackled fresh, one small change at a time, testing after each step.
-- **Sections 5b (AI) and 5d (IT) rendering issue:**
-  - **Details:** Cards fail to render or appear very faint on a direct German-locale page load.
-  - **Reproduction:** Confirmed reproducible on repeated hard refreshes. Fixed only by toggling the language to EN and back.
-  - **Root Cause Hypothesis:** ScrollTrigger timing race condition with heavy canvas/visual elements.
-  - **Status:** No fix has been completed or attempted yet since the reversion.
+- **Sections 5b (AI) and 5d (IT) rendering issue — FIXED (commit `d7c4f64`):**
+  - **Root Cause Confirmed:** ScrollTrigger position calculations ran before heavy visual elements finished mounting — the `AiParticles` WebGL canvas (lazy-loaded via `next/dynamic ssr:false`) had zero height when the `useEffect` fired, and `ItBlock`'s `backdrop-blur` compositing hadn't settled. Both caused ST to measure the wrong trigger position, freezing cards mid-animation.
+  - **Fix Applied:**
+    1. **AiBlock (`AiBlock.tsx` + `AiParticles.tsx`):** Added `onReady` prop to `AiParticles`, fired from R3F `Canvas.onCreated`. `AiBlock` holds `canvasReady` state; ScrollTrigger creation is gated behind it (GSAP `useEffect` deps: `[reduced, canvasReady]`). Added `invalidateOnRefresh: true`.
+    2. **ItBlock (`ItBlock.tsx`):** ScrollTrigger creation deferred behind two `requestAnimationFrame` ticks — first rAF waits for paint commit, second waits for Lenis/ST setup in the same tick to complete. Added `invalidateOnRefresh: true`. Cleanup cancels both rAFs + calls `ctx.revert()`.
+    3. **SmoothScrollProvider (`SmoothScrollProvider.tsx`):** Added a `window 'load'` listener calling `ScrollTrigger.refresh()` once as a global catch-all. If `document.readyState === 'complete'` already (HMR), falls back to a single rAF to let pending ST registrations run first.
 
 ## 5. Next Steps (Priority Order)
-1. **Fix 5b and 5d rendering issues:** Address the ScrollTrigger timing race condition causing cards to be faint on direct load.
+1. **Test 5b/5d fix:** Hard-reload on German (default) at least 5 times in a row; confirm ALL cards in 5b and 5d fully appear without any language toggle. Scroll away and back. Confirm 5a/5c unaffected.
 2. **Fix Hydration Errors:** Methodically debug and resolve the "removeChild" hydration error on `/impressum` and `/datenschutz` pages. Test carefully after each small change.
 3. **Build Section 6:** Proceed to build out Process / Why Us / Portfolio / Contact / Footer sections.
 
