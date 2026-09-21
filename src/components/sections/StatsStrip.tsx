@@ -106,11 +106,11 @@ export function StatsStrip() {
                 key={keys.valueKey}
                 className="relative flex flex-col items-center text-center"
               >
-                {/* Big number + suffix */}
+                {/* Big number + suffix — min-w locks width during count-up to prevent CLS */}
                 <div className="flex items-end gap-0.5 leading-none">
                   <span
                     ref={el => { numRefs.current[i] = el; }}
-                    className="gradient-text text-5xl font-black tabular-nums sm:text-6xl lg:text-7xl"
+                    className="gradient-text text-5xl font-black tabular-nums sm:text-6xl lg:text-7xl min-w-[3ch] text-right"
                     aria-label={raw}
                   >
                     {/* Initial value shown before JS runs / before ScrollTrigger fires */}

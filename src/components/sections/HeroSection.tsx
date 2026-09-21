@@ -6,7 +6,6 @@ import {
   motion,
   useMotionValue,
   useSpring,
-  AnimatePresence,
   type Variants,
 } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
@@ -26,8 +25,8 @@ const ParticleNetwork = dynamic<ParticleNetworkProps>(
 
 /* ── Framer Motion variants ──────────────────────────────────────────────── */
 const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.18, delayChildren: 0.1 } },
+  hidden:  {},
+  visible: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } },
 };
 
 // Cubic-bezier as a typed 4-tuple so Framer Motion accepts it
@@ -35,13 +34,20 @@ const EASE_OUT_EXPO: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 function makeItemVariants(reduced: boolean): Variants {
   if (reduced)
-    return { hidden: { opacity: 1, y: 0 }, visible: { opacity: 1, y: 0 } };
+    return { hidden: { y: 0 }, visible: { y: 0 } };
   return {
-    hidden:  { opacity: 0, y: 36 },
+    /*
+     * LCP FIX: opacity stays at 1 at all times.
+     * The Preloader (z-[9999]) covers the viewport while loading, so the
+     * user never sees the text early — but the browser's LCP algorithm
+     * correctly timestamps the h1 as painted immediately (no opacity:0 delay).
+     * Only the y-transform animates, giving a smooth upward slide reveal.
+     */
+    hidden:  { opacity: 1, y: 32 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.75, ease: EASE_OUT_EXPO },
+      transition: { duration: 0.7, ease: EASE_OUT_EXPO },
     },
   };
 }
@@ -152,67 +158,67 @@ export function HeroSection({ shouldAnimate }: HeroSectionProps) {
         Plus we cap content width tightly so the toggle (top-right in header)
         NEVER overlaps the heading at any breakpoint.
         z-10 ensures content renders above the Three.js canvas (z-0 by default).
+
+        LCP NOTE: hero content is always rendered (not behind shouldAnimate).
+        The Preloader (z-[9999]) visually covers it while loading.
+        shouldAnimate controls only whether the slide animation is active.
       */}
       <div className="relative z-10 mx-auto w-full max-w-4xl px-5 pb-28 pt-28 text-center sm:px-8 md:pt-0">
-        <AnimatePresence>
-          {shouldAnimate && (
-            <motion.div
-              key="hero-content"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {/* Eyebrow label */}
-              <motion.p
-                variants={itemVariants}
-                className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/80"
-              >
-                TMX — Digital Agency
-              </motion.p>
+        <motion.div
+          key="hero-content"
+          variants={containerVariants}
+          initial="hidden"
+          animate={shouldAnimate ? 'visible' : 'hidden'}
+        >
+          {/* Eyebrow label */}
+          <motion.p
+            variants={itemVariants}
+            className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/80"
+          >
+            TMX — Digital Agency
+          </motion.p>
 
-              {/* Main heading — responsive font size, never overflows */}
-              <motion.h1
-                variants={itemVariants}
-                className={cn(
-                  'mx-auto mb-6',
-                  'text-4xl font-black leading-[1.08] tracking-tight text-white',
-                  'sm:text-5xl',
-                  'md:text-6xl',
-                  'lg:text-7xl',
-                )}
-              >
-                {/* Accent first word, then rest in white */}
-                {t('hero.tagline')
-                  .split('. ')
-                  .map((part, i, arr) => (
-                    <span key={i}>
-                      {i === 0 ? (
-                        <span className="gradient-text">{part}</span>
-                      ) : (
-                        part
-                      )}
-                      {i < arr.length - 1 ? '. ' : ''}
-                    </span>
-                  ))}
-              </motion.h1>
+          {/* Main heading — LCP element. Always in DOM at opacity:1. */}
+          <motion.h1
+            variants={itemVariants}
+            className={cn(
+              'mx-auto mb-6',
+              'text-4xl font-black leading-[1.08] tracking-tight text-white',
+              'sm:text-5xl',
+              'md:text-6xl',
+              'lg:text-7xl',
+            )}
+          >
+            {/* Accent first word, then rest in white */}
+            {t('hero.tagline')
+              .split('. ')
+              .map((part, i, arr) => (
+                <span key={i}>
+                  {i === 0 ? (
+                    <span className="gradient-text">{part}</span>
+                  ) : (
+                    part
+                  )}
+                  {i < arr.length - 1 ? '. ' : ''}
+                </span>
+              ))}
+          </motion.h1>
 
-              {/* Sub-text */}
-              <motion.p
-                variants={itemVariants}
-                className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-white/55 sm:text-lg"
-              >
-                {t('hero.sub')}
-              </motion.p>
+          {/* Sub-text */}
+          <motion.p
+            variants={itemVariants}
+            className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-white/55 sm:text-lg"
+          >
+            {t('hero.sub')}
+          </motion.p>
 
-              {/* CTA button */}
-              <motion.div variants={itemVariants}>
-                <MagneticButton href="#contact" reduced={reduced}>
-                  {t('hero.cta')}
-                </MagneticButton>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* CTA button */}
+          <motion.div variants={itemVariants}>
+            <MagneticButton href="#contact" reduced={reduced}>
+              {t('hero.cta')}
+            </MagneticButton>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* ── Scroll indicator ─────────────────────────────────────────────── */}

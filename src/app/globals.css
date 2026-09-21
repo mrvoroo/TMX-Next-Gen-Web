@@ -9,6 +9,22 @@
   font-display: swap;
 }
 
+/*
+ * CLS defence-in-depth: a metric-adjusted fallback font.
+ * When `font-display: swap` triggers (Inter not yet loaded), the browser
+ * uses system-ui. The overrides below nudge system-ui's metrics to match
+ * Inter so that glyph sizes stay the same, preventing text reflow on swap.
+ * Empirically calibrated for Inter vs system-ui/Arial on Chrome.
+ */
+@font-face {
+  font-family: "Inter-fallback";
+  src: local("Arial");
+  size-adjust: 107%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
 /* ── Design tokens ───────────────────────────────────────────────────────── */
 @theme inline {
   /* Accent gradient */
@@ -24,8 +40,8 @@
   --color-foreground:       #f4f4f5; /* zinc-100  */
   --color-foreground-muted: #a1a1aa; /* zinc-400  */
 
-  /* Font */
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Font — Inter-fallback is the metric-adjusted local fallback (prevents CLS on swap) */
+  --font-sans: "Inter", "Inter-fallback", ui-sans-serif, system-ui, sans-serif;
 
   /* Spacing extras */
   --spacing-section: 7rem; /* consistent vertical section padding */
