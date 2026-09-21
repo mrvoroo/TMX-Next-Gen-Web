@@ -2,6 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { DevBlock } from './services/DevBlock';
+import { AiBlock }  from './services/AiBlock';
 
 export function ServicesSection() {
   const { t } = useTranslation();
@@ -29,7 +30,12 @@ export function ServicesSection() {
         <DevBlock />
       </div>
 
-      {/* 5b, 5c, 5d blocks will be added here in subsequent commits */}
+      {/* ── 5b: AI (ambient particle background) ───────────────────────── */}
+      <div className="border-t border-white/[0.05]">
+        <AiBlock />
+      </div>
+
+      {/* 5c, 5d blocks will be added here in subsequent commits */}
     </section>
   );
 }
