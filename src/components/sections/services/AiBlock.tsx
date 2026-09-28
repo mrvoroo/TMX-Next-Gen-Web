@@ -1,9 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useRef, useEffect, useState } from 'react';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+import { useRef } from 'react';
 import {
   Brain,
   Cpu,
@@ -15,11 +13,10 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
 import type { AiParticlesProps } from '@/components/three/AiParticles';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /*
  * Lazy-load the R3F canvas — same pattern as ParticleNetwork in HeroSection.
@@ -68,43 +65,16 @@ export function AiBlock() {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  /*
-   * canvasReady is set to true by the AiParticles onReady callback, which fires
-   * from Canvas.onCreated — i.e. only after the WebGL context is live and the
-   * canvas element has its final rendered size. This guarantees ScrollTrigger
-   * calculates trigger positions against a fully-laid-out section, not a
-   * zero/partial-height container.
-   */
-  const [canvasReady, setCanvasReady] = useState(false);
 
   const items = translations[locale].services.ai.items;
 
-  /* Staggered scroll-triggered fade-in — deferred until canvas has mounted */
-  useEffect(() => {
-    // In reduced-motion mode there's no canvas, so proceed immediately.
-    // Otherwise wait for canvasReady before building the ScrollTrigger so
-    // positions are measured against the fully-rendered container.
-    if (!reduced && !canvasReady) return;
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-      gsap.from(cards, {
-        opacity: 0,
-        y: 42,
-        duration: 0.65,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 82%',
-          toggleActions: 'play none none none',
-          invalidateOnRefresh: true,
-        },
-      });
-    }, containerRef);
-    return () => ctx.revert();
-  }, [reduced, canvasReady]);
+  /*
+   * Shared progressive-enhancement reveal hook.
+   * The canvasReady gate has been removed — the hook's failsafe timers (+2 s/+4 s)
+   * cover the WebGL paint lag without creating a dependency that could starve the
+   * trigger from ever firing if the canvas fails to load.
+   */
+  useStaggerReveal(containerRef, { cardRefs, reduced });
 
   return (
     /*
@@ -116,7 +86,7 @@ export function AiBlock() {
       {!reduced && (
         <AiParticles
           reducedMotion={reduced}
-          onReady={() => setCanvasReady(true)}
+          onReady={() => {/* no-op: reveal no longer gated on canvas */}}
         />
       )}
 

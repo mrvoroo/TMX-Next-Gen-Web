@@ -39,7 +39,7 @@ Reflecting current state after git reset to `a91c5fd`:
     3. **SmoothScrollProvider (`SmoothScrollProvider.tsx`):** Added a `window 'load'` listener calling `ScrollTrigger.refresh()` once as a global catch-all. If `document.readyState === 'complete'` already (HMR), falls back to a single rAF to let pending ST registrations run first.
 
 ## 5. Next Steps (Priority Order)
-1. **Test 5b/5d fix:** Hard-reload on German (default) at least 5 times in a row; confirm ALL cards in 5b and 5d fully appear without any language toggle. Scroll away and back. Confirm 5a/5c unaffected.
+1. **Verify useStaggerReveal fix:** Hard-reload on DE at least 10x at 5b and 5d; confirm all 6 cards visible every time at 375px and 1440px. Scroll mid-section. (commit: "fix: shared reveal hook for section 5 cards")
 2. **Fix Hydration Errors:** Methodically debug and resolve the "removeChild" hydration error on `/impressum` and `/datenschutz` pages. Test carefully after each small change.
 3. **Build Section 6:** Proceed to build out Process / Why Us / Portfolio / Contact / Footer sections.
 

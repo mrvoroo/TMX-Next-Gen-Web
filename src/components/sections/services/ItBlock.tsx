@@ -1,9 +1,7 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import {
   MapPin,
   Layers,
@@ -15,10 +13,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* ── Icon order matches translations.ts services.it.items order ─────────── */
 const ICONS: LucideIcon[] = [MapPin, Layers, Shield, Upload, Server, Settings];
@@ -60,8 +57,7 @@ function ItCard({ Icon, label, cardRef }: ItCardProps) {
 export function ItBlock() {
   const { t, locale } = useTranslation();
   const reduced = useReducedMotion();
-  const blockRef   = useRef<HTMLDivElement>(null);   // spotlight tracking target
-  const containerRef = useRef<HTMLDivElement>(null); // GSAP context root
+  const blockRef   = useRef<HTMLDivElement>(null);   // spotlight tracking target + GSAP context root
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const items = translations[locale].services.it.items;
@@ -95,61 +91,21 @@ export function ItBlock() {
     mouseY.set(-1000);
   }, [mouseX, mouseY]);
 
-  /* Staggered scroll-triggered fade-in
-   *
-   * We defer ScrollTrigger creation by two requestAnimationFrame ticks:
-   *   rAF 1 — browser has committed the current paint (backdrop-blur layers
-   *            are composited, grid has its final height).
-   *   rAF 2 — one more frame to ensure any deferred Lenis/ST setup that also
-   *            runs in the first rAF has completed before we register.
-   * This eliminates the timing race where ST measured the container before
-   * glassmorphism compositing shifted the final layout position.
+  /*
+   * Shared progressive-enhancement reveal hook replaces the previous double-rAF
+   * approach. The hook's failsafe timers (+2 s/+4 s) handle the glassmorphism
+   * compositing lag without the risk of a stale rAF handle surviving unmount.
    */
-  useEffect(() => {
-    if (reduced || !containerRef.current) return;
-    let raf1: number, raf2: number;
-    let ctx: ReturnType<typeof gsap.context> | null = null;
-
-    raf1 = requestAnimationFrame(() => {
-      raf2 = requestAnimationFrame(() => {
-        if (!containerRef.current) return;
-        ctx = gsap.context(() => {
-          const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-          gsap.from(cards, {
-            opacity: 0,
-            y: 42,
-            duration: 0.65,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: 'top 82%',
-              toggleActions: 'play none none none',
-              invalidateOnRefresh: true,
-            },
-          });
-        }, containerRef);
-      });
-    });
-
-    return () => {
-      cancelAnimationFrame(raf1);
-      cancelAnimationFrame(raf2);
-      ctx?.revert();
-    };
-  }, [reduced]);
+  useStaggerReveal(blockRef, { cardRefs, reduced });
 
   return (
     /*
      * blockRef is on the outer div — this is the coordinate system for the
-     * spotlight radial gradient (mouseX/Y are measured relative to its origin).
-     * containerRef is also on the same outer div so GSAP context can access cards.
+     * spotlight radial gradient (mouseX/Y are measured relative to its origin),
+     * and also the GSAP context root for the reveal hook.
      */
     <div
-      ref={(el) => {
-        (blockRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
-      }}
+      ref={blockRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative bg-[#070612] overflow-hidden"

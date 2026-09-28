@@ -1,9 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import {
   Search,
   Target,
@@ -15,10 +13,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* ── Icon order matches translations.ts services.marketing.items order ────── */
 const ICONS: LucideIcon[] = [Search, Target, Share2, FileText, Mail, TrendingUp];
@@ -135,26 +132,8 @@ export function MarketingBlock() {
 
   const items = translations[locale].services.marketing.items;
 
-  /* Staggered GSAP scroll-reveal for the card grid */
-  useEffect(() => {
-    if (reduced || !containerRef.current) return;
-    const ctx = gsap.context(() => {
-      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-      gsap.from(cards, {
-        opacity: 0,
-        y: 42,
-        duration: 0.65,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 82%',
-          toggleActions: 'play none none none',
-        },
-      });
-    }, containerRef);
-    return () => ctx.revert();
-  }, [reduced]);
+  /* Staggered scroll-triggered reveal — shared hook, progressive enhancement */
+  useStaggerReveal(containerRef, { cardRefs, reduced });
 
   return (
     <div className="bg-[#050508]" ref={containerRef}>

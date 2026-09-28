@@ -1,14 +1,12 @@
 'use client';
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import {
   motion,
   useMotionValue,
   useSpring,
   useTransform,
 } from 'framer-motion';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import {
   Globe,
   Smartphone,
@@ -20,10 +18,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* ── Icon order matches translations.ts services.dev.items order ────────── */
 const ICONS: LucideIcon[] = [Globe, Smartphone, ShoppingCart, Link, Cloud, Zap];
@@ -144,26 +141,8 @@ export function DevBlock() {
   /* Access array directly — t() only resolves to strings, not arrays */
   const items = translations[locale].services.dev.items;
 
-  /* Staggered scroll-triggered fade-in */
-  useEffect(() => {
-    if (reduced || !containerRef.current) return;
-    const ctx = gsap.context(() => {
-      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-      gsap.from(cards, {
-        opacity: 0,
-        y: 42,
-        duration: 0.65,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: 'top 82%',
-          toggleActions: 'play none none none',
-        },
-      });
-    }, containerRef);
-    return () => ctx.revert();
-  }, [reduced]);
+  /* Staggered scroll-triggered reveal — shared hook, progressive enhancement */
+  useStaggerReveal(containerRef, { cardRefs, reduced });
 
   return (
     <div ref={containerRef} className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-24">
