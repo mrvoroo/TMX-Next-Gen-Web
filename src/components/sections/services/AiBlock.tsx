@@ -42,7 +42,7 @@ function AiCard({ Icon, label, cardRef }: AiCardProps) {
     <div
       ref={cardRef}
       className={cn(
-        'relative flex flex-col gap-4 rounded-2xl p-6',
+        'relative flex flex-col gap-4 rounded-2xl p-6 min-w-0',
         'border border-cyan-500/10 bg-cyan-500/[0.03]',
         'transition-all duration-300',
         'hover:border-cyan-400/20 hover:bg-cyan-500/[0.06] hover:shadow-lg hover:shadow-cyan-900/20',
@@ -51,7 +51,7 @@ function AiCard({ Icon, label, cardRef }: AiCardProps) {
       <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-600/20 to-violet-500/10 text-cyan-400 ring-1 ring-cyan-500/20">
         <Icon size={19} strokeWidth={1.5} aria-hidden="true" />
       </div>
-      <p className="text-sm font-semibold leading-snug text-white/80">{label}</p>
+      <p className="text-sm font-semibold leading-snug text-white/80 [hyphens:auto] [overflow-wrap:anywhere]">{label}</p>
       <div
         className="absolute inset-x-0 bottom-0 h-px rounded-b-2xl bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"
         aria-hidden="true"
@@ -108,8 +108,8 @@ export function AiBlock() {
           </p>
         </div>
 
-        {/* 6 cards — 2-col mobile → 3-col md+ */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        {/* 6 cards — 1-col mobile → 2-col sm → 3-col md+ */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {items.map((item, i) => (
             <AiCard
               key={item}

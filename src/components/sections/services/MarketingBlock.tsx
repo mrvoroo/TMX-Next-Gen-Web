@@ -74,7 +74,7 @@ function ServiceCard({ Icon, label, cardRef }: ServiceCardProps) {
     <div
       ref={cardRef}
       className={cn(
-        'relative flex flex-col gap-4 rounded-2xl p-6 pl-5',
+        'relative flex flex-col gap-4 rounded-2xl p-6 pl-5 min-w-0',
         /* Gradient left-border accent ties into the "beam / data-flow" theme */
         'border border-white/[0.06] bg-white/[0.02]',
         'transition-colors duration-300',
@@ -87,7 +87,7 @@ function ServiceCard({ Icon, label, cardRef }: ServiceCardProps) {
       <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/15 to-cyan-500/10 text-violet-400 ring-1 ring-violet-500/15">
         <Icon size={19} strokeWidth={1.5} aria-hidden="true" />
       </div>
-      <p className="text-sm font-semibold leading-snug text-white/80">{label}</p>
+      <p className="text-sm font-semibold leading-snug text-white/80 [hyphens:auto] [overflow-wrap:anywhere]">{label}</p>
     </div>
   );
 }
@@ -244,7 +244,7 @@ export function MarketingBlock() {
         </div>
 
         {/* ── Card grid (always visible — the SVG above is decorative) ─────── */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {items.map((item, i) => (
             <ServiceCard
               key={item}

@@ -22,6 +22,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     const stored = localStorage.getItem('tmx-locale') as Locale | null;
     if (stored === 'de' || stored === 'en') {
       setLocaleState(stored);
+      // Sync the html[lang] attribute immediately so hyphenation and a11y tools
+      // always see the correct language, even on first load from storage.
+      document.documentElement.lang = stored;
     }
   }, []);
 

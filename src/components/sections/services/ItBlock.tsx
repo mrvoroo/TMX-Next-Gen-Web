@@ -32,7 +32,7 @@ function ItCard({ Icon, label, cardRef }: ItCardProps) {
     <div
       ref={cardRef}
       className={cn(
-        'relative flex flex-col gap-4 rounded-2xl p-6',
+        'relative flex flex-col gap-4 rounded-2xl p-6 min-w-0',
         /* Glassmorphism: backdrop-blur + semi-transparent fill + frosted border */
         'backdrop-blur-md',
         'border border-white/[0.08] bg-white/[0.03]',
@@ -44,7 +44,7 @@ function ItCard({ Icon, label, cardRef }: ItCardProps) {
       <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 to-cyan-500/10 text-violet-400 ring-1 ring-violet-500/20">
         <Icon size={19} strokeWidth={1.5} aria-hidden="true" />
       </div>
-      <p className="text-sm font-semibold leading-snug text-white/80">{label}</p>
+      <p className="text-sm font-semibold leading-snug text-white/80 [hyphens:auto] [overflow-wrap:anywhere]">{label}</p>
       <div
         className="absolute inset-x-0 bottom-0 h-px rounded-b-2xl bg-gradient-to-r from-transparent via-violet-500/25 to-transparent"
         aria-hidden="true"
@@ -134,8 +134,8 @@ export function ItBlock() {
           </p>
         </div>
 
-        {/* 6 glassmorphic cards — 2-col mobile → 3-col md+ */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        {/* 6 glassmorphic cards — 1-col mobile → 2-col sm → 3-col md+ */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {items.map((item, i) => (
             <ItCard
               key={item}

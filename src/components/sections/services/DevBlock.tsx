@@ -93,7 +93,7 @@ function TiltCard({ Icon, label, reduced }: TiltCardProps) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className={cn(
-          'group relative flex flex-col gap-4 rounded-2xl p-6 h-full',
+          'group relative flex flex-col gap-4 rounded-2xl p-6 h-full min-w-0',
           'border border-white/[0.07] bg-white/[0.025]',
           'cursor-default transition-shadow duration-300',
           'hover:border-violet-500/20 hover:shadow-lg hover:shadow-violet-900/20',
@@ -116,7 +116,7 @@ function TiltCard({ Icon, label, reduced }: TiltCardProps) {
         </div>
 
         {/* Label */}
-        <p className="relative z-10 text-sm font-semibold leading-snug text-white/80">
+        <p className="relative z-10 text-sm font-semibold leading-snug text-white/80 [hyphens:auto] [overflow-wrap:anywhere]">
           {label}
         </p>
 
@@ -160,12 +160,12 @@ export function DevBlock() {
       </div>
 
       {/* 2-col mobile → 3-col md+ */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         {items.map((item, i) => (
           <div
             key={item}
             ref={(el) => { cardRefs.current[i] = el; }}
-            className="h-full"
+            className="h-full min-w-0"
           >
             <TiltCard Icon={ICONS[i]} label={item} reduced={reduced} />
           </div>
