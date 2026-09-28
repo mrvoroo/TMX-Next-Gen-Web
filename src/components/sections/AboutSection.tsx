@@ -11,6 +11,7 @@ import {
 } from 'framer-motion';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -94,7 +95,7 @@ export function AboutSection() {
   }, [reduced, progressMV]);
 
   /* ── Scroll driver (GSAP pin on desktop, IntersectionObserver on mobile) ─ */
-  useEffect(() => {
+  useGSAP(() => {
     if (!mounted || !sectionRef.current) return;
 
     /* ── Mobile / reduced-motion path ─────────────────────────────── */
@@ -157,7 +158,7 @@ export function AboutSection() {
       trigger.kill();
       clearTimeout(timer);
     };
-  }, [mounted, reduced, isMobile, progressMV]);
+  }, { dependencies: [mounted, reduced, isMobile, progressMV] });
 
   /* ── Framer Motion transforms — all driven by progressMV ─────────────── */
   /*

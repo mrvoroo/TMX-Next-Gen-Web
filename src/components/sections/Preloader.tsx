@@ -91,9 +91,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
         ref={counterRef}
         className="tabular-nums text-7xl font-black leading-none text-white sm:text-8xl"
         style={{ fontVariantNumeric: 'tabular-nums' }}
-      >
-        0%
-      </span>
+        dangerouslySetInnerHTML={{ __html: '0%' }}
+      />
 
       {/* Progress track */}
       <div

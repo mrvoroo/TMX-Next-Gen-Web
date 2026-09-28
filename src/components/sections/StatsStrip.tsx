@@ -112,10 +112,8 @@ export function StatsStrip() {
                     ref={el => { numRefs.current[i] = el; }}
                     className="gradient-text text-5xl font-black tabular-nums sm:text-6xl lg:text-7xl min-w-[3ch] text-right"
                     aria-label={raw}
-                  >
-                    {/* Initial value shown before JS runs / before ScrollTrigger fires */}
-                    {reduced ? numeric : 0}
-                  </span>
+                    dangerouslySetInnerHTML={{ __html: String(reduced ? numeric : 0) }}
+                  />
                   <span
                     className="gradient-text mb-1 text-2xl font-black sm:text-3xl lg:text-4xl"
                     aria-hidden="true"
