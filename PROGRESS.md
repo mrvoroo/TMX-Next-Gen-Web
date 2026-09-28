@@ -41,7 +41,7 @@ Reflecting current state after git reset to `a91c5fd`:
 ## 5. Next Steps (Priority Order)
 1. **Verify useStaggerReveal fix:** Hard-reload on DE at least 10x at 5b and 5d; confirm all 6 cards visible every time at 375px and 1440px. Scroll mid-section. (commit: "fix: shared reveal hook for section 5 cards")
 2. **CSS fix applied (commit: "fix: long German words overflow in service cards"):** All 5a–5d cards now have `hyphens:auto`, `overflow-wrap:anywhere`, `min-w-0`; grids switch to 1-col on mobile (<640px), 2-col sm, 3-col md+. `LocaleContext` now also syncs `html[lang]` on initial load from localStorage (was only syncing on toggle).
-3. **Fix Hydration Errors:** Methodically debug and resolve the "removeChild" hydration error on `/impressum` and `/datenschutz` pages. Test carefully after each small change.
+3. **Hydration / DOM error fix applied (commit: "fix: removeChild error on legal page navigation (GSAP pinning and textContent overrides)"):** Replaced `useEffect` with `@gsap/react`'s `useGSAP` in `AboutSection.tsx` to ensure the `.pin-spacer` is synchronously reverted before React unmounts the `<section>`. Also switched `StatsStrip.tsx` and `Preloader.tsx` to use `dangerouslySetInnerHTML` so GSAP's `textContent` animations don't orphan React-managed text nodes.
 4. **Build Section 6:** Proceed to build out Process / Why Us / Portfolio / Contact / Footer sections.
 
 ## 6. Working Conventions & Lessons Learned
@@ -62,4 +62,5 @@ Building in order. One commit per sub-block. Resume from the last line of this f
 5b done — next: 5c marketing beams
 5c done — next: 5d IT glassmorphism spotlight
 5d done — Section 5 complete. Next session: Section 6 (Process / Why Us / Portfolio / Contact / Footer).
-Reverted to a91c5fd (performance fixes). The /impressum and /datenschutz routing hydration bug (removeChild error) is still unresolved. It must be tackled fresh and carefully next time: one small change at a time, testing after each step, rather than a broad multi-file fix attempt.
+Reverted to a91c5fd (performance fixes).
+The `/impressum` and `/datenschutz` routing hydration bug (`removeChild` error) is fixed.
