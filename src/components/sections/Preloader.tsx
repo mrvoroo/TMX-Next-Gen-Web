@@ -22,15 +22,20 @@ const PortalShader = dynamic<PortalShaderProps>(
  * Colors match the React Bits customizer values from the brief.
  */
 const PORTAL_CONFIG: PortalConfig = {
-  primaryColor:   '#4673e1',  // outer halo (blue)
-  secondaryColor: '#E879F9',  // streaks (lilac/pink)
-  centerColor:    '#F0ABFC',  // rim (blends toward white)
-  background:     '#0a0a0a',  // solid bg behind canvas
-  density:        1.0,
-  swirl:          3.8,
-  brightness:     1.25,
-  rimThickness:   0.15,
-  orbSize:        0.13,       // radius = clamp(orbSize * vmin, 90, 150) px
+  background:  '#050508',
+  bodyColor:   '#0c0b12',
+  bodyEdge:    '#13111c',
+  streakColor: '#7c3aed',
+  accentColor: '#06b6d4',
+  rimColorA:   '#6d28d9',
+  rimColorB:   '#0891b2',
+  haloColor:   '#4c1d95',
+  coreColor:   '#0e7490',
+  density:     1.0,
+  swirl:       3.8,
+  brightness:  1.25,
+  rimThickness:0.15,
+  orbSize:     0.13,       // radius = clamp(orbSize * vmin, 90, 150) px
                               // → diameter ≈ clamp(180px, 26vmin, 300px)
 };
 
@@ -146,11 +151,12 @@ export function Preloader({ onComplete }: PreloaderProps) {
               height:       'clamp(180px, 26vmin, 300px)',
               borderRadius: '50%',
               background:   `radial-gradient(circle at center,
-                transparent 0%,
-                ${PORTAL_CONFIG.secondaryColor}55 55%,
-                ${PORTAL_CONFIG.centerColor}cc 82%,
-                ${PORTAL_CONFIG.primaryColor}44 100%)`,
-              boxShadow: `0 0 60px 20px ${PORTAL_CONFIG.primaryColor}33`,
+                ${PORTAL_CONFIG.coreColor} 0%,
+                ${PORTAL_CONFIG.bodyColor} 20%,
+                ${PORTAL_CONFIG.streakColor}88 65%,
+                ${PORTAL_CONFIG.rimColorA}cc 82%,
+                ${PORTAL_CONFIG.haloColor}44 100%)`,
+              boxShadow: `0 0 60px 20px ${PORTAL_CONFIG.haloColor}33`,
             }}
           />
         </div>

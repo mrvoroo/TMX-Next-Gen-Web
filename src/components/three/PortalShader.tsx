@@ -8,15 +8,20 @@ import * as THREE from 'three';
 
 /** All visual tunables live here — one place to change the look. */
 export interface PortalConfig {
-  primaryColor:   string;  // halo (blue outer glow)
-  secondaryColor: string;  // streaks (lilac slashes)
-  centerColor:    string;  // rim (bright ring, blends toward white)
-  background:     string;  // solid fill behind the orb (not used in shader)
-  density:        number;  // streak sharpness / count multiplier
-  swirl:          number;  // vortex twist strength (higher = more wound up)
-  brightness:     number;  // final luminance multiplier
-  rimThickness:   number;  // thickness of the bright rim band
-  orbSize:        number;  // radius = clamp(orbSize * vmin, 90, 150) px
+  background:  string;  // solid fill behind the orb (not used in shader)
+  bodyColor:   string;
+  bodyEdge:    string;
+  streakColor: string;
+  accentColor: string;
+  rimColorA:   string;
+  rimColorB:   string;
+  haloColor:   string;
+  coreColor:   string;
+  density:     number;  // streak sharpness / count multiplier
+  swirl:       number;  // vortex twist strength (higher = more wound up)
+  brightness:  number;  // final luminance multiplier
+  rimThickness:number;  // thickness of the bright rim band
+  orbSize:     number;  // radius = clamp(orbSize * vmin, 90, 150) px
 }
 
 /** Animation state — written by GSAP (CPU), read by useFrame (GPU upload). */
@@ -53,9 +58,16 @@ const FRAG = /* glsl */`
   uniform float uOpen;        // portal expansion 0→1  (GSAP driven)
   uniform float uAlpha;       // overall alpha 0→1     (GSAP driven)
 
-  uniform vec3  uPrimary;     // halo blue
-  uniform vec3  uSecondary;   // streak lilac/pink
-  uniform vec3  uCenter;      // rim near-white/pink
+  uniform vec3  uPrimary;     // (old)
+  
+  uniform vec3  uBody;        // base fill
+  uniform vec3  uBodyEdge;    // base fill edge
+  uniform vec3  uStreak;      // main streaks
+  uniform vec3  uAccent;      // secondary streaks & flecks
+  uniform vec3  uRimA;        // rim gradient start
+  uniform vec3  uRimB;        // rim gradient end
+  uniform vec3  uHalo;        // outer glow
+  uniform vec3  uCore;        // center glow
 
   uniform float uDensity;
   uniform float uSwirl;
@@ -144,28 +156,36 @@ const FRAG = /* glsl */`
     float halo  = exp(-max(0.0, r - 0.94) * 5.5)
                 * (1.0 - smoothstep(1.0, 1.45, r));
 
+    /* ── Alpha mask ──────────────────────────────────────────────────── */
+    float innerA = 1.0 - smoothstep(0.94, 1.03, r);  /* sharp orb cutoff   */
+    float haloA  = halo * 0.35;                      /* 35% alpha for halo */
+    float fragA  = clamp(innerA + haloA, 0.0, 1.0) * uAlpha;
+
     /* ── Compose colour ──────────────────────────────────────────────── */
-    vec3 col = vec3(0.0);
+    /* Base body fill inside the orb */
+    vec3 col = mix(uBody, uBodyEdge, clamp(r, 0.0, 1.0)) * innerA;
 
-    /* Streaks: secondary colour (lilac/pink) → near-white at brightest */
-    col += mix(uSecondary, vec3(1.0, 0.96, 1.0), streakI * 0.65)
-           * streakI * 2.0;
+    /* Streaks: luminous streakColor mixed with accentColor, no white mix */
+    col += mix(uStreak, uAccent, nSum * 0.5) * streakI * 1.5;
 
-    /* White flecks */
-    col += vec3(1.0) * fleck * 1.2;
+    /* Accent flecks */
+    col += uAccent * fleck * 0.8;
 
-    /* Rim: center colour (pinkish-white) brightened toward pure white */
-    col += mix(uCenter, vec3(1.0), 0.5) * rim * 2.8;
+    /* Rim: soft gradient between rimColorA and rimColorB, intensity <= 0.8, no hard white */
+    float rimGradient = (sin(aNorm * TAU) + 1.0) * 0.5; // 0 to 1
+    col += mix(uRimA, uRimB, rimGradient) * rim * 0.8;
 
-    /* Halo: primary colour (blue) */
-    col += uPrimary * halo * 0.65;
+    /* Core: subtle glow in the center */
+    float coreGlow = exp(-r * 6.0) * 0.6;
+    col += uCore * coreGlow;
+
+    /* Halo: haloColor */
+    col += uHalo * halo;
 
     col *= uBrightness;
 
-    /* ── Alpha mask ──────────────────────────────────────────────────── */
-    float innerA = 1.0 - smoothstep(0.94, 1.03, r);  /* sharp orb cutoff   */
-    float haloA  = halo * 0.75;                       /* soft outer fade    */
-    float fragA  = clamp(innerA + haloA, 0.0, 1.0) * uAlpha;
+    /* Clamp maximum luminance to avoid pure white (max ~0.75) */
+    col = min(col, vec3(0.75));
 
     gl_FragColor = vec4(col, fragA);
   }
@@ -188,9 +208,14 @@ function PortalScene({ config, stateRef }: PortalSceneProps) {
     uIntro:      { value: 0.7 },
     uOpen:       { value: 0.0 },
     uAlpha:      { value: 0.0 },
-    uPrimary:    { value: new THREE.Color(config.primaryColor) },
-    uSecondary:  { value: new THREE.Color(config.secondaryColor) },
-    uCenter:     { value: new THREE.Color(config.centerColor) },
+    uBody:       { value: new THREE.Color(config.bodyColor) },
+    uBodyEdge:   { value: new THREE.Color(config.bodyEdge) },
+    uStreak:     { value: new THREE.Color(config.streakColor) },
+    uAccent:     { value: new THREE.Color(config.accentColor) },
+    uRimA:       { value: new THREE.Color(config.rimColorA) },
+    uRimB:       { value: new THREE.Color(config.rimColorB) },
+    uHalo:       { value: new THREE.Color(config.haloColor) },
+    uCore:       { value: new THREE.Color(config.coreColor) },
     uDensity:    { value: config.density },
     uSwirl:      { value: config.swirl },
     uBrightness: { value: config.brightness },
