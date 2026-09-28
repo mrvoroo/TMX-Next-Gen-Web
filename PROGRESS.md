@@ -42,7 +42,8 @@ Reflecting current state after git reset to `a91c5fd`:
 1. **Verify useStaggerReveal fix:** Hard-reload on DE at least 10x at 5b and 5d; confirm all 6 cards visible every time at 375px and 1440px. Scroll mid-section. (commit: "fix: shared reveal hook for section 5 cards")
 2. **CSS fix applied (commit: "fix: long German words overflow in service cards"):** All 5a–5d cards now have `hyphens:auto`, `overflow-wrap:anywhere`, `min-w-0`; grids switch to 1-col on mobile (<640px), 2-col sm, 3-col md+. `LocaleContext` now also syncs `html[lang]` on initial load from localStorage (was only syncing on toggle).
 3. **Hydration / DOM error fix applied (commit: "fix: removeChild error on legal page navigation (GSAP pinning and textContent overrides)"):** Replaced `useEffect` with `@gsap/react`'s `useGSAP` in `AboutSection.tsx` to ensure the `.pin-spacer` is synchronously reverted before React unmounts the `<section>`. Also switched `StatsStrip.tsx` and `Preloader.tsx` to use `dangerouslySetInnerHTML` so GSAP's `textContent` animations don't orphan React-managed text nodes.
-4. **Build Section 6:** Proceed to build out Process / Why Us / Portfolio / Contact / Footer sections.
+4. **Custom portal shader preloader (commit: "feat: custom portal shader preloader"):** Created `src/components/three/PortalShader.tsx` — a full-screen GLSL fragment shader rendered via R3F, drawing N layered wavy rings receding toward a glowing core with violet→cyan gradient. Integrated into `Preloader.tsx` as an absolute-positioned background behind the existing counter UI; lazy-loaded via `next/dynamic({ssr:false})`; mobile uses `layerCount:6` vs desktop `10`; reduced-motion skips WebGL entirely.
+5. **Build Section 6:** Proceed to build out Process / Why Us / Portfolio / Contact / Footer sections.
 
 ## 6. Working Conventions & Lessons Learned
 - Always clean up GSAP ScrollTrigger instances with `gsap.context()` to prevent memory leaks and React strict-mode double-firing issues.
