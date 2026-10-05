@@ -1,68 +1,99 @@
-# TMX Agency Website - Comprehensive Handoff Document
+# TMX Agency Website - Progress & Handoff
 
-## 1. Project Overview
-- **Stack:** Next.js 16 App Router, TypeScript, Tailwind v4, Framer Motion, GSAP + ScrollTrigger, Lenis, @react-three/fiber + drei.
-- **Core Conventions:**
-  - Translation dictionary pattern via `t()`.
-  - GSAP cleanup pattern using `gsap.context()`.
-  - German (DE) is the default language, with English (EN) available via toggle.
-  - **No `git push` without explicit user permission.**
-
-## 2. Completed Features / Current State
-Reflecting current state after git reset to `a91c5fd`:
-- **Section 1:** Hero section
-- **Section 2:** Introduction / About
-- **Section 3:** Services Overview
-- **Section 4:** Detailed Services Introduction
-- **Section 5:** Services Breakdown
-  - 5a: Web Development
-  - 5b: AI Particle Cards
-  - 5c: Marketing Beams
-  - 5d: IT Glassmorphism Spotlight
-- **Performance Fixes:** LCP (Largest Contentful Paint) opacity and CLS (Cumulative Layout Shift) font/layout shifts fixed.
-- **Footer / Legal:** Footer legal links and cookie consent routing.
-
-## 3. Current Git State
-- **Last Commit Hash:** `d7c4f64` (fix: resolve 5b/5d ScrollTrigger race on German direct load)
-- **Previous:** `a91c5fd` (fix: LCP opacity and CLS font/layout shifts)
-- **Remote Status:** Local branch is ahead of `origin/main` by 1 commit (not pushed — per convention, no push without explicit permission).
-
-## 4. Known Unresolved Bugs
-- **/impressum and /datenschutz hydration error:** 
-  - **Details:** Causes a "removeChild... not a child of this node" error. 
-  - **Status:** Confirmed NOT to be caused by browser extensions. The root cause is not yet fixed. A previous fix attempt broke other sections and was therefore reverted. It must be tackled fresh, one small change at a time, testing after each step.
-- **Sections 5b (AI) and 5d (IT) rendering issue — FIXED (commit `d7c4f64`):**
-  - **Root Cause Confirmed:** ScrollTrigger position calculations ran before heavy visual elements finished mounting — the `AiParticles` WebGL canvas (lazy-loaded via `next/dynamic ssr:false`) had zero height when the `useEffect` fired, and `ItBlock`'s `backdrop-blur` compositing hadn't settled. Both caused ST to measure the wrong trigger position, freezing cards mid-animation.
-  - **Fix Applied:**
-    1. **AiBlock (`AiBlock.tsx` + `AiParticles.tsx`):** Added `onReady` prop to `AiParticles`, fired from R3F `Canvas.onCreated`. `AiBlock` holds `canvasReady` state; ScrollTrigger creation is gated behind it (GSAP `useEffect` deps: `[reduced, canvasReady]`). Added `invalidateOnRefresh: true`.
-    2. **ItBlock (`ItBlock.tsx`):** ScrollTrigger creation deferred behind two `requestAnimationFrame` ticks — first rAF waits for paint commit, second waits for Lenis/ST setup in the same tick to complete. Added `invalidateOnRefresh: true`. Cleanup cancels both rAFs + calls `ctx.revert()`.
-    3. **SmoothScrollProvider (`SmoothScrollProvider.tsx`):** Added a `window 'load'` listener calling `ScrollTrigger.refresh()` once as a global catch-all. If `document.readyState === 'complete'` already (HMR), falls back to a single rAF to let pending ST registrations run first.
-
-## 5. Next Steps (Priority Order)
-1. **Verify useStaggerReveal fix:** Hard-reload on DE at least 10x at 5b and 5d; confirm all 6 cards visible every time at 375px and 1440px. Scroll mid-section. (commit: "fix: shared reveal hook for section 5 cards")
-2. **CSS fix applied (commit: "fix: long German words overflow in service cards"):** All 5a–5d cards now have `hyphens:auto`, `overflow-wrap:anywhere`, `min-w-0`; grids switch to 1-col on mobile (<640px), 2-col sm, 3-col md+. `LocaleContext` now also syncs `html[lang]` on initial load from localStorage (was only syncing on toggle).
-3. **Hydration / DOM error fix applied (commit: "fix: removeChild error on legal page navigation (GSAP pinning and textContent overrides)"):** Replaced `useEffect` with `@gsap/react`'s `useGSAP` in `AboutSection.tsx` to ensure the `.pin-spacer` is synchronously reverted before React unmounts the `<section>`. Also switched `StatsStrip.tsx` and `Preloader.tsx` to use `dangerouslySetInnerHTML` so GSAP's `textContent` animations don't orphan React-managed text nodes.
-4. **Portal orb preloader — v1 (commit: "feat: custom portal shader preloader"):** Created `PortalShader.tsx` with layered wavy rings. Rejected by design review (tearing artifact, wrong visual).
-5. **Portal orb preloader — v2 / FINAL (commit: "feat: portal orb preloader (custom shader, no counter)"):** Rewrote `PortalShader.tsx` with single-pass GLSL: twisted polar coordinates + value noise → sharp angular streak slashes, ragged-edge rim, soft blue halo. `Preloader.tsx` is now text-free (no counter, no bar, no label). GSAP timeline drives `shaderState.current` (plain object) → `useFrame` pushes to GPU each tick; zero React re-renders during the 2.5 s animation. Reduced-motion fallback shows a static CSS gradient ring. Orb diameter: `clamp(180px, 26vmin, 300px)`. *Update*: tweaked color mix in GLSL and config to use a dark violet-cyan cohesive palette, eliminating the jarring bright white core.
-6. **Build Section 6:** Proceed to build out Process / Why Us / Portfolio / Contact / Footer sections.
-
-## 6. Working Conventions & Lessons Learned
-- Always clean up GSAP ScrollTrigger instances with `gsap.context()` to prevent memory leaks and React strict-mode double-firing issues.
-- Always test issues in an incognito window before assuming browser extensions are causing hydration or DOM errors.
-- Commit granularly after completing each sub-task to allow for easy rollbacks.
-- **Always ask before force-pushing to the remote.**
+## RESUME FROM HERE
+**Next single action for next session:**
+Build the **CookieConsent** banner component (`src/components/ui/CookieConsent.tsx`), wire its localStorage key (`"tmx-cookie-consent"`), mount it in the root layout, and wire the stubbed `"Cookie-Einstellungen"` button in `src/components/layout/Footer.tsx` (line 98) to trigger the banner opening.
+After that: Proceed to Section 6 build-out (Process, Why Us, Portfolio, Contact section on home).
 
 ---
 
-### Previous Checkpoint History
+## 1. Project Overview & Rules
+- **Stack:** Next.js 16.3.5 App Router (Turbopack), React 19, TypeScript, Tailwind v4, Framer Motion, GSAP 3 + ScrollTrigger, Lenis, @react-three/fiber.
+- **Core Conventions:**
+  - DE is primary/default language, EN secondary via `useTranslation` + `translations.ts`.
+  - GSAP cleanup strictly via `gsap.context()` or `@gsap/react` `useGSAP`.
+  - **No `git push` without explicit user confirmation.**
+  - **Always verify commit diffs before trusting commit messages.**
 
-# Section 5 Services — Build Progress
+---
 
-Building in order. One commit per sub-block. Resume from the last line of this file.
+## 2. Verified Status of Step B Deliverables
+| Deliverable | Status | Details |
+|---|---|---|
+| **Legal Route Group Layout** (`src/app/(legal)/layout.tsx`) | **DONE** | Minimal layout without SmoothScrollProvider/GSAP/Lenis. Lightweight, fast. |
+| **/impressum Page** (`src/app/(legal)/impressum/page.tsx`) | **DONE** | Server Component. Complete DE and EN statutory legal notice. Imports all data from `src/config/company.ts`. |
+| **/datenschutz Page** (`src/app/(legal)/datenschutz/page.tsx`) | **DONE** | Server Component. Complete DE and EN GDPR privacy policy. Imports data from `src/config/company.ts`. |
+| **/kontakt Page** (`src/app/(legal)/kontakt/page.tsx`) | **DONE** | Client Component. Full Web3Forms form (name, email, subject, message, GDPR checkbox, honeypot, error/success states). |
+| **Global Footer** (`src/components/layout/Footer.tsx`) | **DONE** | Rendered in root `layout.tsx` outside Lenis. Links to `/impressum`, `/datenschutz`, `/kontakt`, MrVoroo credit, social icons. Includes stubbed "Cookie-Einstellungen" button with `TODO` comment. |
+| **Header Hamburger Legal Links** (`src/components/layout/Header.tsx`) | **DONE** | Replaced dead `href="#contact"` anchor tags with real Next.js `<Link>` to `/impressum` and `/datenschutz`. |
+| **Files Reverted in Step 2** | **NONE** | All created/modified files were complete, compile cleanly, and pass lint with 0 errors. |
 
-5a done — next: 5b AI particle cards
-5b done — next: 5c marketing beams
-5c done — next: 5d IT glassmorphism spotlight
-5d done — Section 5 complete. Next session: Section 6 (Process / Why Us / Portfolio / Contact / Footer).
-Reverted to a91c5fd (performance fixes).
-The `/impressum` and `/datenschutz` routing hydration bug (`removeChild` error) is fixed.
+---
+
+## 3. List of `[[PENDING]]` Placeholders in `src/config/company.ts`
+All company details are centralized in `src/config/company.ts`. The following 17 keys currently hold `"[[PENDING]]"`:
+1. `COMPANY_NAME`
+2. `COMPANY_FORM`
+3. `COMPANY_FULL_NAME`
+4. `COMPANY_STREET`
+5. `COMPANY_CITY`
+6. `COMPANY_EMAIL`
+7. `COMPANY_PHONE`
+8. `COMPANY_WEBSITE`
+9. `COMPANY_REGISTER_ENTRY`
+10. `COMPANY_REGISTER_COURT`
+11. `COMPANY_MANAGING_DIRECTOR`
+12. `COMPANY_VAT_ID`
+13. `COMPANY_DPO_EMAIL` (relevant only if `COMPANY_DPO_NAME` is configured)
+14. `SOCIAL_LINKEDIN`
+15. `SOCIAL_INSTAGRAM`
+16. `SOCIAL_XING`
+17. `WEB3FORMS_ACCESS_KEY`
+
+---
+
+## 4. What Is NOT Built Yet
+- **CookieConsent component:** Neither `CookieConsent.tsx` nor the `"tmx-cookie-consent"` localStorage logic exists yet.
+- **Section 6 on Home:** Process, Why Us, Portfolio, Contact sections on `page.tsx`.
+- **Real company values:** The 17 `[[PENDING]]` placeholders in `src/config/company.ts`.
+- **Official service terminology & claim stats validation:** Pending final review.
+
+---
+
+## 5. Recent Git Commits (Last 10)
+```text
+7f752ab feat: global footer component and header legal links
+823e9c2 feat: kontakt page with web3forms integration
+8150c25 feat: impressum and datenschutz legal pages
+4d56d77 feat: company config and legal route group layout
+72c4b61 style: portal preloader dark violet-cyan palette
+fbb1b83 feat: portal orb preloader (custom shader, no counter)
+c98b138 feat: custom portal shader preloader
+a7faa20 docs: update PROGRESS.md with removeChild error fix details
+598d30c fix: removeChild error on legal page navigation (GSAP pinning and textContent overrides)
+d25401f fix: long German words overflow in service cards
+```
+
+---
+
+## 6. Verification & Build Output
+Production build verified with `next build` (exit code 0):
+```text
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /datenschutz
+├ ○ /impressum
+└ ○ /kontakt
+
+○ (Static) prerendered as static content
+TypeScript: Finished in 6.7s with 0 errors
+ESLint: Passed with 0 errors, 0 warnings
+```
+
+---
+
+## 7. Lessons Learned & Working Conventions
+- **Verify commit scope against actual diffs:** A commit message's stated scope was wrong in a prior session (`598d30c` claimed to fix "legal page navigation" when no legal pages existed; it actually addressed GSAP pin cleanup in `AboutSection` and text node ownership in `StatsStrip`). Always verify `git show <commit> --stat` before trusting commit descriptions.
+- **Isolate non-interactive legal routes:** Keep legal routes in a dedicated `(legal)` route group layout without SmoothScrollProvider, Lenis, or GSAP ScrollTrigger to avoid hydration and DOM reparenting issues.
+- **Centralize pending legal data:** Always put configurable legal placeholders into a single config file (`src/config/company.ts`) with clear `[[PENDING]]` flags instead of scattering them in page JSX.
