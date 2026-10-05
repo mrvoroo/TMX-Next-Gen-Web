@@ -3,6 +3,7 @@ import './globals.css';
 import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
   title: 'TMX — Digitale Exzellenz',
@@ -48,6 +49,8 @@ export default function RootLayout({
             <Header />
             <main>{children}</main>
           </SmoothScrollProvider>
+          {/* Footer is outside SmoothScrollProvider intentionally — no Lenis/GSAP context needed */}
+          <Footer />
         </LocaleProvider>
       </body>
     </html>

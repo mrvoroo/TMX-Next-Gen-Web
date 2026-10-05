@@ -149,13 +149,13 @@ export function Header() {
 
             {/* Social / legal links in mobile menu */}
             <div className="mt-8 flex items-center justify-center gap-6 text-xs text-white/30">
-              <a href="#contact" onClick={closeMenu} className="hover:text-white/60 transition-colors">
+              <Link href="/impressum" onClick={closeMenu} className="hover:text-white/60 transition-colors">
                 {t('footer.impressum')}
-              </a>
+              </Link>
               <span>·</span>
-              <a href="#contact" onClick={closeMenu} className="hover:text-white/60 transition-colors">
+              <Link href="/datenschutz" onClick={closeMenu} className="hover:text-white/60 transition-colors">
                 {t('footer.datenschutz')}
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}
