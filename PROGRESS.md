@@ -27,6 +27,7 @@ After that: Proceed to Section 6 build-out (Process, Why Us, Portfolio, Contact 
 | **Global Footer** (`src/components/layout/Footer.tsx`) | **DONE** | Rendered in root `layout.tsx` outside Lenis. Links to `/impressum`, `/datenschutz`, `/kontakt`, MrVoroo credit, social icons. Includes stubbed "Cookie-Einstellungen" button with `TODO` comment. |
 | **Header Hamburger Legal Links** (`src/components/layout/Header.tsx`) | **DONE** | Replaced dead `href="#contact"` anchor tags with real Next.js `<Link>` to `/impressum` and `/datenschutz`. |
 | **Header Nav Order & Contact Link** (`src/components/layout/Header.tsx`) | **DONE** | Reordered About before Services to match actual page section order; wired Contact to `/kontakt` (both desktop and mobile). |
+| **Nav Unification & Mobile Nav Fix** (`src/config/nav.ts`, `Header.tsx`) | **DONE** | Unified desktop and mobile navigation into single shared `navLinks` config; fixed mobile Contact navigation by replacing `MotionLink` with native `Link` inside `motion.div`. |
 | **Files Reverted in Step 2** | **NONE** | All created/modified files were complete, compile cleanly, and pass lint with 0 errors. |
 
 ---

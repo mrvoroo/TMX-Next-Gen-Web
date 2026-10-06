@@ -8,15 +8,10 @@ import { useTranslation } from '@/lib/i18n/useTranslation';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { cn } from '@/lib/utils';
 
-const NAV_ANCHORS = [
-  { key: 'nav.home' as const, href: '#hero' },
-  { key: 'nav.about' as const, href: '#about' },
-  { key: 'nav.services' as const, href: '#services' },
-  { key: 'nav.portfolio' as const, href: '#portfolio' },
-  { key: 'nav.contact' as const, href: '/kontakt' },
-];
+import { navLinks, type NavLink } from '@/config/nav';
 
-const MotionLink = motion.create(Link);
+export { navLinks, type NavLink };
+export const NAV_ANCHORS = navLinks;
 
 export function Header() {
   const { t } = useTranslation();
@@ -51,7 +46,7 @@ export function Header() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           {/* Logo */}
           <Link
-            href="#hero"
+            href="/"
             onClick={closeMenu}
             className="gradient-text text-xl font-black tracking-tight"
             aria-label="TMX — zur Startseite"
@@ -64,7 +59,7 @@ export function Header() {
             className="hidden items-center gap-8 md:flex"
             aria-label="Hauptnavigation"
           >
-            {NAV_ANCHORS.map(({ key, href }) => (
+            {navLinks.map(({ key, href }) => (
               <Link
                 key={key}
                 href={href}
@@ -131,18 +126,22 @@ export function Header() {
               className="flex flex-col items-center gap-1 px-6 pt-8"
               aria-label="Mobile Navigation"
             >
-              {NAV_ANCHORS.map(({ key, href }, i) => (
-                <MotionLink
+              {navLinks.map(({ key, href }, i) => (
+                <motion.div
                   key={key}
-                  href={href}
-                  onClick={closeMenu}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.25 }}
-                  className="w-full rounded-xl px-6 py-4 text-center text-2xl font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+                  className="w-full"
                 >
-                  {t(key)}
-                </MotionLink>
+                  <Link
+                    href={href}
+                    onClick={closeMenu}
+                    className="block w-full rounded-xl px-6 py-4 text-center text-2xl font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
+                  >
+                    {t(key)}
+                  </Link>
+                </motion.div>
               ))}
             </nav>
 
