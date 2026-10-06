@@ -3,8 +3,8 @@ export type Locale = 'de' | 'en';
 export interface TranslationSchema {
   nav: {
     home: string;
-    services: string;
     about: string;
+    services: string;
     portfolio: string;
     contact: string;
   };
@@ -109,8 +109,8 @@ export const translations: Record<Locale, TranslationSchema> = {
   de: {
     nav: {
       home: 'Start',
-      services: 'Leistungen',
       about: 'Über uns',
+      services: 'Leistungen',
       portfolio: 'Referenzen',
       contact: 'Kontakt',
     },
@@ -309,8 +309,8 @@ export const translations: Record<Locale, TranslationSchema> = {
   en: {
     nav: {
       home: 'Home',
-      services: 'Services',
       about: 'About',
+      services: 'Services',
       portfolio: 'Portfolio',
       contact: 'Contact',
     },

@@ -26,6 +26,7 @@ After that: Proceed to Section 6 build-out (Process, Why Us, Portfolio, Contact 
 | **/kontakt Page** (`src/app/(legal)/kontakt/page.tsx`) | **DONE** | Client Component. Full Web3Forms form (name, email, subject, message, GDPR checkbox, honeypot, error/success states). |
 | **Global Footer** (`src/components/layout/Footer.tsx`) | **DONE** | Rendered in root `layout.tsx` outside Lenis. Links to `/impressum`, `/datenschutz`, `/kontakt`, MrVoroo credit, social icons. Includes stubbed "Cookie-Einstellungen" button with `TODO` comment. |
 | **Header Hamburger Legal Links** (`src/components/layout/Header.tsx`) | **DONE** | Replaced dead `href="#contact"` anchor tags with real Next.js `<Link>` to `/impressum` and `/datenschutz`. |
+| **Header Nav Order & Contact Link** (`src/components/layout/Header.tsx`) | **DONE** | Reordered About before Services to match actual page section order; wired Contact to `/kontakt` (both desktop and mobile). |
 | **Files Reverted in Step 2** | **NONE** | All created/modified files were complete, compile cleanly, and pass lint with 0 errors. |
 
 ---

@@ -10,11 +10,13 @@ import { cn } from '@/lib/utils';
 
 const NAV_ANCHORS = [
   { key: 'nav.home' as const, href: '#hero' },
-  { key: 'nav.services' as const, href: '#services' },
   { key: 'nav.about' as const, href: '#about' },
+  { key: 'nav.services' as const, href: '#services' },
   { key: 'nav.portfolio' as const, href: '#portfolio' },
-  { key: 'nav.contact' as const, href: '#contact' },
+  { key: 'nav.contact' as const, href: '/kontakt' },
 ];
+
+const MotionLink = motion.create(Link);
 
 export function Header() {
   const { t } = useTranslation();
@@ -63,13 +65,13 @@ export function Header() {
             aria-label="Hauptnavigation"
           >
             {NAV_ANCHORS.map(({ key, href }) => (
-              <a
+              <Link
                 key={key}
                 href={href}
                 className="text-sm font-medium text-white/60 transition-colors duration-200 hover:text-white"
               >
                 {t(key)}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -101,7 +103,7 @@ export function Header() {
                     key="open"
                     initial={{ rotate: 90, opacity: 0 }}
                     animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
+                    exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.15 }}
                   >
                     <Menu size={20} />
@@ -130,7 +132,7 @@ export function Header() {
               aria-label="Mobile Navigation"
             >
               {NAV_ANCHORS.map(({ key, href }, i) => (
-                <motion.a
+                <MotionLink
                   key={key}
                   href={href}
                   onClick={closeMenu}
@@ -140,7 +142,7 @@ export function Header() {
                   className="w-full rounded-xl px-6 py-4 text-center text-2xl font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
                 >
                   {t(key)}
-                </motion.a>
+                </MotionLink>
               ))}
             </nav>
 
