@@ -1,0 +1,17 @@
+---
+alwaysApply: true
+---
+---
+description: TMX project rules
+alwaysApply: true
+---
+- Next.js 16 App Router, TypeScript, Tailwind v4 (CSS-first), GSAP+ScrollTrigger, Lenis, Framer Motion, R3F. Installs need --legacy-peer-deps.
+- No hardcoded user-facing text: every string goes through i18n (DE default, EN secondary).
+- GSAP: always gsap.context() or useGSAP with cleanup. Respect useReducedMotion. 3D via next/dynamic ssr:false.
+- No third-party requests on page load (no CDNs, no Google Fonts).
+- Never invent company facts, stats, references or legal values. Use src/config/company.ts placeholders.
+- Legal texts are copied verbatim from docs/legal/. Never rephrase them.
+- Touch only files listed in the task scope. One small change per commit.
+- Commit locally only. NEVER git push, never force anything, unless the user explicitly says so.
+- If a command fails twice the same way, stop and report instead of retrying.
+- Be concise: no summaries or explanations unless asked.
