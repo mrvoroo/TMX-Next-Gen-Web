@@ -11,11 +11,11 @@
  *   - "Cookie-Einstellungen" button — stub only
  *     TODO: wire to CookieConsent once built
  *   - Social placeholders from src/config/company.ts
- *   - MrVoroo credit link → https://github.com/mrvoroo
  */
 
+import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { SOCIAL_LINKEDIN, SOCIAL_INSTAGRAM, SOCIAL_XING } from '@/config/company';
+import { COMPANY_BRAND, SOCIAL_LINKEDIN, SOCIAL_INSTAGRAM, SOCIAL_XING } from '@/config/company';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 
 /* ── Minimal SVG icons (inline, no extra package) ────────────────────────── */
@@ -43,9 +43,44 @@ function IconXing() {
   );
 }
 
+function isPendingSocialUrl(url: string) {
+  return url === '[[PENDING]]' || url.trim() === '';
+}
+
+function SocialIcon({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: ReactNode;
+}) {
+  const className = 'text-white/40 transition-colors hover:text-white';
+  if (isPendingSocialUrl(href)) {
+    return (
+      <span className={className} aria-disabled="true" aria-label={label}>
+        {children}
+      </span>
+    );
+  }
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      aria-label={label}
+    >
+      {children}
+    </a>
+  );
+}
+
 /* ── Component ───────────────────────────────────────────────────────────── */
 export function Footer() {
   const { t } = useTranslation();
+  const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-white/10 bg-[#050508]">
@@ -114,35 +149,17 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-4">
               {/* LinkedIn */}
-              <a
-                href={SOCIAL_LINKEDIN}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/40 transition-colors hover:text-white"
-                aria-label={t('footer.socialAriaLinkedIn')}
-              >
+              <SocialIcon href={SOCIAL_LINKEDIN} label={t('footer.socialAriaLinkedIn')}>
                 <IconLinkedIn />
-              </a>
+              </SocialIcon>
               {/* Instagram */}
-              <a
-                href={SOCIAL_INSTAGRAM}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/40 transition-colors hover:text-white"
-                aria-label={t('footer.socialAriaInstagram')}
-              >
+              <SocialIcon href={SOCIAL_INSTAGRAM} label={t('footer.socialAriaInstagram')}>
                 <IconInstagram />
-              </a>
+              </SocialIcon>
               {/* Xing */}
-              <a
-                href={SOCIAL_XING}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/40 transition-colors hover:text-white"
-                aria-label={t('footer.socialAriaXing')}
-              >
+              <SocialIcon href={SOCIAL_XING} label={t('footer.socialAriaXing')}>
                 <IconXing />
-              </a>
+              </SocialIcon>
             </div>
           </div>
         </div>
@@ -152,19 +169,8 @@ export function Footer() {
 
         {/* Bottom row */}
         <div className="flex flex-col items-center gap-3 text-xs text-white/25 sm:flex-row sm:justify-between">
-          <p>{t('footer.allRights')}</p>
-
-          {/* MrVoroo credit */}
           <p>
-            Built by{' '}
-            <a
-              href="https://github.com/mrvoroo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/40 underline underline-offset-2 transition-colors hover:text-white"
-            >
-              MrVoroo
-            </a>
+            © {year} {COMPANY_BRAND}. {t('footer.rightsReserved')}
           </p>
         </div>
       </div>

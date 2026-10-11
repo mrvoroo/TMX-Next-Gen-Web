@@ -98,7 +98,7 @@ export interface TranslationSchema {
     impressum: string;
     datenschutz: string;
     backToTop: string;
-    allRights: string;
+    rightsReserved: string;
     socialAriaLinkedIn: string;
     socialAriaInstagram: string;
     socialAriaXing: string;
@@ -299,7 +299,7 @@ export const translations: Record<Locale, TranslationSchema> = {
       impressum: 'Impressum',
       datenschutz: 'Datenschutzerklärung',
       backToTop: 'Nach oben',
-      allRights: '© 2025 TMX. Alle Rechte vorbehalten.',
+      rightsReserved: 'Alle Rechte vorbehalten.',
       socialAriaLinkedIn: 'TMX auf LinkedIn',
       socialAriaInstagram: 'TMX auf Instagram',
       socialAriaXing: 'TMX auf Xing',
@@ -499,7 +499,7 @@ export const translations: Record<Locale, TranslationSchema> = {
       impressum: 'Impressum',
       datenschutz: 'Datenschutzerklärung',
       backToTop: 'Back to top',
-      allRights: '© 2025 TMX. All rights reserved.',
+      rightsReserved: 'All rights reserved.',
       socialAriaLinkedIn: 'TMX on LinkedIn',
       socialAriaInstagram: 'TMX on Instagram',
       socialAriaXing: 'TMX on Xing',
