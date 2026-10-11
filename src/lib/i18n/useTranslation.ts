@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useLocale } from './LocaleContext';
-import { translations, type TranslationSchema } from './translations';
+import { useLocale } from 'next-intl';
+import { translations, type Locale, type TranslationSchema } from './translations';
 
 type NestedKeyOf<T> = T extends object
   ? {
@@ -26,7 +26,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 }
 
 export function useTranslation() {
-  const { locale, setLocale } = useLocale();
+  const locale = useLocale() as Locale;
 
   // Memoised so `t` is the same reference between renders —
   // only changes when `locale` changes. Safe to use in useEffect deps.
@@ -39,5 +39,5 @@ export function useTranslation() {
     [locale],
   );
 
-  return { t, locale, setLocale };
+  return { t, locale };
 }

@@ -9,6 +9,7 @@
  */
 
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import {
   COMPANY_FULL_NAME,
   COMPANY_STREET,
@@ -53,7 +54,14 @@ function Section({
 }
 
 /* ── Page ────────────────────────────────────────────────────────────────── */
-export default function ImpressumPage() {
+export default async function ImpressumPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
 

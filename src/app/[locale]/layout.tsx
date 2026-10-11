@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
-import './globals.css';
-import { LocaleProvider } from '@/lib/i18n/LocaleContext';
+import '../globals.css';
+import { notFound } from 'next/navigation';
+import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -24,14 +27,23 @@ export const metadata: Metadata = {
     : { index: false, follow: false },
 };
 
-export default function RootLayout({
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
   return (
-    // lang is set dynamically by LocaleContext on the client; default is 'de'
-    <html lang="de" className="dark h-full">
+    <html lang={locale} className="dark h-full">
       {/*
         Font preload — must be in <head> before any CSS so the browser starts
         fetching inter-variable.woff2 during HTML parsing, before @font-face
@@ -48,14 +60,14 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full antialiased" suppressHydrationWarning>
-        <LocaleProvider>
+        <NextIntlClientProvider>
           <SmoothScrollProvider>
             <Header />
             <main>{children}</main>
           </SmoothScrollProvider>
           {/* Footer is outside SmoothScrollProvider intentionally — no Lenis/GSAP context needed */}
           <Footer />
-        </LocaleProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

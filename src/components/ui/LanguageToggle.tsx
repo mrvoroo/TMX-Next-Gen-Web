@@ -2,9 +2,15 @@
 
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { cn } from '@/lib/utils';
+import { useRouter, usePathname } from '@/i18n/navigation';
 
 export function LanguageToggle({ className }: { className?: string }) {
-  const { locale, setLocale } = useTranslation();
+  const { locale } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+  const switchTo = (next: 'de' | 'en') => {
+    router.replace(pathname, { locale: next });
+  };
 
   return (
     <div
@@ -16,7 +22,7 @@ export function LanguageToggle({ className }: { className?: string }) {
       aria-label="Language selection"
     >
       <button
-        onClick={() => setLocale('de')}
+        onClick={() => switchTo('de')}
         aria-pressed={locale === 'de'}
         aria-label="Deutsch"
         className={cn(
@@ -29,7 +35,7 @@ export function LanguageToggle({ className }: { className?: string }) {
         DE
       </button>
       <button
-        onClick={() => setLocale('en')}
+        onClick={() => switchTo('en')}
         aria-pressed={locale === 'en'}
         aria-label="English"
         className={cn(
