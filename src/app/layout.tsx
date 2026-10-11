@@ -4,6 +4,7 @@ import { LocaleProvider } from '@/lib/i18n/LocaleContext';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { SITE_INDEXABLE } from '@/config/site';
 
 export const metadata: Metadata = {
   title: 'TMX — Digitale Exzellenz',
@@ -18,6 +19,9 @@ export const metadata: Metadata = {
     'Digital Agency',
   ],
   metadataBase: new URL('https://tmx.de'),
+  robots: SITE_INDEXABLE
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export default function RootLayout({
