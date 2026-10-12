@@ -2,29 +2,42 @@ import type { Metadata } from 'next';
 import '../globals.css';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { SITE_INDEXABLE } from '@/config/site';
+import { SITE_INDEXABLE, SITE_URL } from '@/config/site';
+import { localizedMetadata, resolveLocale } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'TMX — Digitale Exzellenz',
-  description:
-    'TMX ist Ihre full-service Digitalagentur für Webentwicklung, KI, digitales Marketing und IT-Beratung. Messbare Ergebnisse, nachhaltige Lösungen.',
-  keywords: [
-    'Digitalagentur',
-    'Webentwicklung',
-    'Künstliche Intelligenz',
-    'Digitales Marketing',
-    'IT-Beratung',
-    'Digital Agency',
-  ],
-  metadataBase: new URL('https://tmx.de'),
-  robots: SITE_INDEXABLE
-    ? { index: true, follow: true }
-    : { index: false, follow: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const t = await getTranslations({ locale, namespace: 'meta' });
+
+  return {
+    ...localizedMetadata({
+      locale,
+      href: '/',
+      title: t('title'),
+      description: t('description'),
+    }),
+    keywords: [
+      'Digitalagentur',
+      'Webentwicklung',
+      'Künstliche Intelligenz',
+      'Digitales Marketing',
+      'IT-Beratung',
+      'Digital Agency',
+    ],
+    metadataBase: new URL(SITE_URL),
+    robots: SITE_INDEXABLE
+      ? { index: true, follow: true }
+      : { index: false, follow: false },
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

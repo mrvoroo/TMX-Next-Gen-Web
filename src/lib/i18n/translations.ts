@@ -103,6 +103,13 @@ export interface TranslationSchema {
     socialAriaInstagram: string;
     socialAriaXing: string;
   };
+  meta: {
+    title: string;
+    description: string;
+    impressumTitle: string;
+    datenschutzTitle: string;
+    kontaktTitle: string;
+  };
 }
 
 export const translations: Record<Locale, TranslationSchema> = {
@@ -304,6 +311,14 @@ export const translations: Record<Locale, TranslationSchema> = {
       socialAriaInstagram: 'TMX auf Instagram',
       socialAriaXing: 'TMX auf Xing',
     },
+    meta: {
+      title: 'TMX — Digitale Exzellenz',
+      description:
+        'TMX ist Ihre full-service Digitalagentur für Webentwicklung, KI, digitales Marketing und IT-Beratung. Messbare Ergebnisse, nachhaltige Lösungen.',
+      impressumTitle: 'Impressum – TMX',
+      datenschutzTitle: 'Datenschutzerklärung – TMX',
+      kontaktTitle: 'Kontakt – TMX',
+    },
   },
 
   en: {
@@ -503,6 +518,14 @@ export const translations: Record<Locale, TranslationSchema> = {
       socialAriaLinkedIn: 'TMX on LinkedIn',
       socialAriaInstagram: 'TMX on Instagram',
       socialAriaXing: 'TMX on Xing',
+    },
+    meta: {
+      title: 'TMX — Digital Excellence',
+      description:
+        'TMX is your full-service digital agency for web development, AI, digital marketing and IT consulting. Measurable results, sustainable solutions.',
+      impressumTitle: 'Legal Notice – TMX',
+      datenschutzTitle: 'Privacy Policy – TMX',
+      kontaktTitle: 'Contact – TMX',
     },
   },
 };
