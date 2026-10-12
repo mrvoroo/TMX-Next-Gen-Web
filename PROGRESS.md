@@ -1,9 +1,23 @@
 # TMX Agency Website - Progress & Handoff
 
 ## RESUME FROM HERE
-**Next single action for next session:**
-Build the **CookieConsent** banner component (`src/components/ui/CookieConsent.tsx`), wire its localStorage key (`"tmx-cookie-consent"`), mount it in the root layout, and wire the stubbed `"Cookie-Einstellungen"` button in `src/components/layout/Footer.tsx` (line 98) to trigger the banner opening.
-After that: Proceed to Section 6 build-out (Process, Why Us, Portfolio, Contact section on home).
+**main** (`864c20d`):
+- `b48ab54` cursor rules
+- `89438d2` footer copyright
+- `3c81fc5` noindex (`SITE_INDEXABLE=false`)
+- `864c20d` StatsStrip hidden (fake numbers)
+
+**feat/i18n-routing** (not pushed, not merged):
+- `5a6f44a` next-intl URL routing (de at `/`, en at `/en`, no cookie, no detection, localStorage removed)
+
+**Next:**
+1. Step 2: locale-aware links + localized pathnames + toggle on legal pages
+2. Step 3: legal pages open scrolled to bottom (Lenis)
+3. Step 4: per-locale metadata, hreflang, fix metadataBase (`https://tmx.de` is a placeholder)
+
+**Known:**
+- Legal page texts are agent-written drafts; they will be replaced verbatim from `docs/legal`.
+- Lint has 23 pre-existing problems (not 0).
 
 ---
 
@@ -20,15 +34,15 @@ After that: Proceed to Section 6 build-out (Process, Why Us, Portfolio, Contact 
 ## 2. Verified Status of Step B Deliverables
 | Deliverable | Status | Details |
 |---|---|---|
-| **Legal Route Group Layout** (`src/app/(legal)/layout.tsx`) | **DONE** | Minimal layout without SmoothScrollProvider/GSAP/Lenis. Lightweight, fast. |
-| **/impressum Page** (`src/app/(legal)/impressum/page.tsx`) | **DONE** | Server Component. Complete DE and EN statutory legal notice. Imports all data from `src/config/company.ts`. |
-| **/datenschutz Page** (`src/app/(legal)/datenschutz/page.tsx`) | **DONE** | Server Component. Complete DE and EN GDPR privacy policy. Imports data from `src/config/company.ts`. |
-| **/kontakt Page** (`src/app/(legal)/kontakt/page.tsx`) | **DONE** | Client Component. Full Web3Forms form (name, email, subject, message, GDPR checkbox, honeypot, error/success states). |
-| **Global Footer** (`src/components/layout/Footer.tsx`) | **DONE** | Rendered in root `layout.tsx` outside Lenis. Links to `/impressum`, `/datenschutz`, `/kontakt`, MrVoroo credit, social icons. Includes stubbed "Cookie-Einstellungen" button with `TODO` comment. |
+| **Legal Route Group Layout** (`src/app/[locale]/(legal)/layout.tsx`) | **DONE** | The legal layout file itself has no GSAP. Parent `src/app/[locale]/layout.tsx` still wraps these pages in SmoothScrollProvider, so they currently run inside Lenis (step 3). |
+| **/impressum Page** (`src/app/[locale]/(legal)/impressum/page.tsx`) | **DRAFT** | Server Component. Agent-written DE/EN draft, not the final statutory text. Will be replaced verbatim from `docs/legal`. Company data from `src/config/company.ts`. |
+| **/datenschutz Page** (`src/app/[locale]/(legal)/datenschutz/page.tsx`) | **DRAFT** | Server Component. Agent-written DE/EN draft, not the final GDPR text. Will be replaced verbatim from `docs/legal`. Company data from `src/config/company.ts`. |
+| **/kontakt Page** (`src/app/[locale]/(legal)/kontakt/page.tsx`) | **DONE** | Client Component. Full Web3Forms form (name, email, subject, message, GDPR checkbox, honeypot, error/success states). |
+| **Global Footer** (`src/components/layout/Footer.tsx`) | **DONE** | Rendered in `src/app/[locale]/layout.tsx` outside Lenis. Links to `/impressum`, `/datenschutz`, `/kontakt`. Company copyright (`89438d2`); pending social URLs are disabled, not links. Stubbed "Cookie-Einstellungen" button with `TODO`. |
 | **Header Hamburger Legal Links** (`src/components/layout/Header.tsx`) | **DONE** | Replaced dead `href="#contact"` anchor tags with real Next.js `<Link>` to `/impressum` and `/datenschutz`. |
 | **Header Nav Order & Contact Link** (`src/components/layout/Header.tsx`) | **DONE** | Reordered About before Services to match actual page section order; wired Contact to `/kontakt` (both desktop and mobile). |
 | **Nav Unification & Mobile Nav Fix** (`src/config/nav.ts`, `Header.tsx`) | **DONE** | Unified desktop and mobile navigation into single shared `navLinks` config; fixed mobile Contact navigation by replacing `MotionLink` with native `Link` inside `motion.div`. |
-| **Files Reverted in Step 2** | **NONE** | All created/modified files were complete, compile cleanly, and pass lint with 0 errors. |
+| **Files Reverted in Step 2** | **NONE** | Created/modified files were kept. Lint is not clean: 23 pre-existing problems. |
 
 ---
 
@@ -64,22 +78,22 @@ All company details are centralized in `src/config/company.ts`. The following 17
 
 ## 5. Recent Git Commits (Last 10)
 ```text
+5a6f44a feat(i18n): next-intl URL routing (de at /, en at /en), remove localStorage locale
+864c20d chore(home): hide StatsStrip until real stats exist
+3c81fc5 chore(seo): noindex until launch via SITE_INDEXABLE flag
+89438d2 chore(footer): replace dev credit with company copyright, disable pending social links
+b48ab54 chore: add cursor project rules
+fdf1d6d fix: sync mobile nav menu with desktop (order + dead Contact link), unify into single navLinks source
+16a4d8b fix: nav order (About before Services) + contact link to /kontakt page
+8ce156d docs: rewrite PROGRESS.md with verified status and legal routes
 7f752ab feat: global footer component and header legal links
 823e9c2 feat: kontakt page with web3forms integration
-8150c25 feat: impressum and datenschutz legal pages
-4d56d77 feat: company config and legal route group layout
-72c4b61 style: portal preloader dark violet-cyan palette
-fbb1b83 feat: portal orb preloader (custom shader, no counter)
-c98b138 feat: custom portal shader preloader
-a7faa20 docs: update PROGRESS.md with removeChild error fix details
-598d30c fix: removeChild error on legal page navigation (GSAP pinning and textContent overrides)
-d25401f fix: long German words overflow in service cards
 ```
 
 ---
 
 ## 6. Verification & Build Output
-Production build verified with `next build` (exit code 0):
+The route list below is from a `next build` before locale routing. Current routes are `/` (de) and `/en` (en); legal pages live under `src/app/[locale]/(legal)/`.
 ```text
 Route (app)
 ┌ ○ /
@@ -90,12 +104,12 @@ Route (app)
 
 ○ (Static) prerendered as static content
 TypeScript: Finished in 6.7s with 0 errors
-ESLint: Passed with 0 errors, 0 warnings
+ESLint: 23 pre-existing problems (not 0 errors / 0 warnings)
 ```
 
 ---
 
 ## 7. Lessons Learned & Working Conventions
 - **Verify commit scope against actual diffs:** A commit message's stated scope was wrong in a prior session (`598d30c` claimed to fix "legal page navigation" when no legal pages existed; it actually addressed GSAP pin cleanup in `AboutSection` and text node ownership in `StatsStrip`). Always verify `git show <commit> --stat` before trusting commit descriptions.
-- **Isolate non-interactive legal routes:** Keep legal routes in a dedicated `(legal)` route group layout without SmoothScrollProvider, Lenis, or GSAP ScrollTrigger to avoid hydration and DOM reparenting issues.
+- **Isolate non-interactive legal routes:** The `(legal)` layout itself has no Lenis or GSAP. After `5a6f44a`, `src/app/[locale]/layout.tsx` still wraps those pages in SmoothScrollProvider, so the isolation does not currently hold (legal pages open scrolled to the bottom).
 - **Centralize pending legal data:** Always put configurable legal placeholders into a single config file (`src/config/company.ts`) with clear `[[PENDING]]` flags instead of scattering them in page JSX.
