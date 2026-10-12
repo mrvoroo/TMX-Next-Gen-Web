@@ -14,7 +14,7 @@
  */
 
 import type { ReactNode } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { COMPANY_BRAND, SOCIAL_LINKEDIN, SOCIAL_INSTAGRAM, SOCIAL_XING } from '@/config/company';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 

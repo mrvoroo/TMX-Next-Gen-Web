@@ -496,8 +496,8 @@ export const translations: Record<Locale, TranslationSchema> = {
     footer: {
       tagline: 'Digital Excellence. Measurable Results.',
       legal: 'Legal',
-      impressum: 'Impressum',
-      datenschutz: 'Datenschutzerklärung',
+      impressum: 'Legal Notice',
+      datenschutz: 'Privacy Policy',
       backToTop: 'Back to top',
       rightsReserved: 'All rights reserved.',
       socialAriaLinkedIn: 'TMX on LinkedIn',

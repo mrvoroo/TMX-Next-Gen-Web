@@ -13,8 +13,9 @@
  * only need to add what's different: a simple sticky nav + main area.
  */
 
-import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { Link } from '@/i18n/navigation';
+import { LanguageToggle } from '@/components/ui/LanguageToggle';
 
 export default function LegalLayout({ children }: { children: ReactNode }) {
   return (
@@ -29,12 +30,15 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
           >
             TMX
           </Link>
-          <Link
-            href="/"
-            className="text-sm text-white/50 transition-colors hover:text-white"
-          >
-            ← Startseite
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="text-sm text-white/50 transition-colors hover:text-white"
+            >
+              ← Startseite
+            </Link>
+            <LanguageToggle />
+          </div>
         </div>
       </header>
 
