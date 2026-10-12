@@ -15,7 +15,7 @@
  */
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { WEB3FORMS_ACCESS_KEY, COMPANY_EMAIL } from '@/config/company';
 
 // Metadata cannot be exported from a 'use client' component.

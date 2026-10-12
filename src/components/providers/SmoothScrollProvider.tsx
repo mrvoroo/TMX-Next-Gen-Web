@@ -77,5 +77,27 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
     };
   }, [reducedMotion]);
 
+  /*
+   * Arriving on home with a hash (e.g. from /impressum via /#services): Next
+   * scrolls to the target before the AboutSection pin-spacer exists, so it
+   * lands short once layout settles. Re-apply the hash on every ScrollTrigger
+   * refresh during the short settle window, then stop.
+   */
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!id) return;
+    const toHash = () =>
+      document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    ScrollTrigger.addEventListener('refresh', toHash);
+    const stop = setTimeout(
+      () => ScrollTrigger.removeEventListener('refresh', toHash),
+      800,
+    );
+    return () => {
+      clearTimeout(stop);
+      ScrollTrigger.removeEventListener('refresh', toHash);
+    };
+  }, []);
+
   return <>{children}</>;
 }

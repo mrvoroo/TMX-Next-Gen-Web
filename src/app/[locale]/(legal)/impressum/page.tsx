@@ -9,6 +9,8 @@
  */
 
 import type { Metadata } from 'next';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { localizedMetadata, resolveLocale } from '@/lib/seo';
 import {
   COMPANY_FULL_NAME,
   COMPANY_STREET,
@@ -26,11 +28,23 @@ import {
   COMPANY_DPO_EMAIL,
 } from '@/config/company';
 
-export const metadata: Metadata = {
-  title: 'Impressum – TMX',
-  description: 'Impressum und rechtliche Angaben der TMX Digitalagentur.',
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const locale = resolveLocale((await params).locale);
+  const t = await getTranslations({ locale, namespace: 'meta' });
+
+  return {
+    ...localizedMetadata({
+      locale,
+      href: '/impressum',
+      title: t('impressumTitle'),
+    }),
+    robots: { index: false, follow: false },
+  };
+}
 
 /* ── Reusable prose section ─────────────────────────────────────────────── */
 function Section({
@@ -53,7 +67,14 @@ function Section({
 }
 
 /* ── Page ────────────────────────────────────────────────────────────────── */
-export default function ImpressumPage() {
+export default async function ImpressumPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   return (
     <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
 

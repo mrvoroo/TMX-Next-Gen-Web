@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { Link } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/useTranslation';
@@ -59,10 +59,10 @@ export function Header() {
             className="hidden items-center gap-8 md:flex"
             aria-label="Hauptnavigation"
           >
-            {navLinks.map(({ key, href }) => (
+            {navLinks.map(({ key, pathname, hash }) => (
               <Link
                 key={key}
-                href={href}
+                href={{ pathname, hash }}
                 className="text-sm font-medium text-white/60 transition-colors duration-200 hover:text-white"
               >
                 {t(key)}
@@ -126,7 +126,7 @@ export function Header() {
               className="flex flex-col items-center gap-1 px-6 pt-8"
               aria-label="Mobile Navigation"
             >
-              {navLinks.map(({ key, href }, i) => (
+              {navLinks.map(({ key, pathname, hash }, i) => (
                 <motion.div
                   key={key}
                   initial={{ opacity: 0, x: -20 }}
@@ -135,7 +135,7 @@ export function Header() {
                   className="w-full"
                 >
                   <Link
-                    href={href}
+                    href={{ pathname, hash }}
                     onClick={closeMenu}
                     className="block w-full rounded-xl px-6 py-4 text-center text-2xl font-semibold text-white/80 transition-colors hover:bg-white/5 hover:text-white"
                   >
