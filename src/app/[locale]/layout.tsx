@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
-import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SITE_INDEXABLE } from '@/config/site';
@@ -61,11 +60,8 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full antialiased" suppressHydrationWarning>
         <NextIntlClientProvider>
-          <SmoothScrollProvider>
-            <Header />
-            <main>{children}</main>
-          </SmoothScrollProvider>
-          {/* Footer is outside SmoothScrollProvider intentionally — no Lenis/GSAP context needed */}
+          <Header />
+          <main>{children}</main>
           <Footer />
         </NextIntlClientProvider>
       </body>

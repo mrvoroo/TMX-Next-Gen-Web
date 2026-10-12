@@ -1,51 +1,24 @@
 /**
- * Minimal layout for legal pages (Impressum, Datenschutz, Kontakt).
+ * Layout for legal pages (Impressum, Datenschutz, Kontakt).
  *
- * Intentionally stripped of:
- *   - SmoothScrollProvider (Lenis + ScrollTrigger)
- *   - GSAP context
- *   - Any heavy animation providers
+ * Header, Footer and LanguageToggle come from src/app/[locale]/layout.tsx and
+ * are rendered once. No SmoothScrollProvider (Lenis / ScrollTrigger / GSAP)
+ * here — that lives in the (site) group, which only wraps the home page.
  *
- * This keeps legal routes fast (<100 kB JS) and free of GSAP cleanup
- * races that caused earlier bugs on the main layout.
- *
- * The root RootLayout still wraps this (html/body/fonts/meta), so we
- * only need to add what's different: a simple sticky nav + main area.
+ * Do NOT render next-intl's `Link` (or other locale-aware server components)
+ * in this server layout: without setRequestLocale in this scope it resolves
+ * the locale through headers() and turns every legal route dynamic.
  */
 
 import type { ReactNode } from 'react';
-import { Link } from '@/i18n/navigation';
-import { LanguageToggle } from '@/components/ui/LanguageToggle';
 
 export default function LegalLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#050508] text-white">
-      {/* Minimal header — no GSAP, no Lenis, just a back-to-home link */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#050508]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-4 sm:px-8">
-          <Link
-            href="/"
-            className="gradient-text text-xl font-black tracking-tight"
-            aria-label="TMX – zur Startseite"
-          >
-            TMX
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="text-sm text-white/50 transition-colors hover:text-white"
-            >
-              ← Startseite
-            </Link>
-            <LanguageToggle />
-          </div>
-        </div>
-      </header>
-
-      {/* Page content */}
-      <main className="flex-1">
-        {children}
-      </main>
+    // No top padding here: Next scrolls a new route to its first element, so any
+    // offset would land the page below the top. Pages' own py-16 (64px) already
+    // clears the fixed global Header (~61px).
+    <div className="min-h-screen bg-[#050508] text-white">
+      {children}
     </div>
   );
 }
