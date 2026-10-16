@@ -17,6 +17,7 @@
 import {
   Fragment,
   useEffect,
+  useLayoutEffect,
   useId,
   useRef,
   useState,
@@ -51,6 +52,7 @@ export interface ConsentBannerContent {
   impressumLinkText: string;
 }
 
+const PRELOADER_START_EVENT = 'tmx:preloader-start';
 const PRELOADER_DONE_EVENT = 'tmx:preloader-done';
 const PRELOADER_FALLBACK_MS = 3000;
 
@@ -162,18 +164,45 @@ export function ConsentBanner({ content }: { content: ConsentBannerContent }) {
   const [draft, setDraft] = useState({ analytics: false, marketing: false });
   const [preloaderDone, setPreloaderDone] = useState(false);
 
-  /* Home waits for the preloader (event or 3 s fallback); other pages don't. */
+  /* Every route change closes the settings layer (it stays open only on the page where it was opened). */
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
+    setLayer('first');
+    setReopened(false);
+  }
+
+  /*
+   * The banner never renders above the preloader: hidden on "tmx:preloader-start",
+   * shown again on "tmx:preloader-done" (or after 3 s at the latest).
+   * Initial state is "not done" so the very first paint on home is covered too.
+   */
   const isHome = pathname === '/';
   useEffect(() => {
-    if (!isHome || preloaderDone) return;
-    const done = () => setPreloaderDone(true);
+    let timer: number | undefined;
+    const done = () => {
+      window.clearTimeout(timer);
+      setPreloaderDone(true);
+    };
+    const start = () => {
+      window.clearTimeout(timer);
+      setPreloaderDone(false);
+      timer = window.setTimeout(done, PRELOADER_FALLBACK_MS);
+    };
+    window.addEventListener(PRELOADER_START_EVENT, start);
     window.addEventListener(PRELOADER_DONE_EVENT, done);
-    const timer = window.setTimeout(done, PRELOADER_FALLBACK_MS);
+    timer = window.setTimeout(done, PRELOADER_FALLBACK_MS);
     return () => {
+      window.removeEventListener(PRELOADER_START_EVENT, start);
       window.removeEventListener(PRELOADER_DONE_EVENT, done);
       window.clearTimeout(timer);
     };
-  }, [isHome, preloaderDone]);
+  }, []);
+  /* Client navigation onto home while the preloader overlay mounts: hide before paint. */
+  useLayoutEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- must sync with the DOM overlay before paint
+    if (document.querySelector('[data-tmx-preloader]')) setPreloaderDone(false);
+  }, [pathname]);
   const ready = !isHome || preloaderDone;
 
   /* Footer "Cookie-Einstellungen" → settings layer with the CURRENT choice. */
