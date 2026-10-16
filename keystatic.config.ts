@@ -10,7 +10,7 @@ const legalText = (label: string, multiline = false) =>
 
 const impressumFields = () => ({
   title: legalText('Title'),
-  intro: legalText('Intro (ÃÂÃÂ§ 5 line)'),
+  intro: legalText('Intro (§ 5 line)'),
   addressBlock: legalText('Address block', true),
   representedBy: legalText('Represented by', true),
   contactHeading: legalText('Contact heading'),
@@ -135,7 +135,7 @@ export default config({
       },
     }),
     legalImpressum: singleton({
-      label: 'Legal ÃÂÃÂ· Impressum',
+      label: 'Legal · Impressum',
       path: 'content/legal/impressum',
       format: 'json',
       schema: {
@@ -147,7 +147,7 @@ export default config({
       },
     }),
     legalDatenschutz: singleton({
-      label: 'Legal Â· Datenschutz',
+      label: 'Legal · Datenschutz',
       path: 'content/legal/datenschutz',
       format: 'json',
       schema: {
@@ -159,7 +159,7 @@ export default config({
       },
     }),
     consentBanner: singleton({
-      label: 'Legal Â· Consent banner',
+      label: 'Legal · Consent banner',
       path: 'content/legal/consent-banner',
       format: 'json',
       schema: {
