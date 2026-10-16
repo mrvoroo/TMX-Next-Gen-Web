@@ -3,6 +3,28 @@ import { config, fields, singleton } from '@keystatic/core';
 const PENDING_RULE =
   '"[[PENDING]]" = not provided yet (shown visibly on the site). Empty = does not apply (block hidden).';
 
+const LEGAL_RULE = 'Legally binding text. Any change requires lawyer review.';
+
+const legalText = (label: string, multiline = false) =>
+  fields.text({ label, description: LEGAL_RULE, multiline });
+
+const impressumFields = () => ({
+  title: legalText('Title'),
+  intro: legalText('Intro (§ 5 line)'),
+  addressBlock: legalText('Address block', true),
+  representedBy: legalText('Represented by', true),
+  contactHeading: legalText('Contact heading'),
+  phoneLabel: legalText('Phone label'),
+  emailLabel: legalText('E-mail label'),
+  registerLine: legalText('Register line', true),
+  vatLine: legalText('VAT line', true),
+  mstvLine: legalText('MStV line', true),
+  consumerDispute: legalText('Consumer dispute', true),
+  externalLinks: legalText('External links', true),
+  copyright: legalText('Copyright', true),
+  metaDescription: legalText('Meta description', true),
+});
+
 export default config({
   storage: { kind: 'local' },
   singletons: {
@@ -54,6 +76,18 @@ export default config({
           label: 'Has social profiles',
           defaultValue: false,
         }),
+      },
+    }),
+    legalImpressum: singleton({
+      label: 'Legal · Impressum',
+      path: 'content/legal/impressum',
+      format: 'json',
+      schema: {
+        de: fields.object(impressumFields(), { label: 'DE (binding)' }),
+        en: fields.object(
+          { disclaimer: legalText('Disclaimer', true), ...impressumFields() },
+          { label: 'EN (convenience translation)' },
+        ),
       },
     }),
   },

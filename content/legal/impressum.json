@@ -1,0 +1,35 @@
+{
+  "de": {
+    "title": "Impressum",
+    "intro": "Angaben gemäß § 5 DDG",
+    "addressBlock": "{{name}}\n{{legalForm}}\n{{street}}\n{{zip}} {{city}}\nDeutschland",
+    "representedBy": "Vertreten durch: {{representative}}",
+    "contactHeading": "Kontakt",
+    "phoneLabel": "Telefon:",
+    "emailLabel": "E-Mail:",
+    "registerLine": "Registergericht: {{registerCourt}} · Registernummer: {{registerNumber}}",
+    "vatLine": "Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: {{vatId}}",
+    "mstvLine": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV: {{name}}, Anschrift wie oben.",
+    "consumerDispute": "Verbraucherstreitbeilegung: Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+    "externalLinks": "Hinweis zu externen Links: Für die Inhalte verlinkter externer Seiten sind ausschließlich deren Betreiber verantwortlich. Bei Bekanntwerden von Rechtsverletzungen entfernen wir entsprechende Links umgehend.",
+    "copyright": "Urheberrecht: Die von uns erstellten Inhalte und Werke auf dieser Website unterliegen dem deutschen Urheberrecht. Eine Verwendung außerhalb der Grenzen des Urheberrechts bedarf unserer vorherigen schriftlichen Zustimmung.",
+    "metaDescription": "Impressum von TMX – Angaben gemäß § 5 DDG."
+  },
+  "en": {
+    "disclaimer": "This English translation is provided for convenience only. The German version is legally binding.",
+    "title": "Legal Notice (Impressum)",
+    "intro": "Information pursuant to § 5 DDG (German Digital Services Act)",
+    "addressBlock": "{{name}} / {{legalForm}} / {{street}} / {{zip}} {{city}} / Germany",
+    "representedBy": "Represented by: {{representative}}",
+    "contactHeading": "Contact",
+    "phoneLabel": "Phone:",
+    "emailLabel": "E-mail:",
+    "registerLine": "Register court: {{registerCourt}} · Register number: {{registerNumber}}",
+    "vatLine": "VAT identification number pursuant to § 27a German VAT Act: {{vatId}}",
+    "mstvLine": "Responsible for content pursuant to § 18 (2) MStV: {{name}}, address as above.",
+    "consumerDispute": "Consumer dispute resolution: We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board.",
+    "externalLinks": "External links: The operators of linked external sites are solely responsible for their content. We will remove such links promptly upon becoming aware of any legal violation.",
+    "copyright": "Copyright: The content and works created by us on this website are subject to German copyright law. Any use beyond the limits of copyright law requires our prior written consent.",
+    "metaDescription": "Legal notice of TMX pursuant to § 5 DDG."
+  }
+}
