@@ -10,7 +10,7 @@ const legalText = (label: string, multiline = false) =>
 
 const impressumFields = () => ({
   title: legalText('Title'),
-  intro: legalText('Intro (§ 5 line)'),
+  intro: legalText('Intro (ÃÂ§ 5 line)'),
   addressBlock: legalText('Address block', true),
   representedBy: legalText('Represented by', true),
   contactHeading: legalText('Contact heading'),
@@ -22,6 +22,23 @@ const impressumFields = () => ({
   consumerDispute: legalText('Consumer dispute', true),
   externalLinks: legalText('External links', true),
   copyright: legalText('Copyright', true),
+  metaDescription: legalText('Meta description', true),
+});
+
+const datenschutzFields = () => ({
+  title: legalText('Title'),
+  lastUpdatedLine: legalText('Last updated line'),
+  sections: fields.array(
+    fields.object({
+      title: legalText('Section title (without number)'),
+      body: legalText('Section body', true),
+    }),
+    {
+      label: 'Sections',
+      description: LEGAL_RULE,
+      itemLabel: (props) => props.fields.title.value || 'Section',
+    },
+  ),
   metaDescription: legalText('Meta description', true),
 });
 
@@ -79,13 +96,25 @@ export default config({
       },
     }),
     legalImpressum: singleton({
-      label: 'Legal · Impressum',
+      label: 'Legal ÃÂ· Impressum',
       path: 'content/legal/impressum',
       format: 'json',
       schema: {
         de: fields.object(impressumFields(), { label: 'DE (binding)' }),
         en: fields.object(
           { disclaimer: legalText('Disclaimer', true), ...impressumFields() },
+          { label: 'EN (convenience translation)' },
+        ),
+      },
+    }),
+    legalDatenschutz: singleton({
+      label: 'Legal · Datenschutz',
+      path: 'content/legal/datenschutz',
+      format: 'json',
+      schema: {
+        de: fields.object(datenschutzFields(), { label: 'DE (binding)' }),
+        en: fields.object(
+          { disclaimer: legalText('Disclaimer', true), ...datenschutzFields() },
           { label: 'EN (convenience translation)' },
         ),
       },

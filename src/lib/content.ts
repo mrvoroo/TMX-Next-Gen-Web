@@ -11,3 +11,7 @@ export async function getCompany() {
 export async function getImpressum() {
   return reader.singletons.legalImpressum.read();
 }
+
+export async function getDatenschutz() {
+  return reader.singletons.legalDatenschutz.read();
+}
