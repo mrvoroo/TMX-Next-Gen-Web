@@ -1,0 +1,38 @@
+{
+  "de": {
+    "headline": "Ihre Privatsphäre ist uns wichtig",
+    "body": "Wir verwenden nur technisch notwendige Speicherung, um Ihre Auswahl in diesem Hinweis zu speichern. Optionale Kategorien wie Analyse oder Marketing sind derzeit nicht aktiv. Mehr Informationen finden Sie in unserer {{privacyLink}}.",
+    "rejectAll": "Alle ablehnen",
+    "settings": "Einstellungen",
+    "acceptAll": "Alle akzeptieren",
+    "settingsHeading": "Cookie-Einstellungen",
+    "necessaryTitle": "Notwendig",
+    "necessaryBadge": "Immer aktiv",
+    "necessaryText": "Erforderlich für grundlegende Funktionen der Website, z. B. das Speichern Ihrer Auswahl in diesem Hinweis. Diese Speicherung ist gemäß § 25 Abs. 2 TDDDG von der Einwilligungspflicht ausgenommen.",
+    "analyticsTitle": "Analyse",
+    "analyticsText": "Würde uns helfen zu verstehen, wie Besucher unsere Website nutzen. Derzeit setzen wir keine Analyse-Tools ein — diese Kategorie ist vorbereitet für den Fall, dass wir in Zukunft ein Analyse-Tool hinzufügen, und wird Sie dann erneut um Zustimmung bitten.",
+    "marketingTitle": "Marketing",
+    "marketingText": "Würde für personalisierte Werbung oder Retargeting verwendet. Derzeit nicht aktiv.",
+    "saveSelection": "Auswahl speichern",
+    "privacyLinkText": "Datenschutzerklärung",
+    "impressumLinkText": "Impressum"
+  },
+  "en": {
+    "headline": "Your privacy matters to us",
+    "body": "We only use technically necessary storage to save your choice in this notice. Optional categories such as analytics or marketing are not currently active. See our {{privacyLink}} for details.",
+    "rejectAll": "Reject All",
+    "settings": "Settings",
+    "acceptAll": "Accept All",
+    "settingsHeading": "Cookie Settings",
+    "necessaryTitle": "Necessary",
+    "necessaryBadge": "Always Active",
+    "necessaryText": "Required for basic website functionality, e.g. storing your choice in this notice. This storage is exempt from consent requirements.",
+    "analyticsTitle": "Analytics",
+    "analyticsText": "Would help us understand how visitors use our website. We currently do not use any analytics tools — this category is prepared in case we add one in the future, at which point we will ask for your consent again.",
+    "marketingTitle": "Marketing",
+    "marketingText": "Would be used for personalized advertising or retargeting. Not currently active.",
+    "saveSelection": "Save Selection",
+    "privacyLinkText": "Privacy Policy",
+    "impressumLinkText": "Legal Notice"
+  }
+}

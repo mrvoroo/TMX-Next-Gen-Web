@@ -8,8 +8,7 @@
  *
  * Links:
  *   - /impressum, /datenschutz  ← real routes (built as app/(legal)/)
- *   - "Cookie-Einstellungen" button — stub only
- *     TODO: wire to CookieConsent once built
+ *   - "Cookie-Einstellungen" button — reopens the consent banner settings layer
  *   - Social placeholders from src/config/company.ts
  */
 
@@ -17,6 +16,7 @@ import type { ReactNode } from 'react';
 import { Link } from '@/i18n/navigation';
 import { COMPANY_BRAND, SOCIAL_LINKEDIN, SOCIAL_INSTAGRAM, SOCIAL_XING } from '@/config/company';
 import { useTranslation } from '@/lib/i18n/useTranslation';
+import { openConsentSettings } from '@/lib/consent';
 
 /* ── Minimal SVG icons (inline, no extra package) ────────────────────────── */
 function IconLinkedIn() {
@@ -123,20 +123,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                {/*
-                  TODO: wire to CookieConsent once built.
-                  Currently a visual stub — clicking does nothing.
-                  Replace with the real open-banner handler when CookieConsent exists.
-                */}
                 <button
                   type="button"
                   className="cursor-pointer text-left transition-colors hover:text-white text-white/50"
-                  onClick={() => {
-                    /* TODO: wire to CookieConsent once built */
-                    console.info('[Cookie-Einstellungen] CookieConsent not yet implemented.');
-                  }}
+                  onClick={openConsentSettings}
                 >
-                  Cookie-Einstellungen
+                  {t('footer.cookieSettings')}
                 </button>
               </li>
             </ul>

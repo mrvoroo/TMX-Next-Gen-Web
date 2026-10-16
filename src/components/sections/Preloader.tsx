@@ -39,6 +39,16 @@ const PORTAL_CONFIG: PortalConfig = {
                               // → diameter ≈ clamp(180px, 26vmin, 300px)
 };
 
+/*
+ * In-memory, module-level flag: the preloader runs once per page load.
+ * Client-side navigation keeps the module alive (skip); a full reload resets it.
+ * Deliberately NOT localStorage / sessionStorage / cookies.
+ */
+let preloaderStarted = false;
+export function hasPreloaderPlayed(): boolean {
+  return preloaderStarted;
+}
+
 /* ── Component ───────────────────────────────────────────────────────────── */
 interface PreloaderProps {
   onComplete: () => void;
@@ -64,6 +74,21 @@ export function Preloader({ onComplete }: PreloaderProps) {
     const overlay = overlayRef.current;
     if (!overlay) return;
 
+    preloaderStarted = true;
+    window.dispatchEvent(new Event('tmx:preloader-start'));
+
+    /* Notify listeners (consent banner) that the preloader is finished. */
+    let finished = false;
+    const finish = () => {
+      finished = true;
+      window.dispatchEvent(new Event('tmx:preloader-done'));
+      onComplete();
+    };
+    /* Unmounted early (navigation) → release the banner. */
+    const release = () => {
+      if (!finished) window.dispatchEvent(new Event('tmx:preloader-done'));
+    };
+
     /* ── Reduced-motion path ─────────────────────────────────────────── */
     if (reducedMotion) {
       /*
@@ -75,10 +100,13 @@ export function Preloader({ onComplete }: PreloaderProps) {
           opacity:    0,
           duration:   0.2,
           ease:       'power1.out',
-          onComplete: onComplete,
+          onComplete: finish,
         });
       }, 300);
-      return () => clearTimeout(t);
+      return () => {
+        clearTimeout(t);
+        release();
+      };
     }
 
     /* ── Full animation timeline (~2.5 s) ────────────────────────────── */
@@ -122,17 +150,21 @@ export function Preloader({ onComplete }: PreloaderProps) {
         opacity:    0,
         duration:   0.35,
         ease:       'power1.in',
-        onComplete: onComplete,
+        onComplete: finish,
       }, 2.15);
     }, overlay);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      release();
+    };
   }, [onComplete, reducedMotion]);
 
   /* ── Render ─────────────────────────────────────────────────────────────── */
   return (
     <div
       ref={overlayRef}
+      data-tmx-preloader=""
       className="fixed inset-0 z-[9999]"
       style={{ backgroundColor: PORTAL_CONFIG.background }}
       aria-hidden="true"

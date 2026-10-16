@@ -97,6 +97,7 @@ export interface TranslationSchema {
     legal: string;
     impressum: string;
     datenschutz: string;
+    cookieSettings: string;
     backToTop: string;
     rightsReserved: string;
     socialAriaLinkedIn: string;
@@ -305,6 +306,7 @@ export const translations: Record<Locale, TranslationSchema> = {
       legal: 'Rechtliches',
       impressum: 'Impressum',
       datenschutz: 'Datenschutzerklärung',
+      cookieSettings: 'Cookie-Einstellungen',
       backToTop: 'Nach oben',
       rightsReserved: 'Alle Rechte vorbehalten.',
       socialAriaLinkedIn: 'TMX auf LinkedIn',
@@ -513,6 +515,7 @@ export const translations: Record<Locale, TranslationSchema> = {
       legal: 'Legal',
       impressum: 'Legal Notice',
       datenschutz: 'Privacy Policy',
+      cookieSettings: 'Cookie Settings',
       backToTop: 'Back to top',
       rightsReserved: 'All rights reserved.',
       socialAriaLinkedIn: 'TMX on LinkedIn',

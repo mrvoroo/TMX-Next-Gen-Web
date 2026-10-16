@@ -6,6 +6,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { ConsentBanner } from '@/components/ui/ConsentBanner';
+import { ConsentScripts } from '@/components/providers/ConsentScripts';
+import { getConsentBanner } from '@/lib/content';
 import { SITE_INDEXABLE, SITE_URL } from '@/config/site';
 import { localizedMetadata, resolveLocale } from '@/lib/seo';
 
@@ -53,6 +56,7 @@ export default async function RootLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+  const consentBanner = await getConsentBanner();
 
   return (
     <html lang={locale} className="dark h-full">
@@ -76,6 +80,8 @@ export default async function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
+          {consentBanner ? <ConsentBanner content={consentBanner[locale]} /> : null}
+          <ConsentScripts />
         </NextIntlClientProvider>
       </body>
     </html>
