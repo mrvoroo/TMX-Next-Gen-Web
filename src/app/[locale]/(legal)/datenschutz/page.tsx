@@ -17,10 +17,6 @@ import { getCompany, getDatenschutz } from '@/lib/content';
 
 type Company = NonNullable<Awaited<ReturnType<typeof getCompany>>>;
 
-/** Section positions (0-based) with special rendering. Order is part of the legal text. */
-const SOCIAL_SECTION_INDEX = 7; // section 8: only if company.hasSocialProfiles
-const OBJECTION_SECTION_INDEX = 10; // section 11: highlighted box
-
 export async function generateMetadata({
   params,
 }: {
@@ -78,12 +74,11 @@ export default async function DatenschutzPage({
 
   const c = datenschutz[locale];
 
-  const visible = c.sections
-    .map((section, index) => ({ section, index }))
-    .filter(
-      ({ index }) =>
-        index !== SOCIAL_SECTION_INDEX || company.hasSocialProfiles,
-    );
+  // Visibility and highlighting are driven only by each section's own fields.
+  const visible = c.sections.filter(
+    (section) =>
+      section.showIf !== 'hasSocialProfiles' || company.hasSocialProfiles,
+  );
 
   return (
     <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
@@ -100,13 +95,12 @@ export default async function DatenschutzPage({
         </p>
       </header>
 
-      {visible.map(({ section, index }, position) => {
-        const isObjection = index === OBJECTION_SECTION_INDEX;
+      {visible.map((section, position) => {
         return (
           <section
-            key={index}
+            key={position}
             className={
-              isObjection
+              section.highlight
                 ? 'mb-10 rounded-xl border border-violet-400/50 bg-violet-500/10 p-6'
                 : 'mb-10'
             }

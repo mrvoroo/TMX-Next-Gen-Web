@@ -10,7 +10,7 @@ const legalText = (label: string, multiline = false) =>
 
 const impressumFields = () => ({
   title: legalText('Title'),
-  intro: legalText('Intro (ÃÂ§ 5 line)'),
+  intro: legalText('Intro (ÃÂÃÂ§ 5 line)'),
   addressBlock: legalText('Address block', true),
   representedBy: legalText('Represented by', true),
   contactHeading: legalText('Contact heading'),
@@ -32,6 +32,20 @@ const datenschutzFields = () => ({
     fields.object({
       title: legalText('Section title (without number)'),
       body: legalText('Section body', true),
+      showIf: fields.select({
+        label: 'Show if',
+        description: LEGAL_RULE,
+        options: [
+          { label: 'Always', value: 'always' },
+          { label: 'Company has social profiles', value: 'hasSocialProfiles' },
+        ],
+        defaultValue: 'always',
+      }),
+      highlight: fields.checkbox({
+        label: 'Highlighted box (e.g. Art. 21 objection notice)',
+        description: LEGAL_RULE,
+        defaultValue: false,
+      }),
     }),
     {
       label: 'Sections',
@@ -96,7 +110,7 @@ export default config({
       },
     }),
     legalImpressum: singleton({
-      label: 'Legal ÃÂ· Impressum',
+      label: 'Legal ÃÂÃÂ· Impressum',
       path: 'content/legal/impressum',
       format: 'json',
       schema: {
@@ -108,7 +122,7 @@ export default config({
       },
     }),
     legalDatenschutz: singleton({
-      label: 'Legal · Datenschutz',
+      label: 'Legal Â· Datenschutz',
       path: 'content/legal/datenschutz',
       format: 'json',
       schema: {

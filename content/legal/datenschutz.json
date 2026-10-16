@@ -5,55 +5,81 @@
     "sections": [
       {
         "title": "Verantwortlicher und Kontakt",
-        "body": "Verantwortlich für die Verarbeitung personenbezogener Daten auf dieser Website im Sinne der Datenschutz-Grundverordnung (DSGVO) ist: {{name}}, {{street}}, {{zip}} {{city}}, Deutschland. E-Mail: {{email}}, Telefon: {{phone}}."
+        "body": "Verantwortlich für die Verarbeitung personenbezogener Daten auf dieser Website im Sinne der Datenschutz-Grundverordnung (DSGVO) ist: {{name}}, {{street}}, {{zip}} {{city}}, Deutschland. E-Mail: {{email}}, Telefon: {{phone}}.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Überblick",
-        "body": "Wir verarbeiten personenbezogene Daten nur, soweit dies zur Bereitstellung dieser Website, zur Bearbeitung Ihrer Anfragen und zur Gewährleistung der Sicherheit erforderlich ist. Nachfolgend informieren wir Sie gemäß Art. 13 DSGVO darüber, welche Daten wir zu welchem Zweck und auf welcher Rechtsgrundlage verarbeiten."
+        "body": "Wir verarbeiten personenbezogene Daten nur, soweit dies zur Bereitstellung dieser Website, zur Bearbeitung Ihrer Anfragen und zur Gewährleistung der Sicherheit erforderlich ist. Nachfolgend informieren wir Sie gemäß Art. 13 DSGVO darüber, welche Daten wir zu welchem Zweck und auf welcher Rechtsgrundlage verarbeiten.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Hosting und Server-Logfiles (Netlify)",
-        "body": "Diese Website wird bei Netlify, Inc., [[Anschrift laut Netlify-Datenschutzerklärung eintragen]], USA („Netlify“) gehostet. Beim Aufruf der Website verarbeitet Netlify in unserem Auftrag technisch erforderliche Daten, insbesondere: IP-Adresse, Datum und Uhrzeit des Abrufs, aufgerufene Seite bzw. Datei, übertragene Datenmenge, HTTP-Statuscode, Referrer-URL sowie Browser- und Betriebssysteminformationen (Server-Logfiles).\nZweck: Auslieferung der Website, Gewährleistung von Stabilität und Sicherheit, Abwehr von Angriffen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und funktionsfähigen Webauftritt). Speicherdauer: {{logRetention}}.\nMit Netlify besteht [[ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO — Abschluss bestätigen]]. Da Netlify seinen Sitz in den USA hat, kann eine Übermittlung personenbezogener Daten in die USA stattfinden. Grundlage hierfür ist [[Angemessenheitsbeschluss (EU-US Data Privacy Framework), sofern Netlify, Inc. dort zertifiziert ist — auf dataprivacyframework.gov prüfen — ODER Standardvertragsklauseln nach Art. 46 Abs. 2 lit. c DSGVO]]. Eine Kopie der Garantien erhalten Sie auf Anfrage über die Kontaktdaten in Ziffer 1."
+        "body": "Diese Website wird bei Netlify, Inc., [[Anschrift laut Netlify-Datenschutzerklärung eintragen]], USA („Netlify“) gehostet. Beim Aufruf der Website verarbeitet Netlify in unserem Auftrag technisch erforderliche Daten, insbesondere: IP-Adresse, Datum und Uhrzeit des Abrufs, aufgerufene Seite bzw. Datei, übertragene Datenmenge, HTTP-Statuscode, Referrer-URL sowie Browser- und Betriebssysteminformationen (Server-Logfiles).\nZweck: Auslieferung der Website, Gewährleistung von Stabilität und Sicherheit, Abwehr von Angriffen. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren und funktionsfähigen Webauftritt). Speicherdauer: {{logRetention}}.\nMit Netlify besteht [[ein Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO — Abschluss bestätigen]]. Da Netlify seinen Sitz in den USA hat, kann eine Übermittlung personenbezogener Daten in die USA stattfinden. Grundlage hierfür ist [[Angemessenheitsbeschluss (EU-US Data Privacy Framework), sofern Netlify, Inc. dort zertifiziert ist — auf dataprivacyframework.gov prüfen — ODER Standardvertragsklauseln nach Art. 46 Abs. 2 lit. c DSGVO]]. Eine Kopie der Garantien erhalten Sie auf Anfrage über die Kontaktdaten in Ziffer 1.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Kontaktaufnahme per E-Mail oder Telefon",
-        "body": "Wenn Sie uns per E-Mail oder Telefon kontaktieren, verarbeiten wir Ihre Angaben (z. B. Name, E-Mail-Adresse, Telefonnummer, Inhalt der Anfrage) zur Bearbeitung Ihres Anliegens. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage mit einem Vertrag oder vorvertraglichen Maßnahmen zusammenhängt, ansonsten Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der effektiven Bearbeitung von Anfragen). Wir löschen die Daten, sobald sie für den Zweck nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten (z. B. nach Handels- und Steuerrecht) entgegenstehen. Unser Postfach wird bei {{emailProvider}} betrieben, der für uns als Auftragsverarbeiter tätig ist. [[AVV und ggf. Drittlandübermittlung dieses Anbieters bestätigen]]"
+        "body": "Wenn Sie uns per E-Mail oder Telefon kontaktieren, verarbeiten wir Ihre Angaben (z. B. Name, E-Mail-Adresse, Telefonnummer, Inhalt der Anfrage) zur Bearbeitung Ihres Anliegens. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage mit einem Vertrag oder vorvertraglichen Maßnahmen zusammenhängt, ansonsten Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der effektiven Bearbeitung von Anfragen). Wir löschen die Daten, sobald sie für den Zweck nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten (z. B. nach Handels- und Steuerrecht) entgegenstehen. Unser Postfach wird bei {{emailProvider}} betrieben, der für uns als Auftragsverarbeiter tätig ist. [[AVV und ggf. Drittlandübermittlung dieses Anbieters bestätigen]]",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Kontaktformular (Web3Forms)",
-        "body": "Auf unserer Kontaktseite bieten wir ein Formular an. Verarbeitet werden die von Ihnen eingegebenen Daten: Name, E-Mail-Adresse, [[ggf. gewünschte Leistung]] und Ihre Nachricht [[prüfen, welche technischen Metadaten Web3Forms zusätzlich verarbeitet, z. B. IP-Adresse, und hier ergänzen]].\nZur Übermittlung nutzen wir den Formular-Dienst Web3Forms ([[Betreiber und Anschrift laut Web3Forms-Datenschutzerklärung eintragen]]). Beim Absenden werden die Formulardaten an Web3Forms übertragen und von dort per E-Mail an uns weitergeleitet. [[Serverstandort, Auftragsverarbeitungsvertrag und Rechtsgrundlage der Drittlandübermittlung laut Web3Forms prüfen und hier konkret eintragen — ohne diese Angaben ist dieser Abschnitt unvollständig.]]\nZweck: Bearbeitung Ihrer Anfrage. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO bzw. Art. 6 Abs. 1 lit. f DSGVO; soweit Sie das Häkchen zur Datenschutzerklärung gesetzt haben, zusätzlich Art. 6 Abs. 1 lit. a DSGVO. Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen (Kontakt siehe Ziffer 1). Name, E-Mail-Adresse und Nachricht sind erforderlich, damit wir Ihre Anfrage beantworten können; ohne diese Angaben ist eine Bearbeitung nicht möglich. Speicherdauer: siehe Ziffer 4."
+        "body": "Auf unserer Kontaktseite bieten wir ein Formular an. Verarbeitet werden die von Ihnen eingegebenen Daten: Name, E-Mail-Adresse, [[ggf. gewünschte Leistung]] und Ihre Nachricht [[prüfen, welche technischen Metadaten Web3Forms zusätzlich verarbeitet, z. B. IP-Adresse, und hier ergänzen]].\nZur Übermittlung nutzen wir den Formular-Dienst Web3Forms ([[Betreiber und Anschrift laut Web3Forms-Datenschutzerklärung eintragen]]). Beim Absenden werden die Formulardaten an Web3Forms übertragen und von dort per E-Mail an uns weitergeleitet. [[Serverstandort, Auftragsverarbeitungsvertrag und Rechtsgrundlage der Drittlandübermittlung laut Web3Forms prüfen und hier konkret eintragen — ohne diese Angaben ist dieser Abschnitt unvollständig.]]\nZweck: Bearbeitung Ihrer Anfrage. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO bzw. Art. 6 Abs. 1 lit. f DSGVO; soweit Sie das Häkchen zur Datenschutzerklärung gesetzt haben, zusätzlich Art. 6 Abs. 1 lit. a DSGVO. Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen (Kontakt siehe Ziffer 1). Name, E-Mail-Adresse und Nachricht sind erforderlich, damit wir Ihre Anfrage beantworten können; ohne diese Angaben ist eine Bearbeitung nicht möglich. Speicherdauer: siehe Ziffer 4.",
+        "showIf": "always",
+        "highlight": false
       },
       {
-        "title": "Keine Cookies, keine lokale Speicherung",
-        "body": "Wir setzen keine Cookies und speichern keine Informationen in Ihrem Browser (z. B. im Local Storage). Die Anzeigesprache ergibt sich ausschließlich aus der aufgerufenen Adresse (z. B. „/en“ für Englisch)."
+        "title": "Lokale Speicherung im Browser",
+        "body": "Wir setzen keine Cookies zu Analyse- oder Marketingzwecken. In dem lokalen Speicher (Local Storage) Ihres Browsers speichern wir ausschließlich:\n– „tmx-cookie-consent“: Ihre Entscheidung im Einwilligungsbanner samt Zeitpunkt, damit die Abfrage nicht bei jedem Besuch erneut erscheint.\nDie Anzeigesprache wird nicht gespeichert; sie ergibt sich ausschließlich aus der aufgerufenen Adresse (z. B. „/en“ für Englisch).\nDiese Speicherung ist technisch unbedingt erforderlich, um Ihre Entscheidung umzusetzen, und bedarf daher nach § 25 Abs. 2 Nr. 2 TDDDG keiner Einwilligung. Soweit dabei personenbezogene Daten verarbeitet werden, erfolgt dies auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Die Daten verbleiben in Ihrem Browser, bis Sie sie löschen; sie werden nicht an uns oder Dritte übertragen. Sie können Ihre Auswahl jederzeit über „Cookie-Einstellungen“ im Footer ändern.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Keine Analyse-, Marketing- oder Tracking-Dienste, keine Drittinhalte",
-        "body": "Aktuell setzen wir keine Analyse-, Tracking- oder Marketing-Dienste ein und binden keine Inhalte von Drittservern (z. B. Schriftarten, Karten, Videos) ein. Schriftarten werden lokal von unserem eigenen Server bereitgestellt. Sollten wir künftig solche Dienste einsetzen, holen wir vorher Ihre Einwilligung über das Einwilligungsbanner ein und aktualisieren diese Erklärung."
+        "body": "Aktuell setzen wir keine Analyse-, Tracking- oder Marketing-Dienste ein und binden keine Inhalte von Drittservern (z. B. Schriftarten, Karten, Videos) ein. Schriftarten werden lokal von unserem eigenen Server bereitgestellt. Sollten wir künftig solche Dienste einsetzen, holen wir vorher Ihre Einwilligung über das Einwilligungsbanner ein und aktualisieren diese Erklärung.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Links zu externen Angeboten",
-        "body": "Diese Website enthält Links zu unseren Profilen bei [[LinkedIn / Instagram — nur tatsächlich vorhandene Profile nennen]]. Es werden keine Plug-ins eingebunden; erst durch Anklicken verlassen Sie unsere Website. Für die Datenverarbeitung dort ist der jeweilige Anbieter verantwortlich."
+        "body": "Diese Website enthält Links zu unseren Profilen bei [[LinkedIn / Instagram — nur tatsächlich vorhandene Profile nennen]]. Es werden keine Plug-ins eingebunden; erst durch Anklicken verlassen Sie unsere Website. Für die Datenverarbeitung dort ist der jeweilige Anbieter verantwortlich.",
+        "showIf": "hasSocialProfiles",
+        "highlight": false
       },
       {
         "title": "Empfänger",
-        "body": "Empfänger Ihrer Daten sind ausschließlich die oben genannten Dienstleister (Netlify, Web3Forms, {{emailProvider}}), soweit für den jeweiligen Zweck erforderlich. Im Übrigen geben wir Daten nicht an Dritte weiter, es sei denn, wir sind gesetzlich dazu verpflichtet."
+        "body": "Empfänger Ihrer Daten sind ausschließlich die oben genannten Dienstleister (Netlify, Web3Forms, {{emailProvider}}), soweit für den jeweiligen Zweck erforderlich. Im Übrigen geben wir Daten nicht an Dritte weiter, es sei denn, wir sind gesetzlich dazu verpflichtet.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Ihre Rechte",
-        "body": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie auf Widerruf einer Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3). Zur Ausübung Ihrer Rechte genügt eine Nachricht an die Kontaktdaten in Ziffer 1. Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig für uns ist: {{supervisoryAuthority}}."
+        "body": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie auf Widerruf einer Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3). Zur Ausübung Ihrer Rechte genügt eine Nachricht an die Kontaktdaten in Ziffer 1. Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig für uns ist: {{supervisoryAuthority}}.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "WIDERSPRUCHSRECHT (Art. 21 DSGVO)",
-        "body": "Soweit wir Ihre Daten auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO verarbeiten, haben Sie das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit Widerspruch gegen diese Verarbeitung einzulegen. Wir verarbeiten die Daten dann nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen, die Ihre Interessen, Rechte und Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen."
+        "body": "Soweit wir Ihre Daten auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO verarbeiten, haben Sie das Recht, aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit Widerspruch gegen diese Verarbeitung einzulegen. Wir verarbeiten die Daten dann nicht mehr, es sei denn, wir können zwingende schutzwürdige Gründe nachweisen, die Ihre Interessen, Rechte und Freiheiten überwiegen, oder die Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung von Rechtsansprüchen.",
+        "showIf": "always",
+        "highlight": true
       },
       {
         "title": "Keine automatisierte Entscheidungsfindung",
-        "body": "Eine ausschließlich automatisierte Entscheidungsfindung einschließlich Profiling im Sinne von Art. 22 DSGVO findet nicht statt."
+        "body": "Eine ausschließlich automatisierte Entscheidungsfindung einschließlich Profiling im Sinne von Art. 22 DSGVO findet nicht statt.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Änderungen dieser Erklärung",
-        "body": "Wir passen diese Datenschutzerklärung an, wenn sich unsere Datenverarbeitung oder die Rechtslage ändert. Es gilt die jeweils hier veröffentlichte Fassung. Stand: {{lastUpdated}}."
+        "body": "Wir passen diese Datenschutzerklärung an, wenn sich unsere Datenverarbeitung oder die Rechtslage ändert. Es gilt die jeweils hier veröffentlichte Fassung. Stand: {{lastUpdated}}.",
+        "showIf": "always",
+        "highlight": false
       }
     ],
     "metaDescription": "Datenschutzerklärung von TMX – Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO."
@@ -65,55 +91,81 @@
     "sections": [
       {
         "title": "Controller and contact",
-        "body": "The controller responsible for processing personal data on this website under the General Data Protection Regulation (GDPR) is: {{name}}, {{street}}, {{zip}} {{city}}, Germany. E-mail: {{email}}, phone: {{phone}}."
+        "body": "The controller responsible for processing personal data on this website under the General Data Protection Regulation (GDPR) is: {{name}}, {{street}}, {{zip}} {{city}}, Germany. E-mail: {{email}}, phone: {{phone}}.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Overview",
-        "body": "We process personal data only as far as necessary to provide this website, to handle your inquiries and to ensure security. Below we inform you under Art. 13 GDPR which data we process, for what purpose and on which legal basis."
+        "body": "We process personal data only as far as necessary to provide this website, to handle your inquiries and to ensure security. Below we inform you under Art. 13 GDPR which data we process, for what purpose and on which legal basis.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Hosting and server log files (Netlify)",
-        "body": "This website is hosted by Netlify, Inc., [[address per Netlify privacy policy]], USA (\"Netlify\"). When you access the website, Netlify processes technically necessary data on our behalf, in particular: IP address, date and time of the request, requested page or file, amount of data transferred, HTTP status code, referrer URL, and browser and operating-system information (server log files).\nPurpose: delivering the website, ensuring stability and security, defending against attacks. Legal basis: Art. 6(1)(f) GDPR (legitimate interest in a secure and functional website). Retention: {{logRetention}}.\nWe have [[a data processing agreement under Art. 28 GDPR with Netlify — confirm]]. Because Netlify is based in the USA, personal data may be transferred to the USA. The basis for this is [[adequacy decision (EU-US Data Privacy Framework) if Netlify, Inc. is certified — verify at dataprivacyframework.gov — OR standard contractual clauses under Art. 46(2)(c) GDPR]]. You can obtain a copy of the safeguards on request via the contact details in section 1."
+        "body": "This website is hosted by Netlify, Inc., [[address per Netlify privacy policy]], USA (\"Netlify\"). When you access the website, Netlify processes technically necessary data on our behalf, in particular: IP address, date and time of the request, requested page or file, amount of data transferred, HTTP status code, referrer URL, and browser and operating-system information (server log files).\nPurpose: delivering the website, ensuring stability and security, defending against attacks. Legal basis: Art. 6(1)(f) GDPR (legitimate interest in a secure and functional website). Retention: {{logRetention}}.\nWe have [[a data processing agreement under Art. 28 GDPR with Netlify — confirm]]. Because Netlify is based in the USA, personal data may be transferred to the USA. The basis for this is [[adequacy decision (EU-US Data Privacy Framework) if Netlify, Inc. is certified — verify at dataprivacyframework.gov — OR standard contractual clauses under Art. 46(2)(c) GDPR]]. You can obtain a copy of the safeguards on request via the contact details in section 1.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Contact by e-mail or phone",
-        "body": "If you contact us by e-mail or phone, we process your details (e.g. name, e-mail address, phone number, content of the inquiry) to handle your request. Legal basis: Art. 6(1)(b) GDPR where the inquiry relates to a contract or pre-contractual measures, otherwise Art. 6(1)(f) GDPR (legitimate interest in effectively handling inquiries). We delete the data once it is no longer needed for its purpose and no statutory retention obligations (e.g. commercial and tax law) apply. Our mailbox is operated by {{emailProvider}}, which acts as our processor. [[confirm DPA and any third-country transfer of this provider]]"
+        "body": "If you contact us by e-mail or phone, we process your details (e.g. name, e-mail address, phone number, content of the inquiry) to handle your request. Legal basis: Art. 6(1)(b) GDPR where the inquiry relates to a contract or pre-contractual measures, otherwise Art. 6(1)(f) GDPR (legitimate interest in effectively handling inquiries). We delete the data once it is no longer needed for its purpose and no statutory retention obligations (e.g. commercial and tax law) apply. Our mailbox is operated by {{emailProvider}}, which acts as our processor. [[confirm DPA and any third-country transfer of this provider]]",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Contact form (Web3Forms)",
-        "body": "Our contact page offers a form. The data you enter is processed: name, e-mail address, [[selected service, if any]] and your message [[verify which technical metadata Web3Forms also processes, e.g. IP address, and add it here]].\nTo transmit the form we use the form service Web3Forms ([[operator and address per Web3Forms privacy policy]]). When you submit the form, the data is sent to Web3Forms and forwarded by e-mail to us. [[Verify server location, data processing agreement and legal basis for third-country transfer per Web3Forms and enter them here — this section is incomplete without them.]]\nPurpose: handling your inquiry. Legal basis: Art. 6(1)(b) GDPR or Art. 6(1)(f) GDPR; where you ticked the privacy-policy checkbox, additionally Art. 6(1)(a) GDPR. You may withdraw any consent at any time with effect for the future (contact: see section 1). Name, e-mail address and message are required so that we can answer your inquiry; without them we cannot process it. Retention: see section 4."
+        "body": "Our contact page offers a form. The data you enter is processed: name, e-mail address, [[selected service, if any]] and your message [[verify which technical metadata Web3Forms also processes, e.g. IP address, and add it here]].\nTo transmit the form we use the form service Web3Forms ([[operator and address per Web3Forms privacy policy]]). When you submit the form, the data is sent to Web3Forms and forwarded by e-mail to us. [[Verify server location, data processing agreement and legal basis for third-country transfer per Web3Forms and enter them here — this section is incomplete without them.]]\nPurpose: handling your inquiry. Legal basis: Art. 6(1)(b) GDPR or Art. 6(1)(f) GDPR; where you ticked the privacy-policy checkbox, additionally Art. 6(1)(a) GDPR. You may withdraw any consent at any time with effect for the future (contact: see section 1). Name, e-mail address and message are required so that we can answer your inquiry; without them we cannot process it. Retention: see section 4.",
+        "showIf": "always",
+        "highlight": false
       },
       {
-        "title": "No cookies, no local storage",
-        "body": "We do not set cookies and do not store any information in your browser (e.g. in local storage). The display language is determined solely by the address you open (e.g. \"/en\" for English)."
+        "title": "Local storage in your browser",
+        "body": "We do not set cookies for analytics or marketing. In your browser's local storage we store only:\n– \"tmx-cookie-consent\": your choice in the consent banner including the time, so the prompt does not reappear at every visit.\nThe display language is not stored; it is determined solely by the address you open (e.g. \"/en\" for English).\nThis storage is strictly necessary to apply your choice, and therefore requires no consent under § 25(2) No. 2 TDDDG. Where personal data is processed in the process, the legal basis is Art. 6(1)(f) GDPR. The data stays in your browser until you delete it; it is not transmitted to us or to third parties. You can change your choice at any time via \"Cookie settings\" in the footer.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "No analytics, marketing or tracking services, no third-party content",
-        "body": "We currently use no analytics, tracking or marketing services and embed no content from third-party servers (e.g. fonts, maps, videos). Fonts are served locally from our own server. Should we use such services in the future, we will obtain your consent beforehand via the consent banner and update this policy."
+        "body": "We currently use no analytics, tracking or marketing services and embed no content from third-party servers (e.g. fonts, maps, videos). Fonts are served locally from our own server. Should we use such services in the future, we will obtain your consent beforehand via the consent banner and update this policy.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Links to external services",
-        "body": "This website contains links to our profiles on [[LinkedIn / Instagram — only profiles that exist]]. No plug-ins are embedded; you only leave our website by clicking. The respective provider is responsible for data processing there."
+        "body": "This website contains links to our profiles on [[LinkedIn / Instagram — only profiles that exist]]. No plug-ins are embedded; you only leave our website by clicking. The respective provider is responsible for data processing there.",
+        "showIf": "hasSocialProfiles",
+        "highlight": false
       },
       {
         "title": "Recipients",
-        "body": "Recipients of your data are exclusively the service providers named above (Netlify, Web3Forms, {{emailProvider}}) as far as necessary for the respective purpose. We do not otherwise disclose data to third parties unless legally obliged."
+        "body": "Recipients of your data are exclusively the service providers named above (Netlify, Web3Forms, {{emailProvider}}) as far as necessary for the respective purpose. We do not otherwise disclose data to third parties unless legally obliged.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Your rights",
-        "body": "You have the right of access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and to withdraw consent with effect for the future (Art. 7(3)). To exercise your rights, a message to the contact details in section 1 is sufficient. You also have the right to lodge a complaint with a data-protection supervisory authority (Art. 77 GDPR). The authority responsible for us is: {{supervisoryAuthority}}."
+        "body": "You have the right of access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and to withdraw consent with effect for the future (Art. 7(3)). To exercise your rights, a message to the contact details in section 1 is sufficient. You also have the right to lodge a complaint with a data-protection supervisory authority (Art. 77 GDPR). The authority responsible for us is: {{supervisoryAuthority}}.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "RIGHT TO OBJECT (Art. 21 GDPR)",
-        "body": "Where we process your data on the basis of Art. 6(1)(f) GDPR, you have the right to object at any time, on grounds relating to your particular situation, to this processing. We will then no longer process the data unless we demonstrate compelling legitimate grounds that override your interests, rights and freedoms, or the processing serves the establishment, exercise or defence of legal claims."
+        "body": "Where we process your data on the basis of Art. 6(1)(f) GDPR, you have the right to object at any time, on grounds relating to your particular situation, to this processing. We will then no longer process the data unless we demonstrate compelling legitimate grounds that override your interests, rights and freedoms, or the processing serves the establishment, exercise or defence of legal claims.",
+        "showIf": "always",
+        "highlight": true
       },
       {
         "title": "No automated decision-making",
-        "body": "No decision based solely on automated processing, including profiling, within the meaning of Art. 22 GDPR takes place."
+        "body": "No decision based solely on automated processing, including profiling, within the meaning of Art. 22 GDPR takes place.",
+        "showIf": "always",
+        "highlight": false
       },
       {
         "title": "Changes to this policy",
-        "body": "We update this privacy policy when our data processing or the legal situation changes. The version published here applies. Last updated: {{lastUpdated}}."
+        "body": "We update this privacy policy when our data processing or the legal situation changes. The version published here applies. Last updated: {{lastUpdated}}.",
+        "showIf": "always",
+        "highlight": false
       }
     ],
     "metaDescription": "Privacy policy of TMX – information on the processing of personal data under the GDPR."
