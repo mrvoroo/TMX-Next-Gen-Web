@@ -64,6 +64,12 @@ export function Preloader({ onComplete }: PreloaderProps) {
     const overlay = overlayRef.current;
     if (!overlay) return;
 
+    /* Notify listeners (consent banner) that the preloader is finished. */
+    const finish = () => {
+      window.dispatchEvent(new Event('tmx:preloader-done'));
+      onComplete();
+    };
+
     /* ── Reduced-motion path ─────────────────────────────────────────── */
     if (reducedMotion) {
       /*
@@ -75,7 +81,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
           opacity:    0,
           duration:   0.2,
           ease:       'power1.out',
-          onComplete: onComplete,
+          onComplete: finish,
         });
       }, 300);
       return () => clearTimeout(t);
@@ -122,7 +128,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
         opacity:    0,
         duration:   0.35,
         ease:       'power1.in',
-        onComplete: onComplete,
+        onComplete: finish,
       }, 2.15);
     }, overlay);
 

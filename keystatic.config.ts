@@ -56,6 +56,31 @@ const datenschutzFields = () => ({
   metaDescription: legalText('Meta description', true),
 });
 
+const CONSENT_RULE =
+  'Legally relevant text. Any change requires lawyer review.';
+
+const consentText = (label: string, multiline = false) =>
+  fields.text({ label, description: CONSENT_RULE, multiline });
+
+const consentFields = () => ({
+  headline: consentText('Headline'),
+  body: consentText('Body ({{privacyLink}} = link to privacy page)', true),
+  rejectAll: consentText('Reject all'),
+  settings: consentText('Settings'),
+  acceptAll: consentText('Accept all'),
+  settingsHeading: consentText('Settings heading'),
+  necessaryTitle: consentText('Necessary · title'),
+  necessaryBadge: consentText('Necessary · badge'),
+  necessaryText: consentText('Necessary · text', true),
+  analyticsTitle: consentText('Analytics · title'),
+  analyticsText: consentText('Analytics · text', true),
+  marketingTitle: consentText('Marketing · title'),
+  marketingText: consentText('Marketing · text', true),
+  saveSelection: consentText('Save selection'),
+  privacyLinkText: consentText('Privacy link text'),
+  impressumLinkText: consentText('Legal notice link text'),
+});
+
 export default config({
   storage: { kind: 'local' },
   singletons: {
@@ -131,6 +156,15 @@ export default config({
           { disclaimer: legalText('Disclaimer', true), ...datenschutzFields() },
           { label: 'EN (convenience translation)' },
         ),
+      },
+    }),
+    consentBanner: singleton({
+      label: 'Legal Â· Consent banner',
+      path: 'content/legal/consent-banner',
+      format: 'json',
+      schema: {
+        de: fields.object(consentFields(), { label: 'DE' }),
+        en: fields.object(consentFields(), { label: 'EN' }),
       },
     }),
   },

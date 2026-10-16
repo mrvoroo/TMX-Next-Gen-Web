@@ -15,3 +15,7 @@ export async function getImpressum() {
 export async function getDatenschutz() {
   return reader.singletons.legalDatenschutz.read();
 }
+
+export async function getConsentBanner() {
+  return reader.singletons.consentBanner.read();
+}

@@ -1,0 +1,339 @@
+'use client';
+
+/**
+ * Consent banner (GDPR / § 25 TDDDG).
+ *
+ * - Texts come from Keystatic (content/legal/consent-banner.json) via props.
+ * - Client only: nothing is rendered on the server or during hydration.
+ * - First layer: Reject All · Settings · Accept All, identical styling.
+ * - Settings layer: Necessary (locked), Analytics, Marketing (both OFF by default).
+ * - Non-blocking: no cookie wall, no close button, Escape does not dismiss.
+ * - Reopened from the footer via the "tmx:open-consent-settings" window event.
+ * - On the home page it waits for the preloader ("tmx:preloader-done", max 3 s).
+ */
+
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Link, usePathname } from '@/i18n/navigation';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import {
+  getConsent,
+  OPEN_SETTINGS_EVENT,
+  setConsent,
+  useConsent,
+} from '@/lib/consent';
+
+export interface ConsentBannerContent {
+  headline: string;
+  body: string;
+  rejectAll: string;
+  settings: string;
+  acceptAll: string;
+  settingsHeading: string;
+  necessaryTitle: string;
+  necessaryBadge: string;
+  necessaryText: string;
+  analyticsTitle: string;
+  analyticsText: string;
+  marketingTitle: string;
+  marketingText: string;
+  saveSelection: string;
+  privacyLinkText: string;
+  impressumLinkText: string;
+}
+
+const PRELOADER_DONE_EVENT = 'tmx:preloader-done';
+const PRELOADER_FALLBACK_MS = 3000;
+
+/** One class string for every banner button → identical size, color, weight. */
+const BUTTON_CLASS =
+  'inline-flex min-h-11 w-full cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-center text-sm font-semibold text-foreground transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-to sm:flex-1';
+
+const LINK_CLASS =
+  'underline underline-offset-2 transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-to';
+
+const noopSubscribe = () => () => {};
+
+function Toggle({
+  id,
+  checked,
+  disabled = false,
+  describedBy,
+  onChange,
+}: {
+  id: string;
+  checked: boolean;
+  disabled?: boolean;
+  describedBy: string;
+  onChange?: (checked: boolean) => void;
+}) {
+  return (
+    <input
+      id={id}
+      type="checkbox"
+      role="switch"
+      checked={checked}
+      disabled={disabled}
+      aria-describedby={describedBy}
+      onChange={(event) => onChange?.(event.target.checked)}
+      className="relative h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-white/15 transition-colors before:absolute before:left-0.5 before:top-0.5 before:h-5 before:w-5 before:rounded-full before:bg-white before:transition-transform before:content-[''] checked:bg-accent-from checked:before:translate-x-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-to disabled:cursor-not-allowed disabled:opacity-60"
+    />
+  );
+}
+
+function CategoryRow({
+  baseId,
+  title,
+  badge,
+  text,
+  checked,
+  disabled,
+  onChange,
+}: {
+  baseId: string;
+  title: string;
+  badge?: string;
+  text: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange?: (checked: boolean) => void;
+}) {
+  const toggleId = `${baseId}-toggle`;
+  const textId = `${baseId}-text`;
+  return (
+    <div className="flex items-start justify-between gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor={toggleId} className="font-semibold text-foreground">
+            {title}
+          </label>
+          {badge ? (
+            <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium text-foreground-muted">
+              {badge}
+            </span>
+          ) : null}
+        </div>
+        <p id={textId} className="mt-1 text-sm leading-relaxed text-foreground-muted">
+          {text}
+        </p>
+      </div>
+      <Toggle
+        id={toggleId}
+        checked={checked}
+        disabled={disabled}
+        describedBy={textId}
+        onChange={onChange}
+      />
+    </div>
+  );
+}
+
+export function ConsentBanner({ content }: { content: ConsentBannerContent }) {
+  const reduced = useReducedMotion();
+  const pathname = usePathname();
+  const consent = useConsent();
+  const hydrated = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+
+  const baseId = useId();
+  const titleId = `${baseId}-title`;
+  const descId = `${baseId}-desc`;
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  const [layer, setLayer] = useState<'first' | 'settings'>('first');
+  const [reopened, setReopened] = useState(false);
+  const [draft, setDraft] = useState({ analytics: false, marketing: false });
+  const [preloaderDone, setPreloaderDone] = useState(false);
+
+  /* Home waits for the preloader (event or 3 s fallback); other pages don't. */
+  const isHome = pathname === '/';
+  useEffect(() => {
+    if (!isHome || preloaderDone) return;
+    const done = () => setPreloaderDone(true);
+    window.addEventListener(PRELOADER_DONE_EVENT, done);
+    const timer = window.setTimeout(done, PRELOADER_FALLBACK_MS);
+    return () => {
+      window.removeEventListener(PRELOADER_DONE_EVENT, done);
+      window.clearTimeout(timer);
+    };
+  }, [isHome, preloaderDone]);
+  const ready = !isHome || preloaderDone;
+
+  /* Footer "Cookie-Einstellungen" → settings layer with the CURRENT choice. */
+  useEffect(() => {
+    const onOpen = () => {
+      const active = document.activeElement;
+      openerRef.current = active instanceof HTMLElement ? active : null;
+      const current = getConsent();
+      setDraft({
+        analytics: current?.analytics ?? false,
+        marketing: current?.marketing ?? false,
+      });
+      setLayer('settings');
+      setReopened(true);
+    };
+    window.addEventListener(OPEN_SETTINGS_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_SETTINGS_EVENT, onOpen);
+  }, []);
+
+  const visible = hydrated && ready && (consent === null || reopened);
+
+  /* Move focus to the banner when it opens / switches layer. */
+  useEffect(() => {
+    if (visible) dialogRef.current?.focus({ preventScroll: true });
+  }, [visible, layer]);
+
+  if (!hydrated) return null;
+
+  function choose(analytics: boolean, marketing: boolean) {
+    setConsent({ analytics, marketing });
+    setReopened(false);
+    setLayer('first');
+    const opener = openerRef.current;
+    openerRef.current = null;
+    opener?.focus();
+  }
+
+  function openSettings() {
+    setDraft({
+      analytics: consent?.analytics ?? false,
+      marketing: consent?.marketing ?? false,
+    });
+    setLayer('settings');
+  }
+
+  const parts = content.body.split('{{privacyLink}}');
+
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <motion.div
+          key="consent-banner"
+          ref={dialogRef}
+          role="dialog"
+          aria-labelledby={titleId}
+          aria-describedby={descId}
+          tabIndex={-1}
+          initial={reduced ? { opacity: 0 } : { opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduced ? { opacity: 0 } : { opacity: 0, y: 16 }}
+          transition={{ duration: reduced ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed inset-x-3 bottom-3 z-[10000] mx-auto max-h-[calc(100dvh-1.5rem)] max-w-3xl overflow-y-auto rounded-2xl border border-white/10 bg-surface-1/70 p-5 shadow-2xl shadow-black/50 backdrop-blur-xl outline-none sm:bottom-5 sm:p-6"
+        >
+          {layer === 'first' ? (
+            <>
+              <h2 id={titleId} className="text-lg font-bold text-foreground">
+                {content.headline}
+              </h2>
+              <p
+                id={descId}
+                className="mt-2 text-sm leading-relaxed text-foreground-muted"
+              >
+                {parts.map((part, index) => (
+                  <Fragment key={index}>
+                    {part}
+                    {index < parts.length - 1 ? (
+                      <Link href="/datenschutz" className={LINK_CLASS}>
+                        {content.privacyLinkText}
+                      </Link>
+                    ) : null}
+                  </Fragment>
+                ))}
+              </p>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  className={BUTTON_CLASS}
+                  onClick={() => choose(false, false)}
+                >
+                  {content.rejectAll}
+                </button>
+                <button type="button" className={BUTTON_CLASS} onClick={openSettings}>
+                  {content.settings}
+                </button>
+                <button
+                  type="button"
+                  className={BUTTON_CLASS}
+                  onClick={() => choose(true, true)}
+                >
+                  {content.acceptAll}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 id={titleId} className="text-lg font-bold text-foreground">
+                {content.settingsHeading}
+              </h2>
+              <div id={descId} className="mt-4 space-y-3">
+                <CategoryRow
+                  baseId={`${baseId}-necessary`}
+                  title={content.necessaryTitle}
+                  badge={content.necessaryBadge}
+                  text={content.necessaryText}
+                  checked
+                  disabled
+                />
+                <CategoryRow
+                  baseId={`${baseId}-analytics`}
+                  title={content.analyticsTitle}
+                  text={content.analyticsText}
+                  checked={draft.analytics}
+                  onChange={(analytics) =>
+                    setDraft((previous) => ({ ...previous, analytics }))
+                  }
+                />
+                <CategoryRow
+                  baseId={`${baseId}-marketing`}
+                  title={content.marketingTitle}
+                  text={content.marketingText}
+                  checked={draft.marketing}
+                  onChange={(marketing) =>
+                    setDraft((previous) => ({ ...previous, marketing }))
+                  }
+                />
+              </div>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  className={BUTTON_CLASS}
+                  onClick={() => choose(draft.analytics, draft.marketing)}
+                >
+                  {content.saveSelection}
+                </button>
+                <button
+                  type="button"
+                  className={BUTTON_CLASS}
+                  onClick={() => choose(true, true)}
+                >
+                  {content.acceptAll}
+                </button>
+              </div>
+            </>
+          )}
+
+          <p className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-foreground-muted">
+            <Link href="/datenschutz" className={LINK_CLASS}>
+              {content.privacyLinkText}
+            </Link>
+            <Link href="/impressum" className={LINK_CLASS}>
+              {content.impressumLinkText}
+            </Link>
+          </p>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+}
