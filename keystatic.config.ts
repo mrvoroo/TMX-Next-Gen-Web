@@ -1,4 +1,23 @@
-import { config, fields, singleton } from '@keystatic/core';
+import { collection, config, fields, singleton } from '@keystatic/core';
+import { SERVICE_ICON_NAMES } from './src/config/service-icons';
+
+const servicePillarFields = () => ({
+  title: fields.text({ label: 'Title' }),
+  sub: fields.text({ label: 'Subtitle' }),
+});
+
+const servicesSectionFields = () => ({
+  heading: fields.text({ label: 'Heading' }),
+  sub: fields.text({ label: 'Subheading' }),
+  dev: fields.object(servicePillarFields(), { label: 'Pillar · Entwicklung' }),
+  ai: fields.object(servicePillarFields(), { label: 'Pillar · KI' }),
+  marketing: fields.object(servicePillarFields(), {
+    label: 'Pillar · Digitales Marketing',
+  }),
+  it: fields.object(servicePillarFields(), { label: 'Pillar · IT-Beratung' }),
+});
+
+const SLUG_RULE = 'Do not change after launch';
 
 const PENDING_RULE =
   '"[[PENDING]]" = not provided yet (shown visibly on the site). Empty = does not apply (block hidden).';
@@ -165,6 +184,71 @@ export default config({
       schema: {
         de: fields.object(consentFields(), { label: 'DE' }),
         en: fields.object(consentFields(), { label: 'EN' }),
+      },
+    }),
+    servicesSection: singleton({
+      label: 'Home · Services',
+      path: 'content/home/services',
+      format: 'json',
+      schema: {
+        de: fields.object(servicesSectionFields(), { label: 'DE' }),
+        en: fields.object(servicesSectionFields(), { label: 'EN' }),
+      },
+    }),
+  },
+  collections: {
+    services: collection({
+      label: 'Services',
+      path: 'content/services/*',
+      format: 'json',
+      slugField: 'slug',
+      schema: {
+        slug: fields.slug({
+          name: {
+            label: 'Slug',
+            description: `Stable ID, lowercase, used as URL anchor. ${SLUG_RULE}.`,
+            validation: {
+              isRequired: true,
+              pattern: {
+                regex: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+                message: 'Lowercase letters, digits and hyphens only.',
+              },
+            },
+          },
+          slug: {
+            label: 'Slug (file name)',
+            description: SLUG_RULE,
+          },
+        }),
+        pillar: fields.select({
+          label: 'Pillar',
+          options: [
+            { label: 'Entwicklung', value: 'entwicklung' },
+            { label: 'KI', value: 'ki' },
+            { label: 'Digitales Marketing', value: 'digitales-marketing' },
+            { label: 'IT-Beratung', value: 'it-beratung' },
+          ],
+          defaultValue: 'entwicklung',
+        }),
+        order: fields.integer({
+          label: 'Order (within pillar)',
+          defaultValue: 1,
+        }),
+        visible: fields.checkbox({ label: 'Visible', defaultValue: true }),
+        nameDe: fields.text({
+          label: 'Name (DE)',
+          description:
+            'OFFICIAL term from the Gewerbeanmeldung. Must stay verbatim. Changes need owner + lawyer check.',
+        }),
+        nameEn: fields.text({ label: 'Name (EN)' }),
+        icon: fields.select({
+          label: 'Icon (lucide)',
+          options: SERVICE_ICON_NAMES.map((name) => ({
+            label: name,
+            value: name,
+          })),
+          defaultValue: 'Globe',
+        }),
       },
     }),
   },

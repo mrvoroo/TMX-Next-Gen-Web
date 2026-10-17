@@ -2,35 +2,28 @@
 
 import { useRef, useCallback } from 'react';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
-import {
-  MapPin,
-  Layers,
-  Shield,
-  Upload,
-  Server,
-  Settings,
-  type LucideIcon,
-} from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/useTranslation';
+import type { LucideIcon } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useStaggerReveal } from '@/hooks/useStaggerReveal';
-import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
-
-/* ── Icon order matches translations.ts services.it.items order ─────────── */
-const ICONS: LucideIcon[] = [MapPin, Layers, Shield, Upload, Server, Settings];
+import { getServiceIcon } from './icons';
+import { ServiceGrid } from './ServiceGrid';
+import type { PillarBlockProps } from './types';
 
 /* ── Individual glassmorphic card ────────────────────────────────────────── */
 interface ItCardProps {
   Icon: LucideIcon;
   label: string;
+  slug: string;
   cardRef: (el: HTMLDivElement | null) => void;
 }
 
-function ItCard({ Icon, label, cardRef }: ItCardProps) {
+function ItCard({ Icon, label, slug, cardRef }: ItCardProps) {
   return (
     <div
       ref={cardRef}
+      id={slug}
+      data-slug={slug}
       className={cn(
         'relative flex flex-col gap-4 rounded-2xl p-6 min-w-0',
         /* Glassmorphism: backdrop-blur + semi-transparent fill + frosted border */
@@ -54,13 +47,10 @@ function ItCard({ Icon, label, cardRef }: ItCardProps) {
 }
 
 /* ── Exported block ───────────────────────────────────────────────────────── */
-export function ItBlock() {
-  const { t, locale } = useTranslation();
+export function ItBlock({ title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const blockRef   = useRef<HTMLDivElement>(null);   // spotlight tracking target + GSAP context root
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const items = translations[locale].services.it.items;
 
   /*
    * Spotlight MotionValues — start off-screen so no glow is visible
@@ -124,27 +114,29 @@ export function ItBlock() {
         {/* Block header */}
         <div className="mb-12">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-violet-400/60">
-            04
+            {number}
           </p>
           <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {t('services.it.title')}
+            {title}
           </h3>
           <p className="text-sm text-white/45 sm:text-base">
-            {t('services.it.sub')}
+            {sub}
           </p>
         </div>
 
-        {/* 6 glassmorphic cards — 1-col mobile → 2-col sm → 3-col md+ */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {/* glassmorphic cards — 1-col mobile → 2-col sm+. Few cards (≤2): two wide
+            cards, centred as a deliberate pair; otherwise up to 3 per row. */}
+        <ServiceGrid maxCols={items.length <= 2 ? 2 : 3}>
           {items.map((item, i) => (
             <ItCard
-              key={item}
-              Icon={ICONS[i]}
-              label={item}
+              key={item.slug}
+              slug={item.slug}
+              Icon={getServiceIcon(item.icon)}
+              label={item.name}
               cardRef={(el) => { cardRefs.current[i] = el; }}
             />
           ))}
-        </div>
+        </ServiceGrid>
       </div>
     </div>
   );

@@ -7,23 +7,13 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import {
-  Globe,
-  Smartphone,
-  ShoppingCart,
-  Link,
-  Cloud,
-  Zap,
-  type LucideIcon,
-} from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/useTranslation';
+import type { LucideIcon } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useStaggerReveal } from '@/hooks/useStaggerReveal';
-import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
-
-/* ── Icon order matches translations.ts services.dev.items order ────────── */
-const ICONS: LucideIcon[] = [Globe, Smartphone, ShoppingCart, Link, Cloud, Zap];
+import { getServiceIcon } from './icons';
+import { ServiceGrid } from './ServiceGrid';
+import type { PillarBlockProps } from './types';
 
 /* ── Individual tilt card ─────────────────────────────────────────────────── */
 interface TiltCardProps {
@@ -82,7 +72,7 @@ function TiltCard({ Icon, label, reduced }: TiltCardProps) {
   return (
     /* perspective wrapper — must be outside the motion.div to avoid
        perspective-transform conflicts on the animated element itself */
-    <div style={{ perspective: '1000px' }}>
+    <div className="w-full min-w-0" style={{ perspective: '1000px' }}>
       <motion.div
         ref={cardRef}
         style={
@@ -131,15 +121,11 @@ function TiltCard({ Icon, label, reduced }: TiltCardProps) {
 }
 
 /* ── Exported block ───────────────────────────────────────────────────────── */
-export function DevBlock() {
-  const { t, locale } = useTranslation();
+export function DevBlock({ title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   /* One ref per wrapper div (not per TiltCard) so GSAP targets the outer el */
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  /* Access array directly — t() only resolves to strings, not arrays */
-  const items = translations[locale].services.dev.items;
 
   /* Staggered scroll-triggered reveal — shared hook, progressive enhancement */
   useStaggerReveal(containerRef, { cardRefs, reduced });
@@ -149,28 +135,30 @@ export function DevBlock() {
       {/* Block header */}
       <div className="mb-12">
         <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-violet-400/60">
-          01
+          {number}
         </p>
         <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          {t('services.dev.title')}
+          {title}
         </h3>
         <p className="text-sm text-white/45 sm:text-base">
-          {t('services.dev.sub')}
+          {sub}
         </p>
       </div>
 
-      {/* 2-col mobile → 3-col md+ */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+      {/* 1-col mobile → 2-col sm → 3-col md+, incomplete last row centred */}
+      <ServiceGrid>
         {items.map((item, i) => (
           <div
-            key={item}
+            key={item.slug}
+            id={item.slug}
+            data-slug={item.slug}
             ref={(el) => { cardRefs.current[i] = el; }}
-            className="h-full min-w-0"
+            className="flex min-w-0"
           >
-            <TiltCard Icon={ICONS[i]} label={item} reduced={reduced} />
+            <TiltCard Icon={getServiceIcon(item.icon)} label={item.name} reduced={reduced} />
           </div>
         ))}
-      </div>
+      </ServiceGrid>
     </div>
   );
 }

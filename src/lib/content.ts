@@ -19,3 +19,68 @@ export async function getDatenschutz() {
 export async function getConsentBanner() {
   return reader.singletons.consentBanner.read();
 }
+
+/* ── Home · Services ─────────────────────────────────────────────────────── */
+
+export interface ServiceItemData {
+  slug: string;
+  name: string;
+  icon: string;
+}
+
+export interface ServicePillarData {
+  title: string;
+  sub: string;
+  items: ServiceItemData[];
+}
+
+export interface ServicesSectionData {
+  heading: string;
+  sub: string;
+  dev: ServicePillarData;
+  ai: ServicePillarData;
+  marketing: ServicePillarData;
+  it: ServicePillarData;
+}
+
+/**
+ * Home services: singleton texts for `locale` + visible services of the
+ * collection (sorted by order, then slug) grouped into the 4 pillars.
+ * Returns plain, serialisable data for client components.
+ */
+export async function getServicesSection(
+  locale: 'de' | 'en',
+): Promise<ServicesSectionData | null> {
+  const [section, entries] = await Promise.all([
+    reader.singletons.servicesSection.read(),
+    reader.collections.services.all(),
+  ]);
+  if (!section) return null;
+
+  const pillarOf = (pillar: string): ServiceItemData[] =>
+    entries
+      .filter((e) => e.entry.pillar === pillar && e.entry.visible)
+      .sort(
+        (a, b) =>
+          (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+          a.slug.localeCompare(b.slug),
+      )
+      .map((e) => ({
+        slug: e.slug,
+        name:
+          locale === 'en' && e.entry.nameEn.trim() !== ''
+            ? e.entry.nameEn
+            : e.entry.nameDe,
+        icon: e.entry.icon,
+      }));
+
+  const c = section[locale];
+  return {
+    heading: c.heading,
+    sub: c.sub,
+    dev: { ...c.dev, items: pillarOf('entwicklung') },
+    ai: { ...c.ai, items: pillarOf('ki') },
+    marketing: { ...c.marketing, items: pillarOf('digitales-marketing') },
+    it: { ...c.it, items: pillarOf('it-beratung') },
+  };
+}

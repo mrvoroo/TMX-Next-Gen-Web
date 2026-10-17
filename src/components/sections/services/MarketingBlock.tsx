@@ -1,34 +1,21 @@
 'use client';
 
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import {
-  Search,
-  Target,
-  Share2,
-  FileText,
-  Mail,
-  TrendingUp,
-  type LucideIcon,
-} from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/useTranslation';
+import type { LucideIcon } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useStaggerReveal } from '@/hooks/useStaggerReveal';
-import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
-
-/* ── Icon order matches translations.ts services.marketing.items order ────── */
-const ICONS: LucideIcon[] = [Search, Target, Share2, FileText, Mail, TrendingUp];
+import { getServiceIcon } from './icons';
+import { ServiceGrid } from './ServiceGrid';
+import type { PillarBlockProps } from './types';
 
 /* ── Hub-and-spoke SVG geometry ─────────────────────────────────────────────
  *
- * viewBox "0 0 800 280"
- *   Hub   : (400, 140)
- *   Left  : (80, 55) | (80, 140) | (80, 225)   → items 0, 4, 5
- *   Right : (720, 55) | (720, 140) | (720, 225) → items 1, 2, 3
- *
- * sqrt(320²+85²) ≈ 331   (diagonal beams)
- * 320 px                  (horizontal beams)
+ * viewBox "0 0 800 280", hub at (400, 140). One node per visible service,
+ * alternating left (x=80) / right (x=720); each side is spread evenly on
+ * y (85 px apart, centred on the hub). The node shows the service's icon —
+ * no service-specific text, so it can never contradict the official names.
  */
 const HUB = { x: 400, y: 140 };
 
@@ -36,26 +23,21 @@ interface BeamNode {
   x: number;
   y: number;
   itemIdx: number;   // index into the items array
-  abbr: string;      // language-agnostic 3-letter abbreviation shown in the SVG node
+  side: 'left' | 'right';
 }
 
-const LEFT_NODES: BeamNode[] = [
-  { x: 80,  y: 55,  itemIdx: 0, abbr: 'SEO' },
-  { x: 80,  y: 140, itemIdx: 4, abbr: 'EML' },
-  { x: 80,  y: 225, itemIdx: 5, abbr: 'CVR' },
-];
-
-const RIGHT_NODES: BeamNode[] = [
-  { x: 720, y: 55,  itemIdx: 1, abbr: 'SEA' },
-  { x: 720, y: 140, itemIdx: 2, abbr: 'SMM' },
-  { x: 720, y: 225, itemIdx: 3, abbr: 'CTM' },
-];
-
-/* All 6 beams as flat array: left nodes → hub first, then hub → right nodes */
-const BEAMS = [
-  ...LEFT_NODES.map(n => ({ x1: n.x, y1: n.y, x2: HUB.x, y2: HUB.y })),
-  ...RIGHT_NODES.map(n => ({ x1: HUB.x, y1: HUB.y, x2: n.x, y2: n.y })),
-];
+function buildNodes(count: number): BeamNode[] {
+  const leftCount = Math.ceil(count / 2);
+  const rightCount = count - leftCount;
+  const place = (side: 'left' | 'right', sideCount: number): BeamNode[] =>
+    Array.from({ length: sideCount }, (_, k) => ({
+      x: side === 'left' ? 80 : 720,
+      y: HUB.y + (k - (sideCount - 1) / 2) * 85,
+      itemIdx: side === 'left' ? k * 2 : k * 2 + 1,
+      side,
+    }));
+  return [...place('left', leftCount), ...place('right', rightCount)];
+}
 
 /* Pre-computed straight-line length for each beam (strokeDasharray value) */
 function lineLen(x1: number, y1: number, x2: number, y2: number) {
@@ -66,13 +48,16 @@ function lineLen(x1: number, y1: number, x2: number, y2: number) {
 interface ServiceCardProps {
   Icon: LucideIcon;
   label: string;
+  slug: string;
   cardRef: (el: HTMLDivElement | null) => void;
 }
 
-function ServiceCard({ Icon, label, cardRef }: ServiceCardProps) {
+function ServiceCard({ Icon, label, slug, cardRef }: ServiceCardProps) {
   return (
     <div
       ref={cardRef}
+      id={slug}
+      data-slug={slug}
       className={cn(
         'relative flex flex-col gap-4 rounded-2xl p-6 pl-5 min-w-0',
         /* Gradient left-border accent ties into the "beam / data-flow" theme */
@@ -124,13 +109,19 @@ function TravelingDot({ x1, y1, x2, y2, delay, reducedMotion }: TravelingDotProp
 }
 
 /* ── Exported block ───────────────────────────────────────────────────────── */
-export function MarketingBlock() {
-  const { t, locale } = useTranslation();
+export function MarketingBlock({ title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const items = translations[locale].services.marketing.items;
+  const nodes = useMemo(() => buildNodes(items.length), [items.length]);
+  const leftNodes = nodes.filter((n) => n.side === 'left');
+  const rightNodes = nodes.filter((n) => n.side === 'right');
+  /* beams: left nodes → hub first, then hub → right nodes */
+  const beams = [
+    ...leftNodes.map((n) => ({ x1: n.x, y1: n.y, x2: HUB.x, y2: HUB.y })),
+    ...rightNodes.map((n) => ({ x1: HUB.x, y1: HUB.y, x2: n.x, y2: n.y })),
+  ];
 
   /* Staggered scroll-triggered reveal — shared hook, progressive enhancement */
   useStaggerReveal(containerRef, { cardRefs, reduced });
@@ -141,13 +132,13 @@ export function MarketingBlock() {
         {/* Block header */}
         <div className="mb-12">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-violet-400/60">
-            03
+            {number}
           </p>
           <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {t('services.marketing.title')}
+            {title}
           </h3>
           <p className="text-sm text-white/45 sm:text-base">
-            {t('services.marketing.sub')}
+            {sub}
           </p>
         </div>
 
@@ -175,7 +166,7 @@ export function MarketingBlock() {
             </defs>
 
             {/* ── Animated beam lines ── */}
-            {BEAMS.map((b, i) => {
+            {beams.map((b, i) => {
               const len = lineLen(b.x1, b.y1, b.x2, b.y2);
               return (
                 <motion.path
@@ -194,7 +185,7 @@ export function MarketingBlock() {
             })}
 
             {/* ── Traveling dots (one per beam, staggered) ── */}
-            {BEAMS.map((b, i) => (
+            {beams.map((b, i) => (
               <TravelingDot
                 key={`dot-${i}`}
                 x1={b.x1} y1={b.y1}
@@ -222,38 +213,41 @@ export function MarketingBlock() {
             <text x={HUB.x} y={HUB.y + 10} textAnchor="middle" fill="#7c3aed" fontSize={8} fontFamily="Inter, sans-serif" opacity={0.8}>HUB</text>
 
             {/* ── Left nodes ── */}
-            {LEFT_NODES.map((n) => (
-              <g key={`l-${n.itemIdx}`}>
-                <circle cx={n.x} cy={n.y} r={26} fill="#0c0b18" stroke="#7c3aed" strokeWidth={0.8} strokeOpacity={0.35} />
-                <text x={n.x} y={n.y + 4} textAnchor="middle" fill="#c4b5fd" fontSize={8} fontWeight="bold" fontFamily="Inter, sans-serif">
-                  {n.abbr}
-                </text>
-              </g>
-            ))}
+            {leftNodes.map((n) => {
+              const NodeIcon = getServiceIcon(items[n.itemIdx].icon);
+              return (
+                <g key={`l-${n.itemIdx}`}>
+                  <circle cx={n.x} cy={n.y} r={26} fill="#0c0b18" stroke="#7c3aed" strokeWidth={0.8} strokeOpacity={0.35} />
+                  <NodeIcon x={n.x - 10} y={n.y - 10} width={20} height={20} strokeWidth={1.5} color="#c4b5fd" />
+                </g>
+              );
+            })}
 
             {/* ── Right nodes ── */}
-            {RIGHT_NODES.map((n) => (
-              <g key={`r-${n.itemIdx}`}>
-                <circle cx={n.x} cy={n.y} r={26} fill="#0c0b18" stroke="#06b6d4" strokeWidth={0.8} strokeOpacity={0.35} />
-                <text x={n.x} y={n.y + 4} textAnchor="middle" fill="#67e8f9" fontSize={8} fontWeight="bold" fontFamily="Inter, sans-serif">
-                  {n.abbr}
-                </text>
-              </g>
-            ))}
+            {rightNodes.map((n) => {
+              const NodeIcon = getServiceIcon(items[n.itemIdx].icon);
+              return (
+                <g key={`r-${n.itemIdx}`}>
+                  <circle cx={n.x} cy={n.y} r={26} fill="#0c0b18" stroke="#06b6d4" strokeWidth={0.8} strokeOpacity={0.35} />
+                  <NodeIcon x={n.x - 10} y={n.y - 10} width={20} height={20} strokeWidth={1.5} color="#67e8f9" />
+                </g>
+              );
+            })}
           </svg>
         </div>
 
         {/* ── Card grid (always visible — the SVG above is decorative) ─────── */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <ServiceGrid>
           {items.map((item, i) => (
             <ServiceCard
-              key={item}
-              Icon={ICONS[i]}
-              label={item}
+              key={item.slug}
+              slug={item.slug}
+              Icon={getServiceIcon(item.icon)}
+              label={item.name}
               cardRef={(el) => { cardRefs.current[i] = el; }}
             />
           ))}
-        </div>
+        </ServiceGrid>
       </div>
     </div>
   );

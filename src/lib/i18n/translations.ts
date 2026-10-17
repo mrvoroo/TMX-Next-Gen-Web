@@ -35,30 +35,6 @@ export interface TranslationSchema {
     body: string;
     cta: string;
   };
-  services: {
-    heading: string;
-    sub: string;
-    dev: {
-      title: string;
-      sub: string;
-      items: string[];
-    };
-    ai: {
-      title: string;
-      sub: string;
-      items: string[];
-    };
-    marketing: {
-      title: string;
-      sub: string;
-      items: string[];
-    };
-    it: {
-      title: string;
-      sub: string;
-      items: string[];
-    };
-  };
   process: {
     heading: string;
     sub: string;
@@ -148,58 +124,6 @@ export const translations: Record<Locale, TranslationSchema> = {
       sub: 'Ihr Partner für digitale Transformation',
       body: 'Wir sind eine full-service Digitalagentur mit Sitz in Deutschland, spezialisiert auf die Entwicklung innovativer digitaler Lösungen. Unser interdisziplinäres Team aus Entwicklern, KI-Experten, Marketing-Strategen und IT-Beratern arbeitet Hand in Hand, um Ihrem Unternehmen nachhaltige Wettbewerbsvorteile zu sichern.',
       cta: 'Mehr erfahren',
-    },
-    services: {
-      heading: 'Unsere Leistungen',
-      sub: 'Vier Säulen digitaler Exzellenz',
-      dev: {
-        title: 'Entwicklung',
-        sub: 'Maßgeschneiderte Software- und Weblösungen',
-        items: [
-          'Webentwicklung',
-          'Mobile Apps',
-          'E-Commerce',
-          'API-Integration',
-          'Cloud-Lösungen',
-          'Performance-Optimierung',
-        ],
-      },
-      ai: {
-        title: 'Künstliche Intelligenz',
-        sub: 'Intelligente Automatisierung und KI-Lösungen',
-        items: [
-          'KI-Strategie & Beratung',
-          'Machine Learning',
-          'Natural Language Processing',
-          'Prozessautomatisierung',
-          'Chatbots & Assistenten',
-          'Datenanalyse & Prognosen',
-        ],
-      },
-      marketing: {
-        title: 'Digitales Marketing',
-        sub: 'Reichweite, Relevanz und messbare Ergebnisse',
-        items: [
-          'Suchmaschinenoptimierung (SEO)',
-          'Suchmaschinenwerbung (SEA)',
-          'Social-Media-Marketing',
-          'Content-Marketing',
-          'E-Mail-Marketing',
-          'Conversion-Optimierung',
-        ],
-      },
-      it: {
-        title: 'IT & Beratung',
-        sub: 'Technologieberatung und IT-Infrastruktur',
-        items: [
-          'IT-Strategie & Roadmap',
-          'Systemarchitektur',
-          'Cybersicherheit',
-          'Cloud-Migration',
-          'IT-Infrastruktur',
-          'Digitale Transformation',
-        ],
-      },
     },
     process: {
       heading: 'So arbeiten wir',
@@ -357,58 +281,6 @@ export const translations: Record<Locale, TranslationSchema> = {
       sub: 'Your partner for digital transformation',
       body: 'We are a full-service digital agency based in Germany, specialising in building innovative digital solutions. Our interdisciplinary team of developers, AI experts, marketing strategists, and IT consultants works hand in hand to secure lasting competitive advantages for your business.',
       cta: 'Learn more',
-    },
-    services: {
-      heading: 'Our Services',
-      sub: 'Four pillars of digital excellence',
-      dev: {
-        title: 'Development',
-        sub: 'Tailored software and web solutions',
-        items: [
-          'Web Development',
-          'Mobile Apps',
-          'E-Commerce',
-          'API Integration',
-          'Cloud Solutions',
-          'Performance Optimisation',
-        ],
-      },
-      ai: {
-        title: 'Artificial Intelligence',
-        sub: 'Intelligent automation and AI solutions',
-        items: [
-          'AI Strategy & Consulting',
-          'Machine Learning',
-          'Natural Language Processing',
-          'Process Automation',
-          'Chatbots & Assistants',
-          'Data Analytics & Forecasting',
-        ],
-      },
-      marketing: {
-        title: 'Digital Marketing',
-        sub: 'Reach, relevance, and measurable outcomes',
-        items: [
-          'Search Engine Optimisation (SEO)',
-          'Search Engine Advertising (SEA)',
-          'Social Media Marketing',
-          'Content Marketing',
-          'Email Marketing',
-          'Conversion Optimisation',
-        ],
-      },
-      it: {
-        title: 'IT & Consulting',
-        sub: 'Technology consulting and IT infrastructure',
-        items: [
-          'IT Strategy & Roadmap',
-          'System Architecture',
-          'Cybersecurity',
-          'Cloud Migration',
-          'IT Infrastructure',
-          'Digital Transformation',
-        ],
-      },
     },
     process: {
       heading: 'How We Work',

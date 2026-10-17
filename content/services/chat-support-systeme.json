@@ -1,0 +1,9 @@
+{
+  "slug": "chat-support-systeme",
+  "pillar": "entwicklung",
+  "order": 5,
+  "visible": true,
+  "nameDe": "Einrichtung von Chat- und Support-Systemen",
+  "nameEn": "Setting up chat and support systems",
+  "icon": "MessageSquare"
+}

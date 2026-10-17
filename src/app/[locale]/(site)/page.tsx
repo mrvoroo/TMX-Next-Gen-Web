@@ -1,32 +1,22 @@
-'use client';
+/**
+ * Home — Server Component (static). Reads the Keystatic "servicesSection"
+ * singleton + visible "services" entries for the current locale and passes
+ * plain props to the client page (preloader, animated sections).
+ */
 
-import { useState } from 'react';
-import { Preloader, hasPreloaderPlayed } from '@/components/sections/Preloader';
-import { HeroSection }   from '@/components/sections/HeroSection';
-import { AboutSection }    from '@/components/sections/AboutSection';
-import { ServicesSection } from '@/components/sections/ServicesSection';
+import { setRequestLocale } from 'next-intl/server';
+import { resolveLocale } from '@/lib/seo';
+import { getServicesSection } from '@/lib/content';
+import HomeClient from './HomeClient';
 
-export default function Home() {
-  const [loading, setLoading] = useState(() => !hasPreloaderPlayed());
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: rawLocale } = await params;
+  setRequestLocale(rawLocale);
+  const services = await getServicesSection(resolveLocale(rawLocale));
 
-  return (
-    <>
-      {/* Preloader — renders on top (z-[9999]) while assets load */}
-      {loading && (
-        <Preloader onComplete={() => setLoading(false)} />
-      )}
-
-      {/* SECTION 2 — Hero */}
-      <HeroSection shouldAnimate={!loading} />
-
-      {/* SECTION 3 — Stats strip */}
-      {/* StatsStrip hidden: fake numbers (UWG risk). Re-add with real stats later. */}
-
-      {/* SECTION 4 — About (pinned scroll-driven assembly) */}
-      <AboutSection />
-
-      {/* SECTION 5 — Services (4 pillar sub-blocks) */}
-      <ServicesSection />
-    </>
-  );
+  return <HomeClient services={services} />;
 }
