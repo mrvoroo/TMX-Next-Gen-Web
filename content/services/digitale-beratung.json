@@ -3,7 +3,9 @@
   "pillar": "it-beratung",
   "order": 2,
   "visible": true,
-  "nameDe": "[[PENDING]]",
-  "nameEn": "Digital consulting",
+  "name": {
+    "en": "Digital consulting",
+    "de": "[[PENDING]]"
+  },
   "icon": "Compass"
 }

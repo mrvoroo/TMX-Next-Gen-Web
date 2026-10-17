@@ -3,7 +3,9 @@
   "pillar": "digitales-marketing",
   "order": 2,
   "visible": true,
-  "nameDe": "Datenanalyse und Auswertung mit KI-Unterstützung",
-  "nameEn": "Data analysis and evaluation with AI support",
+  "name": {
+    "en": "Data analysis and evaluation with AI support",
+    "de": "Datenanalyse und Auswertung mit KI-Unterstützung"
+  },
   "icon": "BarChart2"
 }

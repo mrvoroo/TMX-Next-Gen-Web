@@ -3,7 +3,9 @@
   "pillar": "entwicklung",
   "order": 3,
   "visible": true,
-  "nameDe": "Erstellung und Betreuung von E-Commerce-Shops",
-  "nameEn": "Building and maintaining e-commerce shops",
+  "name": {
+    "en": "Building and maintaining e-commerce shops",
+    "de": "Erstellung und Betreuung von E-Commerce-Shops"
+  },
   "icon": "ShoppingCart"
 }

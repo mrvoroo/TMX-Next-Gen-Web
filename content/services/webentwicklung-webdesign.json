@@ -3,7 +3,9 @@
   "pillar": "entwicklung",
   "order": 1,
   "visible": true,
-  "nameDe": "Webentwicklung / Webdesign",
-  "nameEn": "Web development / web design",
+  "name": {
+    "en": "Web development / web design",
+    "de": "Webentwicklung / Webdesign"
+  },
   "icon": "Globe"
 }

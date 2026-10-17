@@ -1,42 +1,50 @@
 {
-  "de": {
-    "heading": "Unsere Leistungen",
-    "sub": "Vier Säulen digitaler Exzellenz",
-    "dev": {
-      "title": "Entwicklung",
-      "sub": "Maßgeschneiderte Software- und Weblösungen"
+  "heading": {
+    "en": "Our Services",
+    "de": "Unsere Leistungen"
+  },
+  "sub": {
+    "en": "Four pillars of digital excellence",
+    "de": "Vier Säulen digitaler Exzellenz"
+  },
+  "dev": {
+    "title": {
+      "en": "Development",
+      "de": "Entwicklung"
     },
-    "ai": {
-      "title": "Künstliche Intelligenz",
-      "sub": "Intelligente Automatisierung und KI-Lösungen"
-    },
-    "marketing": {
-      "title": "Digitales Marketing",
-      "sub": "Reichweite, Relevanz und messbare Ergebnisse"
-    },
-    "it": {
-      "title": "IT & Beratung",
-      "sub": "Technologieberatung und IT-Infrastruktur"
+    "sub": {
+      "en": "Tailored software and web solutions",
+      "de": "Maßgeschneiderte Software- und Weblösungen"
     }
   },
-  "en": {
-    "heading": "Our Services",
-    "sub": "Four pillars of digital excellence",
-    "dev": {
-      "title": "Development",
-      "sub": "Tailored software and web solutions"
+  "ai": {
+    "title": {
+      "en": "Artificial Intelligence",
+      "de": "Künstliche Intelligenz"
     },
-    "ai": {
-      "title": "Artificial Intelligence",
-      "sub": "Intelligent automation and AI solutions"
+    "sub": {
+      "en": "Intelligent automation and AI solutions",
+      "de": "Intelligente Automatisierung und KI-Lösungen"
+    }
+  },
+  "marketing": {
+    "title": {
+      "en": "Digital Marketing",
+      "de": "Digitales Marketing"
     },
-    "marketing": {
-      "title": "Digital Marketing",
-      "sub": "Reach, relevance, and measurable outcomes"
+    "sub": {
+      "en": "Reach, relevance, and measurable outcomes",
+      "de": "Reichweite, Relevanz und messbare Ergebnisse"
+    }
+  },
+  "it": {
+    "title": {
+      "en": "IT & Consulting",
+      "de": "IT & Beratung"
     },
-    "it": {
-      "title": "IT & Consulting",
-      "sub": "Technology consulting and IT infrastructure"
+    "sub": {
+      "en": "Technology consulting and IT infrastructure",
+      "de": "Technologieberatung und IT-Infrastruktur"
     }
   }
 }

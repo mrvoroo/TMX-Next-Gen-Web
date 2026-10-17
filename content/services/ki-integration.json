@@ -3,7 +3,9 @@
   "pillar": "ki",
   "order": 2,
   "visible": true,
-  "nameDe": "Integration von KI in bestehende Systeme und Prozesse",
-  "nameEn": "Integration of AI into existing systems and processes",
+  "name": {
+    "en": "Integration of AI into existing systems and processes",
+    "de": "Integration von KI in bestehende Systeme und Prozesse"
+  },
   "icon": "Cpu"
 }

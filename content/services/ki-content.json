@@ -3,7 +3,9 @@
   "pillar": "digitales-marketing",
   "order": 3,
   "visible": true,
-  "nameDe": "KI-gestützte Content-Erstellung",
-  "nameEn": "AI-powered content creation",
+  "name": {
+    "en": "AI-powered content creation",
+    "de": "KI-gestützte Content-Erstellung"
+  },
   "icon": "FileText"
 }

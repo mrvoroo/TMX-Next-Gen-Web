@@ -3,7 +3,9 @@
   "pillar": "ki",
   "order": 1,
   "visible": true,
-  "nameDe": "Entwicklung und Implementierung KI-gestützter Lösungen, Tools und Anwendungen",
-  "nameEn": "Development and implementation of AI-powered solutions, tools and applications",
+  "name": {
+    "en": "Development and implementation of AI-powered solutions, tools and applications",
+    "de": "Entwicklung und Implementierung KI-gestützter Lösungen, Tools und Anwendungen"
+  },
   "icon": "Brain"
 }

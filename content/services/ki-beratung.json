@@ -3,7 +3,9 @@
   "pillar": "ki",
   "order": 3,
   "visible": true,
-  "nameDe": "KI-Beratung und Strategieentwicklung",
-  "nameEn": "AI consulting and strategy development",
+  "name": {
+    "en": "AI consulting and strategy development",
+    "de": "KI-Beratung und Strategieentwicklung"
+  },
   "icon": "Lightbulb"
 }

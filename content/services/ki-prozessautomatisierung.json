@@ -3,7 +3,9 @@
   "pillar": "ki",
   "order": 6,
   "visible": true,
-  "nameDe": "Prozessautomatisierung mit KI",
-  "nameEn": "Process automation with AI",
+  "name": {
+    "en": "Process automation with AI",
+    "de": "Prozessautomatisierung mit KI"
+  },
   "icon": "RefreshCw"
 }

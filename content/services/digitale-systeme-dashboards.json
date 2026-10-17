@@ -3,7 +3,9 @@
   "pillar": "entwicklung",
   "order": 4,
   "visible": true,
-  "nameDe": "Aufbau digitaler Systeme und Dashboards",
-  "nameEn": "Building digital systems and dashboards",
+  "name": {
+    "en": "Building digital systems and dashboards",
+    "de": "Aufbau digitaler Systeme und Dashboards"
+  },
   "icon": "LayoutDashboard"
 }

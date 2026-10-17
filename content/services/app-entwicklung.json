@@ -3,7 +3,9 @@
   "pillar": "entwicklung",
   "order": 2,
   "visible": true,
-  "nameDe": "App-Entwicklung",
-  "nameEn": "App development",
+  "name": {
+    "en": "App development",
+    "de": "App-Entwicklung"
+  },
   "icon": "Smartphone"
 }

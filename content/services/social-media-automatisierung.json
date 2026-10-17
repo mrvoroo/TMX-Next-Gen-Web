@@ -3,7 +3,9 @@
   "pillar": "digitales-marketing",
   "order": 1,
   "visible": true,
-  "nameDe": "Automatisierung von Social-Media-Prozessen",
-  "nameEn": "Automation of social media processes",
+  "name": {
+    "en": "Automation of social media processes",
+    "de": "Automatisierung von Social-Media-Prozessen"
+  },
   "icon": "Share2"
 }

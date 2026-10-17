@@ -1,6 +1,7 @@
 import 'server-only';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
+import { pick, pickAll, type Locale } from './localized';
 
 export const reader = createReader(process.cwd(), keystaticConfig);
 
@@ -8,19 +9,22 @@ export async function getCompany() {
   return reader.singletons.company.read();
 }
 
-export async function getImpressum() {
-  return reader.singletons.legalImpressum.read();
+export async function getImpressum(locale: Locale) {
+  const data = await reader.singletons.legalImpressum.read();
+  return data ? pickAll(data, locale) : null;
 }
 
-export async function getDatenschutz() {
-  return reader.singletons.legalDatenschutz.read();
+export async function getDatenschutz(locale: Locale) {
+  const data = await reader.singletons.legalDatenschutz.read();
+  return data ? pickAll(data, locale) : null;
 }
 
-export async function getConsentBanner() {
-  return reader.singletons.consentBanner.read();
+export async function getConsentBanner(locale: Locale) {
+  const data = await reader.singletons.consentBanner.read();
+  return data ? pickAll(data, locale) : null;
 }
 
-/* ── Home · Services ─────────────────────────────────────────────────────── */
+/* ── Home · Services ─────────────────────────────────────────────────── */
 
 export interface ServiceItemData {
   slug: string;
@@ -49,7 +53,7 @@ export interface ServicesSectionData {
  * Returns plain, serialisable data for client components.
  */
 export async function getServicesSection(
-  locale: 'de' | 'en',
+  locale: Locale,
 ): Promise<ServicesSectionData | null> {
   const [section, entries] = await Promise.all([
     reader.singletons.servicesSection.read(),
@@ -67,14 +71,12 @@ export async function getServicesSection(
       )
       .map((e) => ({
         slug: e.slug,
-        name:
-          locale === 'en' && e.entry.nameEn.trim() !== ''
-            ? e.entry.nameEn
-            : e.entry.nameDe,
+        // EN falls back to the German official name when EN is empty.
+        name: pick(e.entry.name, locale, true),
         icon: e.entry.icon,
       }));
 
-  const c = section[locale];
+  const c = pickAll(section, locale);
   return {
     heading: c.heading,
     sub: c.sub,

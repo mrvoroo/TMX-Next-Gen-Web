@@ -3,7 +3,9 @@
   "pillar": "it-beratung",
   "order": 1,
   "visible": true,
-  "nameDe": "IT-Dienstleistungen",
-  "nameEn": "IT services",
+  "name": {
+    "en": "IT services",
+    "de": "IT-Dienstleistungen"
+  },
   "icon": "Server"
 }

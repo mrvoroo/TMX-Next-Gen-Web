@@ -3,7 +3,9 @@
   "pillar": "digitales-marketing",
   "order": 5,
   "visible": true,
-  "nameDe": "Betreuung digitaler Werbekampagnen",
-  "nameEn": "Management of digital advertising campaigns",
+  "name": {
+    "en": "Management of digital advertising campaigns",
+    "de": "Betreuung digitaler Werbekampagnen"
+  },
   "icon": "Target"
 }

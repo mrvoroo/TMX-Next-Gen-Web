@@ -3,7 +3,9 @@
   "pillar": "ki",
   "order": 5,
   "visible": true,
-  "nameDe": "KI-gestützte Kundenservice-Automatisierung",
-  "nameEn": "AI-powered customer service automation",
+  "name": {
+    "en": "AI-powered customer service automation",
+    "de": "KI-gestützte Kundenservice-Automatisierung"
+  },
   "icon": "Bot"
 }
