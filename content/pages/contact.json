@@ -1,0 +1,94 @@
+{
+  "title": {
+    "en": "Contact",
+    "de": "Kontakt"
+  },
+  "intro": {
+    "en": "Tell us about your project – we will get back to you.",
+    "de": "Erzählen Sie uns von Ihrem Vorhaben – wir melden uns bei Ihnen."
+  },
+  "labelEmail": {
+    "en": "E-mail",
+    "de": "E-Mail"
+  },
+  "labelPhone": {
+    "en": "Phone",
+    "de": "Telefon"
+  },
+  "labelAddress": {
+    "en": "Address",
+    "de": "Anschrift"
+  },
+  "requiredNote": {
+    "en": "Required fields are marked with *.",
+    "de": "Pflichtfelder sind mit * gekennzeichnet."
+  },
+  "fieldName": {
+    "en": "Name *",
+    "de": "Name *"
+  },
+  "fieldEmail": {
+    "en": "E-mail address *",
+    "de": "E-Mail-Adresse *"
+  },
+  "fieldService": {
+    "en": "Service of interest",
+    "de": "Gewünschte Leistung"
+  },
+  "serviceDefault": {
+    "en": "Please select",
+    "de": "Bitte wählen"
+  },
+  "serviceGeneral": {
+    "en": "General inquiry",
+    "de": "Allgemeine Anfrage"
+  },
+  "fieldMessage": {
+    "en": "Message *",
+    "de": "Nachricht *"
+  },
+  "checkbox": {
+    "en": "I have read the {{privacyLink}} and agree",
+    "de": "Ich habe die {{privacyLink}} gelesen und stimme zu"
+  },
+  "privacyLinkText": {
+    "en": "privacy policy",
+    "de": "Datenschutzerklärung"
+  },
+  "hint": {
+    "en": "Your details are used solely to process your inquiry. More in the {{privacyLink}}.",
+    "de": "Ihre Angaben werden ausschließlich zur Bearbeitung Ihrer Anfrage verwendet. Mehr dazu in der {{privacyLink}}."
+  },
+  "button": {
+    "en": "Send message",
+    "de": "Nachricht senden"
+  },
+  "sending": {
+    "en": "Sending …",
+    "de": "Wird gesendet …"
+  },
+  "success": {
+    "en": "Thank you! Your message has been sent.",
+    "de": "Vielen Dank! Ihre Nachricht wurde gesendet."
+  },
+  "error": {
+    "en": "Your message could not be sent. Please try again later or write to us directly at {{email}}.",
+    "de": "Die Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut oder schreiben Sie uns direkt an {{email}}."
+  },
+  "valRequired": {
+    "en": "Please fill in this required field.",
+    "de": "Bitte füllen Sie dieses Pflichtfeld aus."
+  },
+  "valEmail": {
+    "en": "Please enter a valid e-mail address.",
+    "de": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+  },
+  "valCheckbox": {
+    "en": "Please confirm the privacy policy.",
+    "de": "Bitte bestätigen Sie die Datenschutzerklärung."
+  },
+  "metaDescription": {
+    "en": "Contact TMX – tell us about your project.",
+    "de": "Kontakt zu TMX – schreiben Sie uns Ihr Anliegen."
+  }
+}

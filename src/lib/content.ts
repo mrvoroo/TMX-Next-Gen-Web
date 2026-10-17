@@ -86,3 +86,8 @@ export async function getServicesSection(
     it: { ...c.it, items: pillarOf('it-beratung') },
   };
 }
+
+export async function getContactPage(locale: Locale) {
+  const data = await reader.singletons.contactPage.read();
+  return data ? pickAll(data, locale) : null;
+}

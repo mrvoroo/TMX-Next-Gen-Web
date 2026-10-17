@@ -150,6 +150,44 @@ const consentFields = () => ({
   saveSelection: legal('Save selection button'),
 });
 
+const contactFields = () => ({
+  title: localized('Title'),
+  intro: localized('Intro', { multiline: true }),
+  labelEmail: localized('Direct contact · E-mail label'),
+  labelPhone: localized('Direct contact · Phone label'),
+  labelAddress: localized('Direct contact · Address label'),
+  requiredNote: localized('Required fields note'),
+  fieldName: localized('Field · Name'),
+  fieldEmail: localized('Field · E-mail'),
+  fieldService: localized('Field · Service'),
+  serviceDefault: localized('Service · default option'),
+  serviceGeneral: localized('Service · general inquiry option'),
+  fieldMessage: localized('Field · Message'),
+  checkbox: localized('Checkbox', {
+    multiline: true,
+    kind: 'legal',
+    description: '{{privacyLink}} = link to the privacy policy page.',
+  }),
+  privacyLinkText: localized('Privacy link text'),
+  hint: localized('Hint under button', {
+    multiline: true,
+    kind: 'legal',
+    description: '{{privacyLink}} = link to the privacy policy page.',
+  }),
+  button: localized('Button'),
+  sending: localized('Button while sending'),
+  success: localized('Success message', { multiline: true }),
+  error: localized('Error message', {
+    multiline: true,
+    kind: 'legal',
+    description: '{{email}} = company e-mail address.',
+  }),
+  valRequired: localized('Validation · required'),
+  valEmail: localized('Validation · e-mail'),
+  valCheckbox: localized('Validation · checkbox'),
+  metaDescription: localized('Meta description', { multiline: true }),
+});
+
 export default config({
   storage: { kind: 'local' },
   singletons: {
@@ -221,6 +259,12 @@ export default config({
       path: 'content/legal/datenschutz',
       format: 'json',
       schema: datenschutzFields(),
+    }),
+    contactPage: singleton({
+      label: 'Kontakt page',
+      path: 'content/pages/contact',
+      format: 'json',
+      schema: contactFields(),
     }),
     consentBanner: singleton({
       label: 'Legal · Consent banner',
