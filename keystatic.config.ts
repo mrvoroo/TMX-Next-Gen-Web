@@ -150,49 +150,42 @@ const consentFields = () => ({
   saveSelection: legal('Save selection button'),
 });
 
-const contactText = (
-  label: string,
-  { multiline = false, legal = false } = {},
-) =>
-  fields.text({
-    label,
-    multiline,
-    ...(legal ? { description: CONSENT_RULE } : {}),
-  });
-
 const contactFields = () => ({
-  title: contactText('Title'),
-  intro: contactText('Intro', { multiline: true }),
-  labelEmail: contactText('Direct contact · E-mail label'),
-  labelPhone: contactText('Direct contact · Phone label'),
-  labelAddress: contactText('Direct contact · Address label'),
-  requiredNote: contactText('Required fields note'),
-  fieldName: contactText('Field · Name'),
-  fieldEmail: contactText('Field · E-mail'),
-  fieldService: contactText('Field · Service'),
-  serviceDefault: contactText('Service · default option'),
-  serviceGeneral: contactText('Service · general inquiry option'),
-  fieldMessage: contactText('Field · Message'),
-  checkbox: contactText('Checkbox ({{privacyLink}} = link to privacy page)', {
+  title: localized('Title'),
+  intro: localized('Intro', { multiline: true }),
+  labelEmail: localized('Direct contact · E-mail label'),
+  labelPhone: localized('Direct contact · Phone label'),
+  labelAddress: localized('Direct contact · Address label'),
+  requiredNote: localized('Required fields note'),
+  fieldName: localized('Field · Name'),
+  fieldEmail: localized('Field · E-mail'),
+  fieldService: localized('Field · Service'),
+  serviceDefault: localized('Service · default option'),
+  serviceGeneral: localized('Service · general inquiry option'),
+  fieldMessage: localized('Field · Message'),
+  checkbox: localized('Checkbox', {
     multiline: true,
-    legal: true,
+    kind: 'legal',
+    description: '{{privacyLink}} = link to the privacy policy page.',
   }),
-  privacyLinkText: contactText('Privacy link text'),
-  hint: contactText('Hint under button ({{privacyLink}} = link to privacy page)', {
+  privacyLinkText: localized('Privacy link text'),
+  hint: localized('Hint under button', {
     multiline: true,
-    legal: true,
+    kind: 'legal',
+    description: '{{privacyLink}} = link to the privacy policy page.',
   }),
-  button: contactText('Button'),
-  sending: contactText('Button while sending'),
-  success: contactText('Success message', { multiline: true }),
-  error: contactText('Error message ({{email}} = company e-mail)', {
+  button: localized('Button'),
+  sending: localized('Button while sending'),
+  success: localized('Success message', { multiline: true }),
+  error: localized('Error message', {
     multiline: true,
-    legal: true,
+    kind: 'legal',
+    description: '{{email}} = company e-mail address.',
   }),
-  valRequired: contactText('Validation · required'),
-  valEmail: contactText('Validation · e-mail'),
-  valCheckbox: contactText('Validation · checkbox'),
-  metaDescription: contactText('Meta description', { multiline: true }),
+  valRequired: localized('Validation · required'),
+  valEmail: localized('Validation · e-mail'),
+  valCheckbox: localized('Validation · checkbox'),
+  metaDescription: localized('Meta description', { multiline: true }),
 });
 
 export default config({
@@ -271,10 +264,7 @@ export default config({
       label: 'Kontakt page',
       path: 'content/pages/contact',
       format: 'json',
-      schema: {
-        de: fields.object(contactFields(), { label: 'DE' }),
-        en: fields.object(contactFields(), { label: 'EN' }),
-      },
+      schema: contactFields(),
     }),
     consentBanner: singleton({
       label: 'Legal · Consent banner',

@@ -2,7 +2,7 @@
  * /kontakt  —  Kontakt / Contact
  *
  * Server Component, static. Text comes from content/pages/contact.json
- * (Keystatic singleton "contactPage", one block per locale). Company values
+ * (Keystatic singleton "contactPage", every field stored as { en, de }). Company values
  * come from content/settings/company.json. Only the current locale is
  * rendered; the interactive form is the small client component ContactForm.
  *
@@ -41,10 +41,8 @@ export default async function KontaktPage({
   setRequestLocale(rawLocale);
   const locale = resolveLocale(rawLocale);
 
-  const [page, company] = await Promise.all([getContactPage(), getCompany()]);
-  if (!page || !company) return null;
-
-  const c = page[locale];
+  const [c, company] = await Promise.all([getContactPage(locale), getCompany()]);
+  if (!c || !company) return null;
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8">

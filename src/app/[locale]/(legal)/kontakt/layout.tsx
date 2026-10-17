@@ -10,13 +10,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = resolveLocale((await params).locale);
   const t = await getTranslations({ locale, namespace: 'meta' });
-  const page = await getContactPage();
+  const page = await getContactPage(locale);
 
   return localizedMetadata({
     locale,
     href: '/kontakt',
     title: t('kontaktTitle'),
-    description: page?.[locale].metaDescription,
+    description: page?.metaDescription,
   });
 }
 

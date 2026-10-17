@@ -87,6 +87,7 @@ export async function getServicesSection(
   };
 }
 
-export async function getContactPage() {
-  return reader.singletons.contactPage.read();
+export async function getContactPage(locale: Locale) {
+  const data = await reader.singletons.contactPage.read();
+  return data ? pickAll(data, locale) : null;
 }
