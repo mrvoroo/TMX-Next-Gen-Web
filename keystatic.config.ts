@@ -81,6 +81,51 @@ const consentFields = () => ({
   impressumLinkText: consentText('Legal notice link text'),
 });
 
+const contactText = (
+  label: string,
+  { multiline = false, legal = false } = {},
+) =>
+  fields.text({
+    label,
+    multiline,
+    ...(legal ? { description: CONSENT_RULE } : {}),
+  });
+
+const contactFields = () => ({
+  title: contactText('Title'),
+  intro: contactText('Intro', { multiline: true }),
+  labelEmail: contactText('Direct contact · E-mail label'),
+  labelPhone: contactText('Direct contact · Phone label'),
+  labelAddress: contactText('Direct contact · Address label'),
+  requiredNote: contactText('Required fields note'),
+  fieldName: contactText('Field · Name'),
+  fieldEmail: contactText('Field · E-mail'),
+  fieldService: contactText('Field · Service'),
+  serviceDefault: contactText('Service · default option'),
+  serviceGeneral: contactText('Service · general inquiry option'),
+  fieldMessage: contactText('Field · Message'),
+  checkbox: contactText('Checkbox ({{privacyLink}} = link to privacy page)', {
+    multiline: true,
+    legal: true,
+  }),
+  privacyLinkText: contactText('Privacy link text'),
+  hint: contactText('Hint under button ({{privacyLink}} = link to privacy page)', {
+    multiline: true,
+    legal: true,
+  }),
+  button: contactText('Button'),
+  sending: contactText('Button while sending'),
+  success: contactText('Success message', { multiline: true }),
+  error: contactText('Error message ({{email}} = company e-mail)', {
+    multiline: true,
+    legal: true,
+  }),
+  valRequired: contactText('Validation · required'),
+  valEmail: contactText('Validation · e-mail'),
+  valCheckbox: contactText('Validation · checkbox'),
+  metaDescription: contactText('Meta description', { multiline: true }),
+});
+
 export default config({
   storage: { kind: 'local' },
   singletons: {
@@ -156,6 +201,15 @@ export default config({
           { disclaimer: legalText('Disclaimer', true), ...datenschutzFields() },
           { label: 'EN (convenience translation)' },
         ),
+      },
+    }),
+    contactPage: singleton({
+      label: 'Kontakt page',
+      path: 'content/pages/contact',
+      format: 'json',
+      schema: {
+        de: fields.object(contactFields(), { label: 'DE' }),
+        en: fields.object(contactFields(), { label: 'EN' }),
       },
     }),
     consentBanner: singleton({

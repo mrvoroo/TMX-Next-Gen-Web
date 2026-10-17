@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { localizedMetadata, resolveLocale } from '@/lib/seo';
+import { getContactPage } from '@/lib/content';
 
-// page.tsx is a client component and cannot export metadata, so it lives here.
 export async function generateMetadata({
   params,
 }: {
@@ -10,11 +10,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = resolveLocale((await params).locale);
   const t = await getTranslations({ locale, namespace: 'meta' });
+  const page = await getContactPage();
 
   return localizedMetadata({
     locale,
     href: '/kontakt',
     title: t('kontaktTitle'),
+    description: page?.[locale].metaDescription,
   });
 }
 

@@ -69,10 +69,4 @@ export const SOCIAL_INSTAGRAM = '[[PENDING]]';
 /** Xing profile URL. */
 export const SOCIAL_XING = '[[PENDING]]';
 
-/**
- * Web3Forms access key.
- * Obtain a free key at https://web3forms.com/ and paste it here.
- */
-export const WEB3FORMS_ACCESS_KEY = '[[PENDING]]';
-
 export const COMPANY_BRAND = 'TMX';

@@ -19,3 +19,7 @@ export async function getDatenschutz() {
 export async function getConsentBanner() {
   return reader.singletons.consentBanner.read();
 }
+
+export async function getContactPage() {
+  return reader.singletons.contactPage.read();
+}
