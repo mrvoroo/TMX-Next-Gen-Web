@@ -86,3 +86,7 @@ export async function getServicesSection(
     it: { ...c.it, items: pillarOf('it-beratung') },
   };
 }
+
+export async function getContactPage() {
+  return reader.singletons.contactPage.read();
+}

@@ -1,263 +1,110 @@
-'use client';
-
 /**
  * /kontakt  —  Kontakt / Contact
  *
- * Web3Forms integration (https://web3forms.com/).
- * The access key lives in src/config/company.ts → WEB3FORMS_ACCESS_KEY.
- * No server actions needed — Web3Forms handles submission via their API.
+ * Server Component, static. Text comes from content/pages/contact.json
+ * (Keystatic singleton "contactPage", one block per locale). Company values
+ * come from content/settings/company.json. Only the current locale is
+ * rendered; the interactive form is the small client component ContactForm.
  *
- * Form fields: Name, E-Mail, Betreff, Nachricht, GDPR checkbox.
- * DE labels are primary; EN equivalents shown as placeholders/sublabels.
- *
- * Note: no existing Web3Forms integration was found anywhere in the codebase;
- * this is the first implementation.
+ * "[[PENDING]]" company values render visibly as-is.
  */
 
-import { useState } from 'react';
-import { Link } from '@/i18n/navigation';
-import { WEB3FORMS_ACCESS_KEY, COMPANY_EMAIL } from '@/config/company';
+import { setRequestLocale } from 'next-intl/server';
+import { resolveLocale } from '@/lib/seo';
+import { getCompany, getContactPage } from '@/lib/content';
+import { ContactForm } from './ContactForm';
 
-// Metadata cannot be exported from a 'use client' component.
-// Create a separate metadata.ts or move to a server wrapper if needed.
-// For now the <head> title is handled by the layout.
+const isPending = (value: string) => value.startsWith('[[');
 
-type FormState = 'idle' | 'submitting' | 'success' | 'error';
+function ContactValue({
+  value,
+  scheme,
+}: {
+  value: string;
+  scheme: 'tel' | 'mailto';
+}) {
+  if (isPending(value)) return <>{value}</>;
+  const target = scheme === 'tel' ? value.replace(/\s+/g, '') : value;
+  return (
+    <a href={`${scheme}:${target}`} className="transition-colors hover:text-white">
+      {value}
+    </a>
+  );
+}
 
-export default function KontaktPage() {
-  const [state, setState] = useState<FormState>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
+export default async function KontaktPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: rawLocale } = await params;
+  setRequestLocale(rawLocale);
+  const locale = resolveLocale(rawLocale);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setState('submitting');
-    setErrorMsg('');
+  const [page, company] = await Promise.all([getContactPage(), getCompany()]);
+  if (!page || !company) return null;
 
-    const formData = new FormData(e.currentTarget);
+  const c = page[locale];
 
-    // Web3Forms requires the access_key field in the payload.
-    // It is already a hidden input in the form; FormData picks it up automatically.
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData,
-      });
-      const json = await res.json();
-
-      if (json.success) {
-        setState('success');
-      } else {
-        setErrorMsg(json.message ?? 'Unbekannter Fehler');
-        setState('error');
-      }
-    } catch {
-      setErrorMsg('Netzwerkfehler. Bitte versuchen Sie es erneut.');
-      setState('error');
-    }
-  }
-
-  /* ── Success screen ──────────────────────────────────────────────────── */
-  if (state === 'success') {
-    return (
-      <div className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
-        <div className="mb-6 text-5xl">✉️</div>
-        <h1 className="mb-3 text-3xl font-black text-white">
-          Nachricht gesendet! / Message sent!
-        </h1>
-        <p className="mb-8 text-white/60">
-          Vielen Dank für Ihre Anfrage. Wir melden uns innerhalb von 24 Stunden.
-          <br />
-          <span className="text-white/40">
-            Thank you for your enquiry. We will be in touch within 24 hours.
-          </span>
-        </p>
-        <Link
-          href="/"
-          className="inline-block rounded-xl bg-violet-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
-        >
-          ← Zurück zur Startseite / Back to Home
-        </Link>
-      </div>
-    );
-  }
-
-  /* ── Form ────────────────────────────────────────────────────────────── */
   return (
     <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
-      <header className="mb-12">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
-          Kontakt / Contact
-        </p>
-        <h1 className="text-4xl font-black text-white sm:text-5xl">
-          Lassen Sie uns sprechen
-        </h1>
-        <p className="mt-3 text-white/50">
-          Let&apos;s talk. Schreiben Sie uns — wir antworten innerhalb von 24 Stunden.
-        </p>
-        <p className="mt-2 text-sm text-white/40">
-          Oder direkt per E-Mail:{' '}
-          <a
-            href={`mailto:${COMPANY_EMAIL}`}
-            className="text-cyan-400 hover:text-cyan-300 transition-colors"
-          >
-            {COMPANY_EMAIL}
-          </a>
-        </p>
+      <header className="mb-10">
+        <h1 className="text-4xl font-black text-white sm:text-5xl">{c.title}</h1>
+        <p className="mt-3 text-white/60">{c.intro}</p>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-        {/* Hidden Web3Forms fields */}
-        <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-        {/* Redirect back to the same page; Web3Forms ignores this for API calls */}
-        <input type="hidden" name="redirect" value="false" />
-        {/* Honeypot anti-spam */}
-        <input
-          type="checkbox"
-          name="botcheck"
-          className="hidden"
-          style={{ display: 'none' }}
-          tabIndex={-1}
-          aria-hidden="true"
-        />
-
-        {/* Name */}
+      <dl className="mb-10 grid gap-6 text-sm text-white/70 sm:grid-cols-3">
         <div>
-          <label htmlFor="name" className="mb-2 block text-sm font-medium text-white/80">
-            Name <span aria-hidden="true" className="text-violet-400">*</span>
-          </label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            required
-            autoComplete="name"
-            placeholder="Ihr vollständiger Name / Your full name"
-            className="
-              w-full rounded-xl border border-white/10 bg-white/5
-              px-4 py-3 text-sm text-white placeholder-white/25
-              transition-colors focus:border-violet-500 focus:outline-none
-              focus:ring-1 focus:ring-violet-500
-            "
-          />
+          <dt className="mb-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
+            {c.labelEmail}
+          </dt>
+          <dd className="break-words">
+            <ContactValue value={company.email} scheme="mailto" />
+          </dd>
         </div>
-
-        {/* E-Mail */}
         <div>
-          <label htmlFor="email" className="mb-2 block text-sm font-medium text-white/80">
-            E-Mail <span aria-hidden="true" className="text-violet-400">*</span>
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="ihre@email.de / you@email.com"
-            className="
-              w-full rounded-xl border border-white/10 bg-white/5
-              px-4 py-3 text-sm text-white placeholder-white/25
-              transition-colors focus:border-violet-500 focus:outline-none
-              focus:ring-1 focus:ring-violet-500
-            "
-          />
+          <dt className="mb-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
+            {c.labelPhone}
+          </dt>
+          <dd>
+            <ContactValue value={company.phone} scheme="tel" />
+          </dd>
         </div>
-
-        {/* Betreff */}
         <div>
-          <label htmlFor="subject" className="mb-2 block text-sm font-medium text-white/80">
-            Betreff / Subject <span aria-hidden="true" className="text-violet-400">*</span>
-          </label>
-          <input
-            id="subject"
-            name="subject"
-            type="text"
-            required
-            placeholder="Womit können wir Ihnen helfen? / How can we help you?"
-            className="
-              w-full rounded-xl border border-white/10 bg-white/5
-              px-4 py-3 text-sm text-white placeholder-white/25
-              transition-colors focus:border-violet-500 focus:outline-none
-              focus:ring-1 focus:ring-violet-500
-            "
-          />
-        </div>
-
-        {/* Nachricht */}
-        <div>
-          <label htmlFor="message" className="mb-2 block text-sm font-medium text-white/80">
-            Nachricht / Message <span aria-hidden="true" className="text-violet-400">*</span>
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            required
-            rows={6}
-            placeholder="Beschreiben Sie Ihr Projekt oder Ihre Anfrage... / Describe your project or enquiry..."
-            className="
-              w-full resize-y rounded-xl border border-white/10 bg-white/5
-              px-4 py-3 text-sm text-white placeholder-white/25
-              transition-colors focus:border-violet-500 focus:outline-none
-              focus:ring-1 focus:ring-violet-500
-            "
-          />
-        </div>
-
-        {/* GDPR checkbox */}
-        <div className="flex items-start gap-3">
-          <input
-            id="gdpr"
-            name="gdpr"
-            type="checkbox"
-            required
-            className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-white/5 accent-violet-500"
-          />
-          <label htmlFor="gdpr" className="text-xs text-white/50 leading-relaxed">
-            Ich habe die{' '}
-            <Link
-              href="/datenschutz"
-              className="underline underline-offset-2 hover:text-white transition-colors"
-            >
-              Datenschutzerklärung
-            </Link>{' '}
-            gelesen und stimme der Verarbeitung meiner Daten zu.
-            {' '}
-            <span className="text-white/30">
-              I have read the{' '}
-              <Link
-                href="/datenschutz"
-                className="underline underline-offset-2 hover:text-white/50 transition-colors"
-              >
-                privacy policy
-              </Link>{' '}
-              and consent to the processing of my data.
+          <dt className="mb-1 text-xs font-semibold uppercase tracking-widest text-violet-400">
+            {c.labelAddress}
+          </dt>
+          <dd>
+            <span className="block">{company.street}</span>
+            <span className="block">
+              {company.zip} {company.city}
             </span>
-          </label>
+          </dd>
         </div>
+      </dl>
 
-        {/* Error message */}
-        {state === 'error' && (
-          <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
-            Fehler beim Senden: {errorMsg}
-          </p>
-        )}
+      <p className="mb-6 text-sm text-white/50">{c.requiredNote}</p>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={state === 'submitting'}
-          className="
-            w-full rounded-xl bg-violet-600 px-8 py-4 text-sm font-semibold
-            text-white transition-all hover:bg-violet-500
-            disabled:cursor-not-allowed disabled:opacity-50
-            focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2
-            focus:ring-offset-[#050508]
-          "
-        >
-          {state === 'submitting'
-            ? 'Wird gesendet… / Sending…'
-            : 'Nachricht senden / Send message'}
-        </button>
-      </form>
+      <ContactForm
+        texts={{
+          fieldName: c.fieldName,
+          fieldEmail: c.fieldEmail,
+          fieldService: c.fieldService,
+          serviceDefault: c.serviceDefault,
+          serviceGeneral: c.serviceGeneral,
+          fieldMessage: c.fieldMessage,
+          checkbox: c.checkbox,
+          privacyLinkText: c.privacyLinkText,
+          hint: c.hint,
+          button: c.button,
+          sending: c.sending,
+          success: c.success,
+          error: c.error.replaceAll('{{email}}', company.email),
+          valRequired: c.valRequired,
+          valEmail: c.valEmail,
+          valCheckbox: c.valCheckbox,
+        }}
+      />
     </div>
   );
 }
