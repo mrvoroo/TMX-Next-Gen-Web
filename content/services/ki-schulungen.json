@@ -1,0 +1,11 @@
+{
+  "slug": "ki-schulungen",
+  "pillar": "ki",
+  "order": 4,
+  "visible": true,
+  "name": {
+    "en": "Training and workshops on AI applications",
+    "de": "Schulungen und Workshops zu KI-Anwendungen"
+  },
+  "icon": "GraduationCap"
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "datenanalyse-ki",
+  "pillar": "digitales-marketing",
+  "order": 2,
+  "visible": true,
+  "name": {
+    "en": "Data analysis and evaluation with AI support",
+    "de": "Datenanalyse und Auswertung mit KI-Unterstützung"
+  },
+  "icon": "BarChart2"
+}

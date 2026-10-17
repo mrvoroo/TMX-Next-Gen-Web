@@ -1,0 +1,11 @@
+{
+  "slug": "digitale-systeme-dashboards",
+  "pillar": "entwicklung",
+  "order": 4,
+  "visible": true,
+  "name": {
+    "en": "Building digital systems and dashboards",
+    "de": "Aufbau digitaler Systeme und Dashboards"
+  },
+  "icon": "LayoutDashboard"
+}

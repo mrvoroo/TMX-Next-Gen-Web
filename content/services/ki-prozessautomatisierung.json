@@ -1,0 +1,11 @@
+{
+  "slug": "ki-prozessautomatisierung",
+  "pillar": "ki",
+  "order": 6,
+  "visible": true,
+  "name": {
+    "en": "Process automation with AI",
+    "de": "Prozessautomatisierung mit KI"
+  },
+  "icon": "RefreshCw"
+}

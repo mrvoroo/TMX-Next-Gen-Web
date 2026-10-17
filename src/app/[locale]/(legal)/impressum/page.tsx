@@ -23,14 +23,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = resolveLocale((await params).locale);
   const t = await getTranslations({ locale, namespace: 'meta' });
-  const impressum = await getImpressum();
+  const impressum = await getImpressum(locale);
 
   return {
     ...localizedMetadata({
       locale,
       href: '/impressum',
       title: t('impressumTitle'),
-      description: impressum?.[locale].metaDescription,
+      description: impressum?.metaDescription,
     }),
     robots: { index: false, follow: false },
   };
@@ -70,12 +70,11 @@ export default async function ImpressumPage({
   setRequestLocale(rawLocale);
   const locale = resolveLocale(rawLocale);
 
-  const [impressum, company] = await Promise.all([getImpressum(), getCompany()]);
+  const [impressum, company] = await Promise.all([getImpressum(locale), getCompany()]);
   if (!impressum || !company) return null;
 
   const isEn = locale === 'en';
-  const en = impressum.en;
-  const c = impressum[locale];
+  const c = impressum;
   const f = (text: string) => fill(text, company);
 
   const phone = company.phone;
@@ -84,7 +83,7 @@ export default async function ImpressumPage({
   return (
     <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
       {isEn && (
-        <p className="mb-8 text-sm italic text-white/50">{en.disclaimer}</p>
+        <p className="mb-8 text-sm italic text-white/50">{c.disclaimer}</p>
       )}
 
       <header className="mb-12">

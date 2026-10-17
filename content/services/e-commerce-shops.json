@@ -1,0 +1,11 @@
+{
+  "slug": "e-commerce-shops",
+  "pillar": "entwicklung",
+  "order": 3,
+  "visible": true,
+  "name": {
+    "en": "Building and maintaining e-commerce shops",
+    "de": "Erstellung und Betreuung von E-Commerce-Shops"
+  },
+  "icon": "ShoppingCart"
+}

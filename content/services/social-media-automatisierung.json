@@ -1,0 +1,11 @@
+{
+  "slug": "social-media-automatisierung",
+  "pillar": "digitales-marketing",
+  "order": 1,
+  "visible": true,
+  "name": {
+    "en": "Automation of social media processes",
+    "de": "Automatisierung von Social-Media-Prozessen"
+  },
+  "icon": "Share2"
+}

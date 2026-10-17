@@ -56,7 +56,7 @@ export default async function RootLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const consentBanner = await getConsentBanner();
+  const consentBanner = await getConsentBanner(resolveLocale(locale));
 
   return (
     <html lang={locale} className="dark h-full">
@@ -80,7 +80,7 @@ export default async function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
-          {consentBanner ? <ConsentBanner content={consentBanner[locale]} /> : null}
+          {consentBanner ? <ConsentBanner content={consentBanner} /> : null}
           <ConsentScripts />
         </NextIntlClientProvider>
       </body>

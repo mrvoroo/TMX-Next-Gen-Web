@@ -1,0 +1,11 @@
+{
+  "slug": "ki-beratung",
+  "pillar": "ki",
+  "order": 3,
+  "visible": true,
+  "name": {
+    "en": "AI consulting and strategy development",
+    "de": "KI-Beratung und Strategieentwicklung"
+  },
+  "icon": "Lightbulb"
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "it-dienstleistungen",
+  "pillar": "it-beratung",
+  "order": 1,
+  "visible": true,
+  "name": {
+    "en": "IT services",
+    "de": "IT-Dienstleistungen"
+  },
+  "icon": "Server"
+}

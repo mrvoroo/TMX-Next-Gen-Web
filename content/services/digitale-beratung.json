@@ -1,0 +1,11 @@
+{
+  "slug": "digitale-beratung",
+  "pillar": "it-beratung",
+  "order": 2,
+  "visible": true,
+  "name": {
+    "en": "Digital consulting",
+    "de": "[[PENDING]]"
+  },
+  "icon": "Compass"
+}

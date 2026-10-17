@@ -1,0 +1,11 @@
+{
+  "slug": "app-entwicklung",
+  "pillar": "entwicklung",
+  "order": 2,
+  "visible": true,
+  "name": {
+    "en": "App development",
+    "de": "App-Entwicklung"
+  },
+  "icon": "Smartphone"
+}

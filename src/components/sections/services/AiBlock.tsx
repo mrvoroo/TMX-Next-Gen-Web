@@ -2,21 +2,14 @@
 
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
-import {
-  Brain,
-  Cpu,
-  MessageSquare,
-  RefreshCw,
-  Bot,
-  BarChart2,
-  type LucideIcon,
-} from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/useTranslation';
+import type { LucideIcon } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useStaggerReveal } from '@/hooks/useStaggerReveal';
-import { translations } from '@/lib/i18n/translations';
 import { cn } from '@/lib/utils';
 import type { AiParticlesProps } from '@/components/three/AiParticles';
+import { getServiceIcon } from './icons';
+import { ServiceGrid } from './ServiceGrid';
+import type { PillarBlockProps } from './types';
 
 /*
  * Lazy-load the R3F canvas — same pattern as ParticleNetwork in HeroSection.
@@ -27,20 +20,20 @@ const AiParticles = dynamic<AiParticlesProps>(
   { ssr: false, loading: () => null },
 );
 
-/* ── Icon order matches translations.ts services.ai.items order ─────────── */
-const ICONS: LucideIcon[] = [Brain, Cpu, MessageSquare, RefreshCw, Bot, BarChart2];
-
 /* ── Individual card (extracted so Icon can be a capitalised JSX component) */
 interface AiCardProps {
   Icon: LucideIcon;
   label: string;
+  slug: string;
   cardRef: (el: HTMLDivElement | null) => void;
 }
 
-function AiCard({ Icon, label, cardRef }: AiCardProps) {
+function AiCard({ Icon, label, slug, cardRef }: AiCardProps) {
   return (
     <div
       ref={cardRef}
+      id={slug}
+      data-slug={slug}
       className={cn(
         'relative flex flex-col gap-4 rounded-2xl p-6 min-w-0',
         'border border-cyan-500/10 bg-cyan-500/[0.03]',
@@ -60,13 +53,10 @@ function AiCard({ Icon, label, cardRef }: AiCardProps) {
   );
 }
 
-export function AiBlock() {
-  const { t, locale } = useTranslation();
+export function AiBlock({ title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  const items = translations[locale].services.ai.items;
 
   /*
    * Shared progressive-enhancement reveal hook.
@@ -98,27 +88,28 @@ export function AiBlock() {
         {/* Block header */}
         <div className="mb-12">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400/60">
-            02
+            {number}
           </p>
           <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {t('services.ai.title')}
+            {title}
           </h3>
           <p className="text-sm text-white/45 sm:text-base">
-            {t('services.ai.sub')}
+            {sub}
           </p>
         </div>
 
-        {/* 6 cards — 1-col mobile → 2-col sm → 3-col md+ */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {/* cards — 1-col mobile → 2-col sm → 3-col md+, incomplete last row centred */}
+        <ServiceGrid>
           {items.map((item, i) => (
             <AiCard
-              key={item}
-              Icon={ICONS[i]}
-              label={item}
+              key={item.slug}
+              slug={item.slug}
+              Icon={getServiceIcon(item.icon)}
+              label={item.name}
               cardRef={(el) => { cardRefs.current[i] = el; }}
             />
           ))}
-        </div>
+        </ServiceGrid>
       </div>
     </div>
   );

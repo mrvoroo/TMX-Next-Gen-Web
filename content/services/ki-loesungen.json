@@ -1,0 +1,11 @@
+{
+  "slug": "ki-loesungen",
+  "pillar": "ki",
+  "order": 1,
+  "visible": true,
+  "name": {
+    "en": "Development and implementation of AI-powered solutions, tools and applications",
+    "de": "Entwicklung und Implementierung KI-gestützter Lösungen, Tools und Anwendungen"
+  },
+  "icon": "Brain"
+}

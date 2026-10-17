@@ -1,0 +1,11 @@
+{
+  "slug": "ki-kundenservice",
+  "pillar": "ki",
+  "order": 5,
+  "visible": true,
+  "name": {
+    "en": "AI-powered customer service automation",
+    "de": "KI-gestützte Kundenservice-Automatisierung"
+  },
+  "icon": "Bot"
+}

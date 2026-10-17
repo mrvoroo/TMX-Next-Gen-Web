@@ -1,0 +1,50 @@
+{
+  "heading": {
+    "en": "Our Services",
+    "de": "Unsere Leistungen"
+  },
+  "sub": {
+    "en": "Four pillars of digital excellence",
+    "de": "Vier Säulen digitaler Exzellenz"
+  },
+  "dev": {
+    "title": {
+      "en": "Development",
+      "de": "Entwicklung"
+    },
+    "sub": {
+      "en": "Tailored software and web solutions",
+      "de": "Maßgeschneiderte Software- und Weblösungen"
+    }
+  },
+  "ai": {
+    "title": {
+      "en": "Artificial Intelligence",
+      "de": "Künstliche Intelligenz"
+    },
+    "sub": {
+      "en": "Intelligent automation and AI solutions",
+      "de": "Intelligente Automatisierung und KI-Lösungen"
+    }
+  },
+  "marketing": {
+    "title": {
+      "en": "Digital Marketing",
+      "de": "Digitales Marketing"
+    },
+    "sub": {
+      "en": "Reach, relevance, and measurable outcomes",
+      "de": "Reichweite, Relevanz und messbare Ergebnisse"
+    }
+  },
+  "it": {
+    "title": {
+      "en": "IT & Consulting",
+      "de": "IT & Beratung"
+    },
+    "sub": {
+      "en": "Technology consulting and IT infrastructure",
+      "de": "Technologieberatung und IT-Infrastruktur"
+    }
+  }
+}

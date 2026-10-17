@@ -1,0 +1,11 @@
+{
+  "slug": "webentwicklung-webdesign",
+  "pillar": "entwicklung",
+  "order": 1,
+  "visible": true,
+  "name": {
+    "en": "Web development / web design",
+    "de": "Webentwicklung / Webdesign"
+  },
+  "icon": "Globe"
+}

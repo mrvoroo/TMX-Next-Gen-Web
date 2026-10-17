@@ -24,14 +24,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const locale = resolveLocale((await params).locale);
   const t = await getTranslations({ locale, namespace: 'meta' });
-  const datenschutz = await getDatenschutz();
+  const datenschutz = await getDatenschutz(locale);
 
   return {
     ...localizedMetadata({
       locale,
       href: '/datenschutz',
       title: t('datenschutzTitle'),
-      description: datenschutz?.[locale].metaDescription,
+      description: datenschutz?.metaDescription,
     }),
     robots: { index: false, follow: false },
   };
@@ -67,12 +67,12 @@ export default async function DatenschutzPage({
   const locale = resolveLocale(rawLocale);
 
   const [datenschutz, company] = await Promise.all([
-    getDatenschutz(),
+    getDatenschutz(locale),
     getCompany(),
   ]);
   if (!datenschutz || !company) return null;
 
-  const c = datenschutz[locale];
+  const c = datenschutz;
 
   // Visibility and highlighting are driven only by each section's own fields.
   const visible = c.sections.filter(
@@ -84,7 +84,7 @@ export default async function DatenschutzPage({
     <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
       {locale === 'en' && (
         <p className="mb-8 text-sm italic text-white/50">
-          {datenschutz.en.disclaimer}
+          {c.disclaimer}
         </p>
       )}
 

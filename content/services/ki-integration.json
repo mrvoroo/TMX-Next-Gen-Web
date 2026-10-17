@@ -1,0 +1,11 @@
+{
+  "slug": "ki-integration",
+  "pillar": "ki",
+  "order": 2,
+  "visible": true,
+  "name": {
+    "en": "Integration of AI into existing systems and processes",
+    "de": "Integration von KI in bestehende Systeme und Prozesse"
+  },
+  "icon": "Cpu"
+}

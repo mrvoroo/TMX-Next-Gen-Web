@@ -1,0 +1,11 @@
+{
+  "slug": "ki-content",
+  "pillar": "digitales-marketing",
+  "order": 3,
+  "visible": true,
+  "name": {
+    "en": "AI-powered content creation",
+    "de": "KI-gestützte Content-Erstellung"
+  },
+  "icon": "FileText"
+}

@@ -1,37 +1,107 @@
-import { config, fields, singleton } from '@keystatic/core';
+import { collection, config, fields, singleton } from '@keystatic/core';
+import { SERVICE_ICON_NAMES } from './src/config/service-icons';
+
+/* ── Localized fields ─────────────────────────────────────────────────────
+ * Every translatable value is ONE block: English on top, German directly
+ * below. Stored as { en, de }. Read with pick() from src/lib/localized.ts.
+ */
+
+type LocalizedKind = 'legal' | 'official' | 'normal';
+
+const DE_DESCRIPTION: Record<LocalizedKind, string> = {
+  legal:
+    'German = legally binding text. Do NOT change without lawyer review. Changing English does NOT update German.',
+  official:
+    'Official term from the business registration. Do not change.',
+  normal:
+    'German version. Changing English does NOT update German — update both.',
+};
+
+const localized = (
+  label: string,
+  options: {
+    multiline?: boolean;
+    kind?: LocalizedKind;
+    description?: string;
+  } = {},
+) => {
+  const { multiline = false, kind = 'normal', description } = options;
+  return fields.object(
+    {
+      en: fields.text({ label: 'English', multiline }),
+      de: fields.text({
+        label: 'German',
+        multiline,
+        description: DE_DESCRIPTION[kind],
+      }),
+    },
+    { label, description },
+  );
+};
+
+const SLUG_RULE = 'Do not change after launch';
 
 const PENDING_RULE =
   '"[[PENDING]]" = not provided yet (shown visibly on the site). Empty = does not apply (block hidden).';
 
 const LEGAL_RULE = 'Legally binding text. Any change requires lawyer review.';
 
-const legalText = (label: string, multiline = false) =>
-  fields.text({ label, description: LEGAL_RULE, multiline });
+const servicePillarFields = () => ({
+  title: localized('Title'),
+  sub: localized('Subtitle'),
+});
+
+const servicesSectionFields = () => ({
+  heading: localized('Heading'),
+  sub: localized('Subheading'),
+  dev: fields.object(servicePillarFields(), { label: 'Pillar · Development' }),
+  ai: fields.object(servicePillarFields(), {
+    label: 'Pillar · Artificial Intelligence',
+  }),
+  marketing: fields.object(servicePillarFields(), {
+    label: 'Pillar · Digital Marketing',
+  }),
+  it: fields.object(servicePillarFields(), {
+    label: 'Pillar · IT & Consulting',
+  }),
+});
+
+const legal = (label: string, multiline = false) =>
+  localized(label, { multiline, kind: 'legal' });
+
+const englishDisclaimer = () =>
+  fields.text({
+    label: 'English disclaimer (EN page only)',
+    description: LEGAL_RULE,
+    multiline: true,
+  });
 
 const impressumFields = () => ({
-  title: legalText('Title'),
-  intro: legalText('Intro (§ 5 line)'),
-  addressBlock: legalText('Address block', true),
-  representedBy: legalText('Represented by', true),
-  contactHeading: legalText('Contact heading'),
-  phoneLabel: legalText('Phone label'),
-  emailLabel: legalText('E-mail label'),
-  registerLine: legalText('Register line', true),
-  vatLine: legalText('VAT line', true),
-  mstvLine: legalText('MStV line', true),
-  consumerDispute: legalText('Consumer dispute', true),
-  externalLinks: legalText('External links', true),
-  copyright: legalText('Copyright', true),
-  metaDescription: legalText('Meta description', true),
+  disclaimer: englishDisclaimer(),
+  title: legal('Title'),
+  intro: legal('Intro (§ 5 line)'),
+  addressBlock: legal('Address block', true),
+  representedBy: legal('Represented by', true),
+  contactHeading: legal('Contact heading'),
+  phoneLabel: legal('Phone label'),
+  emailLabel: legal('E-mail label'),
+  registerLine: legal('Register line', true),
+  vatLine: legal('VAT line', true),
+  mstvLine: legal('MStV line', true),
+  consumerDispute: legal('Consumer dispute', true),
+  externalLinks: legal('External links', true),
+  copyright: legal('Copyright', true),
+  metaDescription: legal('Meta description', true),
 });
 
 const datenschutzFields = () => ({
-  title: legalText('Title'),
-  lastUpdatedLine: legalText('Last updated line'),
+  disclaimer: englishDisclaimer(),
+  title: legal('Title'),
+  lastUpdatedLine: legal('Last updated line'),
   sections: fields.array(
     fields.object({
-      title: legalText('Section title (without number)'),
-      body: legalText('Section body', true),
+      title: legal('Section title (without number)'),
+      body: legal('Section body', true),
       showIf: fields.select({
         label: 'Show if',
         description: LEGAL_RULE,
@@ -50,35 +120,34 @@ const datenschutzFields = () => ({
     {
       label: 'Sections',
       description: LEGAL_RULE,
-      itemLabel: (props) => props.fields.title.value || 'Section',
+      itemLabel: (props) => props.fields.title.fields.en.value || 'Section',
     },
   ),
-  metaDescription: legalText('Meta description', true),
+  metaDescription: legal('Meta description', true),
 });
 
-const CONSENT_RULE =
-  'Legally relevant text. Any change requires lawyer review.';
-
-const consentText = (label: string, multiline = false) =>
-  fields.text({ label, description: CONSENT_RULE, multiline });
-
+/* Order = order of appearance: first layer, then settings layer. */
 const consentFields = () => ({
-  headline: consentText('Headline'),
-  body: consentText('Body ({{privacyLink}} = link to privacy page)', true),
-  rejectAll: consentText('Reject all'),
-  settings: consentText('Settings'),
-  acceptAll: consentText('Accept all'),
-  settingsHeading: consentText('Settings heading'),
-  necessaryTitle: consentText('Necessary · title'),
-  necessaryBadge: consentText('Necessary · badge'),
-  necessaryText: consentText('Necessary · text', true),
-  analyticsTitle: consentText('Analytics · title'),
-  analyticsText: consentText('Analytics · text', true),
-  marketingTitle: consentText('Marketing · title'),
-  marketingText: consentText('Marketing · text', true),
-  saveSelection: consentText('Save selection'),
-  privacyLinkText: consentText('Privacy link text'),
-  impressumLinkText: consentText('Legal notice link text'),
+  headline: legal('Headline'),
+  body: localized('Body', {
+    multiline: true,
+    kind: 'legal',
+    description: '{{privacyLink}} = link to the privacy policy page.',
+  }),
+  rejectAll: legal('Reject all button'),
+  settings: legal('Settings button'),
+  acceptAll: legal('Accept all button'),
+  privacyLinkText: legal('Privacy policy link text'),
+  impressumLinkText: legal('Legal notice link text'),
+  settingsHeading: legal('Settings heading'),
+  necessaryTitle: legal('Necessary · title'),
+  necessaryBadge: legal('Necessary · badge'),
+  necessaryText: legal('Necessary · text', true),
+  analyticsTitle: legal('Analytics · title'),
+  analyticsText: legal('Analytics · text', true),
+  marketingTitle: legal('Marketing · title'),
+  marketingText: legal('Marketing · text', true),
+  saveSelection: legal('Save selection button'),
 });
 
 export default config({
@@ -90,17 +159,17 @@ export default config({
       format: 'json',
       schema: {
         brand: fields.text({ label: 'Brand', defaultValue: 'TMX' }),
-        name: fields.text({ label: 'Name' }),
+        name: fields.text({ label: 'Company name' }),
         legalForm: fields.text({ label: 'Legal form' }),
         street: fields.text({ label: 'Street' }),
-        zip: fields.text({ label: 'ZIP' }),
+        zip: fields.text({ label: 'ZIP code' }),
         city: fields.text({ label: 'City' }),
         representative: fields.text({
-          label: 'Representative',
+          label: 'Authorised representative',
           description: PENDING_RULE,
         }),
-        email: fields.text({ label: 'Email' }),
-        phone: fields.text({ label: 'Phone' }),
+        email: fields.text({ label: 'E-mail address' }),
+        phone: fields.text({ label: 'Phone number' }),
         registerCourt: fields.text({
           label: 'Register court',
           description: PENDING_RULE,
@@ -113,58 +182,107 @@ export default config({
           label: 'VAT ID',
           description: PENDING_RULE,
         }),
-        emailProvider: fields.text({ label: 'Email provider' }),
+        emailProvider: fields.text({ label: 'E-mail provider' }),
         supervisoryAuthority: fields.text({ label: 'Supervisory authority' }),
-        logRetention: fields.text({ label: 'Log retention' }),
-        lastUpdated: fields.text({ label: 'Last updated' }),
+        logRetention: fields.text({ label: 'Server log retention period' }),
+        lastUpdated: fields.text({
+          label: 'Privacy policy last updated',
+          description: 'Inserted where the texts use {{lastUpdated}}.',
+        }),
         socialLinkedin: fields.text({ label: 'LinkedIn URL' }),
         socialInstagram: fields.text({ label: 'Instagram URL' }),
         socialXing: fields.text({ label: 'Xing URL' }),
         showMstvResponsible: fields.checkbox({
           label: 'Show MStV responsible person',
+          description: 'Shows the MStV line on the legal notice page.',
           defaultValue: true,
         }),
         showConsumerDispute: fields.checkbox({
           label: 'Show consumer dispute notice',
+          description: 'Shows the consumer dispute line on the legal notice page.',
           defaultValue: false,
         }),
         hasSocialProfiles: fields.checkbox({
           label: 'Has social profiles',
+          description:
+            'Shows the privacy policy sections marked "Company has social profiles".',
           defaultValue: false,
         }),
       },
     }),
     legalImpressum: singleton({
-      label: 'Legal · Impressum',
+      label: 'Legal · Legal notice (Impressum)',
       path: 'content/legal/impressum',
       format: 'json',
-      schema: {
-        de: fields.object(impressumFields(), { label: 'DE (binding)' }),
-        en: fields.object(
-          { disclaimer: legalText('Disclaimer', true), ...impressumFields() },
-          { label: 'EN (convenience translation)' },
-        ),
-      },
+      schema: impressumFields(),
     }),
     legalDatenschutz: singleton({
-      label: 'Legal · Datenschutz',
+      label: 'Legal · Privacy policy (Datenschutz)',
       path: 'content/legal/datenschutz',
       format: 'json',
-      schema: {
-        de: fields.object(datenschutzFields(), { label: 'DE (binding)' }),
-        en: fields.object(
-          { disclaimer: legalText('Disclaimer', true), ...datenschutzFields() },
-          { label: 'EN (convenience translation)' },
-        ),
-      },
+      schema: datenschutzFields(),
     }),
     consentBanner: singleton({
       label: 'Legal · Consent banner',
       path: 'content/legal/consent-banner',
       format: 'json',
+      schema: consentFields(),
+    }),
+    servicesSection: singleton({
+      label: 'Home · Services',
+      path: 'content/home/services',
+      format: 'json',
+      schema: servicesSectionFields(),
+    }),
+  },
+  collections: {
+    services: collection({
+      label: 'Services',
+      path: 'content/services/*',
+      format: 'json',
+      slugField: 'slug',
       schema: {
-        de: fields.object(consentFields(), { label: 'DE' }),
-        en: fields.object(consentFields(), { label: 'EN' }),
+        slug: fields.slug({
+          name: {
+            label: 'Slug',
+            description: `Stable ID, lowercase, used as URL anchor. ${SLUG_RULE}.`,
+            validation: {
+              isRequired: true,
+              pattern: {
+                regex: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+                message: 'Lowercase letters, digits and hyphens only.',
+              },
+            },
+          },
+          slug: {
+            label: 'Slug (file name)',
+            description: SLUG_RULE,
+          },
+        }),
+        pillar: fields.select({
+          label: 'Pillar',
+          options: [
+            { label: 'Development', value: 'entwicklung' },
+            { label: 'Artificial Intelligence', value: 'ki' },
+            { label: 'Digital Marketing', value: 'digitales-marketing' },
+            { label: 'IT & Consulting', value: 'it-beratung' },
+          ],
+          defaultValue: 'entwicklung',
+        }),
+        order: fields.integer({
+          label: 'Order (within pillar)',
+          defaultValue: 1,
+        }),
+        visible: fields.checkbox({ label: 'Visible', defaultValue: true }),
+        name: localized('Name', { kind: 'official' }),
+        icon: fields.select({
+          label: 'Icon (lucide)',
+          options: SERVICE_ICON_NAMES.map((name) => ({
+            label: name,
+            value: name,
+          })),
+          defaultValue: 'Globe',
+        }),
       },
     }),
   },

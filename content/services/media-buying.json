@@ -1,0 +1,11 @@
+{
+  "slug": "media-buying",
+  "pillar": "digitales-marketing",
+  "order": 4,
+  "visible": true,
+  "name": {
+    "en": "Media buying and placement of digital advertising",
+    "de": "Mediaeinkauf und Schaltung digitaler Werbung (Media Buying)"
+  },
+  "icon": "Megaphone"
+}
