@@ -23,16 +23,22 @@ const localized = (
     multiline?: boolean;
     kind?: LocalizedKind;
     description?: string;
+    defaults?: { en: string; de: string };
   } = {},
 ) => {
-  const { multiline = false, kind = 'normal', description } = options;
+  const { multiline = false, kind = 'normal', description, defaults } = options;
   return fields.object(
     {
-      en: fields.text({ label: 'English', multiline }),
+      en: fields.text({
+        label: 'English',
+        multiline,
+        defaultValue: defaults?.en,
+      }),
       de: fields.text({
         label: 'German',
         multiline,
         description: DE_DESCRIPTION[kind],
+        defaultValue: defaults?.de,
       }),
     },
     { label, description },
@@ -63,6 +69,24 @@ const servicesSectionFields = () => ({
   }),
   it: fields.object(servicePillarFields(), {
     label: 'Pillar · IT & Consulting',
+  }),
+});
+
+const portfolioSectionFields = () => ({
+  heading: localized('Heading', {
+    defaults: { en: 'Selected projects', de: 'Ausgewählte Projekte' },
+  }),
+  sub: localized('Subheading', {
+    defaults: {
+      en: 'A look at completed projects.',
+      de: 'Ein Einblick in umgesetzte Projekte.',
+    },
+  }),
+  linkLabel: localized('Project link label', {
+    defaults: { en: 'View project', de: 'Projekt ansehen' },
+  }),
+  founderBadge: localized('Founder badge', {
+    defaults: { en: "Founder's project", de: 'Projekt des Gründers' },
   }),
 });
 
@@ -278,8 +302,82 @@ export default config({
       format: 'json',
       schema: servicesSectionFields(),
     }),
+    portfolioSection: singleton({
+      label: 'Home · Portfolio',
+      path: 'content/home/portfolio',
+      format: 'json',
+      schema: portfolioSectionFields(),
+    }),
   },
   collections: {
+    projects: collection({
+      label: 'Portfolio projects',
+      path: 'content/projects/*',
+      format: 'json',
+      slugField: 'slug',
+      schema: {
+        slug: fields.slug({
+          name: {
+            label: 'Slug',
+            description: `Stable ID, lowercase. ${SLUG_RULE}.`,
+            validation: {
+              isRequired: true,
+              pattern: {
+                regex: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+                message: 'Lowercase letters, digits and hyphens only.',
+              },
+            },
+          },
+          slug: {
+            label: 'Slug (file name)',
+            description: SLUG_RULE,
+          },
+        }),
+        title: localized('Title'),
+        description: localized('Description', {
+          multiline: true,
+          description:
+            'Max. ~160 characters. Facts only, no invented results.',
+        }),
+        image: fields.image({
+          label: 'Screenshot',
+          directory: 'public/images/portfolio',
+          publicPath: '/images/portfolio/',
+          validation: { isRequired: true },
+        }),
+        imageAlt: localized('Image alt text'),
+        url: fields.text({
+          label: 'Project URL (optional)',
+          description: 'Must start with https://',
+          validation: {
+            pattern: {
+              regex: /^(https:\/\/\S+)?$/,
+              message: 'Must start with https://',
+            },
+          },
+        }),
+        techTags: fields.array(fields.text({ label: 'Tag' }), {
+          label: 'Tech tags',
+          description: 'e.g. "Next.js"',
+          itemLabel: (props) => props.value || 'Tag',
+        }),
+        origin: fields.select({
+          label: 'Origin',
+          options: [
+            { label: 'TMX project', value: 'tmx' },
+            { label: 'Founder project (before TMX)', value: 'founder' },
+          ],
+          defaultValue: 'tmx',
+        }),
+        clientPermission: fields.checkbox({
+          label: 'Client permission',
+          description: "Show only with the client's (written) permission.",
+          defaultValue: false,
+        }),
+        visible: fields.checkbox({ label: 'Visible', defaultValue: true }),
+        order: fields.integer({ label: 'Order', defaultValue: 1 }),
+      },
+    }),
     services: collection({
       label: 'Services',
       path: 'content/services/*',

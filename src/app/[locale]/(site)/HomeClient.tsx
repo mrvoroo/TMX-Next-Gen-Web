@@ -5,12 +5,15 @@ import { Preloader, hasPreloaderPlayed } from '@/components/sections/Preloader';
 import { HeroSection }   from '@/components/sections/HeroSection';
 import { AboutSection }    from '@/components/sections/AboutSection';
 import { ServicesSection } from '@/components/sections/ServicesSection';
-import type { ServicesSectionData } from '@/lib/content';
+import { PortfolioSection } from '@/components/sections/PortfolioSection';
+import type { PortfolioSectionData, ServicesSectionData } from '@/lib/content';
 
 export default function HomeClient({
   services,
+  portfolio,
 }: {
   services: ServicesSectionData | null;
+  portfolio: PortfolioSectionData | null;
 }) {
   const [loading, setLoading] = useState(() => !hasPreloaderPlayed());
 
@@ -32,6 +35,9 @@ export default function HomeClient({
 
       {/* SECTION 5 — Services (4 pillar sub-blocks) */}
       {services && <ServicesSection data={services} />}
+
+      {/* SECTION 6 — Portfolio (hidden while no project is shown) */}
+      {portfolio && <PortfolioSection data={portfolio} />}
     </>
   );
 }

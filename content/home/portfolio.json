@@ -1,0 +1,18 @@
+{
+  "heading": {
+    "en": "Selected projects",
+    "de": "Ausgewählte Projekte"
+  },
+  "sub": {
+    "en": "A look at completed projects.",
+    "de": "Ein Einblick in umgesetzte Projekte."
+  },
+  "linkLabel": {
+    "en": "View project",
+    "de": "Projekt ansehen"
+  },
+  "founderBadge": {
+    "en": "Founder's project",
+    "de": "Projekt des Gründers"
+  }
+}

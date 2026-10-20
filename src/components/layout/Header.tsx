@@ -13,8 +13,11 @@ import { navLinks, type NavLink } from '@/config/nav';
 export { navLinks, type NavLink };
 export const NAV_ANCHORS = navLinks;
 
-export function Header() {
+export function Header({ hasPortfolio }: { hasPortfolio: boolean }) {
   const { t } = useTranslation();
+  const links = navLinks.filter(
+    (l) => l.key !== 'nav.portfolio' || hasPortfolio,
+  );
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -59,7 +62,7 @@ export function Header() {
             className="hidden items-center gap-8 md:flex"
             aria-label="Hauptnavigation"
           >
-            {navLinks.map(({ key, pathname, hash }) => (
+            {links.map(({ key, pathname, hash }) => (
               <Link
                 key={key}
                 href={{ pathname, hash }}
@@ -126,7 +129,7 @@ export function Header() {
               className="flex flex-col items-center gap-1 px-6 pt-8"
               aria-label="Mobile Navigation"
             >
-              {navLinks.map(({ key, pathname, hash }, i) => (
+              {links.map(({ key, pathname, hash }, i) => (
                 <motion.div
                   key={key}
                   initial={{ opacity: 0, x: -20 }}
