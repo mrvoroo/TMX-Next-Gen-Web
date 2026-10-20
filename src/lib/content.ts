@@ -1,4 +1,7 @@
 import 'server-only';
+import path from 'node:path';
+import { cache } from 'react';
+import sharp from 'sharp';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 import { pick, pickAll, type Locale } from './localized';
@@ -85,6 +88,90 @@ export async function getServicesSection(
     marketing: { ...c.marketing, items: pillarOf('digitales-marketing') },
     it: { ...c.it, items: pillarOf('it-beratung') },
   };
+}
+
+/* ── Portfolio page ──────────────────────────────────────────────────── */
+
+export interface PortfolioProjectData {
+  slug: string;
+  title: string;
+  description: string;
+  image: { src: string; width: number; height: number };
+  imageAlt: string;
+  url: string | null;
+  techTags: string[];
+  founder: boolean;
+  year: number | null;
+  accent: 'violet' | 'cyan' | 'mixed';
+}
+
+export interface PortfolioPageData {
+  eyebrow: string;
+  heading: string;
+  sub: string;
+  ctaHeading: string;
+  ctaButton: string;
+  linkLabel: string;
+  founderBadge: string;
+  metaTitle: string;
+  metaDescription: string;
+  projects: PortfolioProjectData[];
+}
+
+/** Projects that may be shown: visible AND client permission, by order. */
+const getShownProjects = cache(async () => {
+  const entries = await reader.collections.projects.all();
+  return entries
+    .filter((e) => e.entry.visible && e.entry.clientPermission && e.entry.image)
+    .sort(
+      (a, b) =>
+        (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+        a.slug.localeCompare(b.slug),
+    );
+});
+
+/** True when at least one project is shown (drives section + nav link). */
+export async function hasPortfolio(): Promise<boolean> {
+  return (await getShownProjects()).length > 0;
+}
+
+async function imageSize(src: string) {
+  try {
+    const file = path.join(process.cwd(), 'public', src);
+    const { width, height } = await sharp(file).metadata();
+    if (width && height) return { src, width, height };
+  } catch {
+    /* fall through to the default 16:10 frame */
+  }
+  return { src, width: 1600, height: 1000 };
+}
+
+/** Portfolio page texts + shown projects for `locale`; null while none is shown. */
+export async function getPortfolioPage(
+  locale: Locale,
+): Promise<PortfolioPageData | null> {
+  const [section, shown] = await Promise.all([
+    reader.singletons.portfolioPage.read(),
+    getShownProjects(),
+  ]);
+  if (!section || shown.length === 0) return null;
+
+  const c = pickAll(section, locale);
+  const projects = await Promise.all(
+    shown.map(async ({ slug, entry }): Promise<PortfolioProjectData> => ({
+      slug,
+      title: pick(entry.title, locale, true),
+      description: pick(entry.description, locale, true),
+      image: await imageSize(entry.image as string),
+      imageAlt: pick(entry.imageAlt, locale, true),
+      url: entry.url.trim().startsWith('https://') ? entry.url.trim() : null,
+      techTags: entry.techTags.filter((tag) => tag.trim() !== ''),
+      founder: entry.origin === 'founder',
+      year: entry.year,
+      accent: entry.accent,
+    })),
+  );
+  return { ...c, projects };
 }
 
 export async function getContactPage(locale: Locale) {

@@ -23,16 +23,22 @@ const localized = (
     multiline?: boolean;
     kind?: LocalizedKind;
     description?: string;
+    defaults?: { en: string; de: string };
   } = {},
 ) => {
-  const { multiline = false, kind = 'normal', description } = options;
+  const { multiline = false, kind = 'normal', description, defaults } = options;
   return fields.object(
     {
-      en: fields.text({ label: 'English', multiline }),
+      en: fields.text({
+        label: 'English',
+        multiline,
+        defaultValue: defaults?.en,
+      }),
       de: fields.text({
         label: 'German',
         multiline,
         description: DE_DESCRIPTION[kind],
+        defaultValue: defaults?.de,
       }),
     },
     { label, description },
@@ -63,6 +69,43 @@ const servicesSectionFields = () => ({
   }),
   it: fields.object(servicePillarFields(), {
     label: 'Pillar · IT & Consulting',
+  }),
+});
+
+const portfolioPageFields = () => ({
+  eyebrow: localized('Eyebrow', {
+    defaults: { en: 'Portfolio', de: 'Portfolio' },
+  }),
+  heading: localized('Heading', {
+    defaults: { en: 'Work you can see.', de: 'Arbeit, die man sieht.' },
+  }),
+  sub: localized('Subheading', {
+    defaults: {
+      en: 'Selected websites and applications – up close.',
+      de: 'Ausgewählte Websites und Anwendungen – im Detail.',
+    },
+  }),
+  ctaHeading: localized('CTA heading', {
+    defaults: { en: 'Your project next?', de: 'Ihr Projekt als nächstes?' },
+  }),
+  ctaButton: localized('CTA button', {
+    defaults: { en: 'Start a project', de: 'Projekt anfragen' },
+  }),
+  linkLabel: localized('Project link label', {
+    defaults: { en: 'View project', de: 'Projekt ansehen' },
+  }),
+  founderBadge: localized('Founder badge', {
+    defaults: { en: "Founder's project", de: 'Projekt des Gründers' },
+  }),
+  metaTitle: localized('Meta title', {
+    defaults: { en: 'Portfolio – TMX', de: 'Portfolio – TMX' },
+  }),
+  metaDescription: localized('Meta description', {
+    multiline: true,
+    defaults: {
+      en: 'Selected projects by TMX.',
+      de: 'Ausgewählte Projekte von TMX.',
+    },
   }),
 });
 
@@ -278,8 +321,92 @@ export default config({
       format: 'json',
       schema: servicesSectionFields(),
     }),
+    portfolioPage: singleton({
+      label: 'Portfolio page',
+      path: 'content/pages/portfolio',
+      format: 'json',
+      schema: portfolioPageFields(),
+    }),
   },
   collections: {
+    projects: collection({
+      label: 'Portfolio projects',
+      path: 'content/projects/*',
+      format: 'json',
+      slugField: 'slug',
+      schema: {
+        slug: fields.slug({
+          name: {
+            label: 'Slug',
+            description: `Stable ID, lowercase. ${SLUG_RULE}.`,
+            validation: {
+              isRequired: true,
+              pattern: {
+                regex: /^[a-z0-9]+(-[a-z0-9]+)*$/,
+                message: 'Lowercase letters, digits and hyphens only.',
+              },
+            },
+          },
+          slug: {
+            label: 'Slug (file name)',
+            description: SLUG_RULE,
+          },
+        }),
+        title: localized('Title'),
+        description: localized('Description', {
+          multiline: true,
+          description:
+            'Max. ~160 characters. Facts only, no invented results.',
+        }),
+        image: fields.image({
+          label: 'Screenshot',
+          directory: 'public/images/portfolio',
+          publicPath: '/images/portfolio/',
+          validation: { isRequired: true },
+        }),
+        imageAlt: localized('Image alt text'),
+        url: fields.text({
+          label: 'Project URL (optional)',
+          description: 'Must start with https://',
+          validation: {
+            pattern: {
+              regex: /^(https:\/\/\S+)?$/,
+              message: 'Must start with https://',
+            },
+          },
+        }),
+        techTags: fields.array(fields.text({ label: 'Tag' }), {
+          label: 'Tech tags',
+          description: 'e.g. "Next.js"',
+          itemLabel: (props) => props.value || 'Tag',
+        }),
+        origin: fields.select({
+          label: 'Origin',
+          options: [
+            { label: 'TMX project', value: 'tmx' },
+            { label: 'Founder project (before TMX)', value: 'founder' },
+          ],
+          defaultValue: 'tmx',
+        }),
+        clientPermission: fields.checkbox({
+          label: 'Client permission',
+          description: "Show only with the client's (written) permission.",
+          defaultValue: false,
+        }),
+        visible: fields.checkbox({ label: 'Visible', defaultValue: true }),
+        order: fields.integer({ label: 'Order', defaultValue: 1 }),
+        year: fields.integer({ label: 'Year (optional)' }),
+        accent: fields.select({
+          label: 'Accent',
+          options: [
+            { label: 'Violet', value: 'violet' },
+            { label: 'Cyan', value: 'cyan' },
+            { label: 'Mixed', value: 'mixed' },
+          ],
+          defaultValue: 'mixed',
+        }),
+      },
+    }),
     services: collection({
       label: 'Services',
       path: 'content/services/*',

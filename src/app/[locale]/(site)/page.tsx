@@ -16,7 +16,8 @@ export default async function Home({
 }) {
   const { locale: rawLocale } = await params;
   setRequestLocale(rawLocale);
-  const services = await getServicesSection(resolveLocale(rawLocale));
+  const locale = resolveLocale(rawLocale);
+  const services = await getServicesSection(locale);
 
   return <HomeClient services={services} />;
 }

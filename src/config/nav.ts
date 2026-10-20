@@ -17,13 +17,13 @@ export interface NavLink {
  * 1. Home      (/#hero)
  * 2. About     (/#about)
  * 3. Services  (/#services)
- * 4. Portfolio (/#portfolio)
+ * 4. Portfolio (/portfolio - dedicated page, only when a project is shown)
  * 5. Contact   (/kontakt - dedicated page)
  */
 export const navLinks: NavLink[] = [
   { key: 'nav.home', pathname: '/', hash: 'hero' },
   { key: 'nav.about', pathname: '/', hash: 'about' },
   { key: 'nav.services', pathname: '/', hash: 'services' },
-  { key: 'nav.portfolio', pathname: '/', hash: 'portfolio' },
+  { key: 'nav.portfolio', pathname: '/portfolio' },
   { key: 'nav.contact', pathname: '/kontakt' },
 ];

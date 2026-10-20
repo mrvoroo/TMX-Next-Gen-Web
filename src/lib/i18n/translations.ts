@@ -45,12 +45,6 @@ export interface TranslationSchema {
     sub: string;
     cards: Array<{ title: string; desc: string }>;
   };
-  portfolio: {
-    heading: string;
-    sub: string;
-    badge: string;
-    cards: Array<{ title: string; desc: string; tag: string }>;
-  };
   contact: {
     heading: string;
     sub: string;
@@ -95,7 +89,7 @@ export const translations: Record<Locale, TranslationSchema> = {
       home: 'Start',
       about: 'Über uns',
       services: 'Leistungen',
-      portfolio: 'Referenzen',
+      portfolio: 'Portfolio',
       contact: 'Kontakt',
     },
     toggle: {
@@ -178,33 +172,6 @@ export const translations: Record<Locale, TranslationSchema> = {
         {
           title: 'Langfristige Partnerschaft',
           desc: 'Wir denken in nachhaltigen Beziehungen — Ihr Erfolg ist unser Erfolg.',
-        },
-      ],
-    },
-    portfolio: {
-      heading: 'Referenzen',
-      sub: 'Ausgewählte Projekte',
-      badge: 'Fallstudie',
-      cards: [
-        {
-          title: 'E-Commerce Relaunch',
-          desc: 'Vollständige Neugestaltung und Entwicklung einer B2C-E-Commerce-Plattform mit KI-gestützter Produktempfehlung.',
-          tag: 'Entwicklung · KI',
-        },
-        {
-          title: 'KI-Automatisierung',
-          desc: 'Implementierung eines KI-basierten Automatisierungssystems zur Optimierung von Geschäftsprozessen.',
-          tag: 'Künstliche Intelligenz',
-        },
-        {
-          title: 'SEO & Growth',
-          desc: 'Steigerung des organischen Traffics um 340 % durch ganzheitliche SEO-Strategie und Content-Marketing.',
-          tag: 'Digitales Marketing',
-        },
-        {
-          title: 'IT-Infrastruktur-Migration',
-          desc: 'Vollständige Migration der On-Premise-Infrastruktur in eine sichere, skalierbare Cloud-Umgebung.',
-          tag: 'IT & Beratung',
         },
       ],
     },
@@ -335,33 +302,6 @@ export const translations: Record<Locale, TranslationSchema> = {
         {
           title: 'Long-term Partnership',
           desc: 'We think in sustainable relationships — your success is our success.',
-        },
-      ],
-    },
-    portfolio: {
-      heading: 'Portfolio',
-      sub: 'Selected projects',
-      badge: 'Case Study',
-      cards: [
-        {
-          title: 'E-Commerce Relaunch',
-          desc: 'Complete redesign and development of a B2C e-commerce platform with AI-powered product recommendations.',
-          tag: 'Development · AI',
-        },
-        {
-          title: 'AI Automation',
-          desc: 'Implementation of an AI-based automation system to streamline and optimise business processes.',
-          tag: 'Artificial Intelligence',
-        },
-        {
-          title: 'SEO & Growth',
-          desc: 'Grew organic traffic by 340 % through a holistic SEO strategy and content marketing programme.',
-          tag: 'Digital Marketing',
-        },
-        {
-          title: 'IT Infrastructure Migration',
-          desc: 'Full migration of on-premise infrastructure to a secure, scalable cloud environment.',
-          tag: 'IT & Consulting',
         },
       ],
     },
