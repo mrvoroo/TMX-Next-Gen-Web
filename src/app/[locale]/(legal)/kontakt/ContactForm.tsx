@@ -9,14 +9,29 @@
  * Form content is never logged.
  */
 
-import { Fragment, useState } from 'react';
+import { Fragment, useId, useState, useSyncExternalStore } from 'react';
 import { Link } from '@/i18n/navigation';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+
+export interface ContactServiceItem {
+  slug: string;
+  /** Name for the current page language. */
+  label: string;
+  /** Official German name – the value sent in the payload. */
+  nameDe: string;
+}
+
+export interface ContactServiceGroup {
+  id: string;
+  /** Pillar title for the current page language. */
+  title: string;
+  items: ContactServiceItem[];
+}
 
 export interface ContactFormTexts {
   fieldName: string;
   fieldEmail: string;
   fieldService: string;
-  serviceDefault: string;
   serviceGeneral: string;
   fieldMessage: string;
   checkbox: string;
@@ -46,9 +61,159 @@ const ERROR_CLASS = 'mt-2 text-sm text-red-400';
 const LINK_CLASS =
   'underline underline-offset-2 transition-colors hover:text-white';
 
-export function ContactForm({ texts }: { texts: ContactFormTexts }) {
+const DESKTOP_QUERY = '(min-width: 768px)';
+
+/** true from the md breakpoint up; false on the server (mobile-first). */
+function useIsDesktop(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(DESKTOP_QUERY);
+      mq.addEventListener('change', onChange);
+      return () => mq.removeEventListener('change', onChange);
+    },
+    () => window.matchMedia(DESKTOP_QUERY).matches,
+    () => false,
+  );
+}
+
+const CHIP_BASE =
+  'block max-w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm leading-snug text-white/70 [hyphens:auto] [overflow-wrap:anywhere] peer-focus-visible:ring-2 peer-focus-visible:ring-violet-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-[#050508]';
+const CHIP_HOVER = 'hover:border-white/25 hover:text-white';
+/* Selected: translucent accent fill over a solid base, accent gradient border. */
+const CHIP_CHECKED =
+  'peer-checked:border-transparent peer-checked:text-white peer-checked:[background-image:linear-gradient(rgb(124_58_237/0.3),rgb(6_182_212/0.2)),linear-gradient(#0d0d14,#0d0d14),linear-gradient(135deg,var(--color-accent-from),var(--color-accent-to))] peer-checked:[background-origin:border-box] peer-checked:[background-clip:padding-box,padding-box,border-box]';
+
+function Chip({
+  label,
+  value,
+  checked,
+  onToggle,
+  animate,
+}: {
+  label: string;
+  value: string;
+  checked: boolean;
+  onToggle: (value: string) => void;
+  animate: boolean;
+}) {
+  return (
+    <label className="relative block max-w-full cursor-pointer">
+      <input
+        type="checkbox"
+        name="services"
+        value={value}
+        checked={checked}
+        onChange={() => onToggle(value)}
+        className="peer sr-only"
+      />
+      <span
+        className={`${CHIP_BASE} ${CHIP_HOVER} ${CHIP_CHECKED} ${animate ? 'transition-colors duration-200' : ''}`}
+      >
+        {label}
+      </span>
+    </label>
+  );
+}
+
+function ServicePillar({
+  group,
+  selected,
+  onToggle,
+  isDesktop,
+  animate,
+}: {
+  group: ContactServiceGroup;
+  selected: Set<string>;
+  onToggle: (value: string) => void;
+  isDesktop: boolean;
+  animate: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const panelId = useId();
+  const count = group.items.filter((item) => selected.has(item.nameDe)).length;
+
+  return (
+    <fieldset className="min-w-0 border-0 p-0">
+      <legend className="mb-3 w-full p-0">
+        {isDesktop ? (
+          <span className="text-xs font-semibold uppercase tracking-widest text-violet-400">
+            {group.title}
+          </span>
+        ) : (
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={() => setOpen((prev) => !prev)}
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-xs font-semibold uppercase tracking-widest text-violet-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+          >
+            <span className="min-w-0 break-words">{group.title}</span>
+            <span className="flex shrink-0 items-center gap-2">
+              {count > 0 ? (
+                <span className="rounded-full bg-violet-500/30 px-2 py-0.5 text-[11px] font-semibold tracking-normal text-white">
+                  {count}
+                </span>
+              ) : null}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 16 16"
+                className={`h-3 w-3 ${animate ? 'transition-transform duration-200' : ''} ${open ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M3 6l5 5 5-5" />
+              </svg>
+            </span>
+          </button>
+        )}
+      </legend>
+      <div
+        id={panelId}
+        className={`${open ? 'flex' : 'hidden'} flex-wrap gap-2 md:flex`}
+      >
+        {group.items.map((item) => (
+          <Chip
+            key={item.slug}
+            label={item.label}
+            value={item.nameDe}
+            checked={selected.has(item.nameDe)}
+            onToggle={onToggle}
+            animate={animate}
+          />
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+export function ContactForm({
+  texts,
+  groups,
+  generalNameDe,
+  locale,
+}: {
+  texts: ContactFormTexts;
+  groups: ContactServiceGroup[];
+  /** German "general inquiry" text – always sent in German. */
+  generalNameDe: string;
+  locale: 'de' | 'en';
+}) {
   const [status, setStatus] = useState<Status>('idle');
   const [errors, setErrors] = useState<Errors>({});
+  const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const isDesktop = useIsDesktop();
+  const reducedMotion = useReducedMotion();
+  const animate = !reducedMotion;
+
+  function toggleService(value: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return next;
+    });
+  }
 
   function clearError(key: FieldKey) {
     setErrors((prev) => {
@@ -82,7 +247,11 @@ export function ContactForm({ texts }: { texts: ContactFormTexts }) {
     const name = String(data.get('name') ?? '').trim();
     const email = String(data.get('email') ?? '').trim();
     const message = String(data.get('message') ?? '').trim();
-    const service = String(data.get('service') ?? '');
+    // Official German names, always German, in DOM order.
+    const services = data
+      .getAll('services')
+      .map((value) => String(value))
+      .join('; ');
     const privacy = data.get('privacy') === 'on';
     const botcheck = data.get('botcheck') === 'on';
 
@@ -121,7 +290,8 @@ export function ContactForm({ texts }: { texts: ContactFormTexts }) {
           name,
           email,
           message,
-          ...(service ? { service } : {}),
+          ...(services ? { services } : {}),
+          page_language: locale,
           botcheck,
         }),
       });
@@ -206,19 +376,31 @@ export function ContactForm({ texts }: { texts: ContactFormTexts }) {
         ) : null}
       </div>
 
-      <div>
-        <label htmlFor="contact-service" className={LABEL_CLASS}>
+      <div role="group" aria-labelledby="contact-service-label">
+        <p id="contact-service-label" className={LABEL_CLASS}>
           {texts.fieldService}
-        </label>
-        <select
-          id="contact-service"
-          name="service"
-          defaultValue=""
-          className={`${INPUT_CLASS} [&>option]:bg-[#050508]`}
-        >
-          <option value="">{texts.serviceDefault}</option>
-          <option value={texts.serviceGeneral}>{texts.serviceGeneral}</option>
-        </select>
+        </p>
+        <div className="space-y-5">
+          {groups.map((group) => (
+            <ServicePillar
+              key={group.id}
+              group={group}
+              selected={selected}
+              onToggle={toggleService}
+              isDesktop={isDesktop}
+              animate={animate}
+            />
+          ))}
+          <div className="flex">
+            <Chip
+              label={texts.serviceGeneral}
+              value={generalNameDe}
+              checked={selected.has(generalNameDe)}
+              onToggle={toggleService}
+              animate={animate}
+            />
+          </div>
+        </div>
       </div>
 
       <div>
