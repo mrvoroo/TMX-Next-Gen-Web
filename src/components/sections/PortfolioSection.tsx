@@ -2,7 +2,7 @@
 
 /**
  * Portfolio — all texts and projects come from Keystatic (see
- * getPortfolioSection in src/lib/content.ts).
+ * getPortfolioPage in src/lib/content.ts).
  *
  *  - Desktop ≥1024px, ≥2 projects, no reduced motion: the section is pinned and
  *    scrolling moves the slides horizontally (GSAP ScrollTrigger).
@@ -22,7 +22,7 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { cn } from '@/lib/utils';
 import type {
   PortfolioProjectData,
-  PortfolioSectionData,
+  PortfolioPageData,
 } from '@/lib/content';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -91,7 +91,7 @@ function ProjectText({
   data,
 }: {
   project: PortfolioProjectData;
-  data: PortfolioSectionData;
+  data: PortfolioPageData;
 }) {
   return (
     <div className="flex min-w-0 flex-col items-start gap-4">
@@ -137,39 +137,13 @@ function ProjectText({
   );
 }
 
-function SectionHeader({ data }: { data: PortfolioSectionData }) {
-  return (
-    <div>
-      <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/70">
-        {data.sub}
-      </p>
-      <h2
-        id="portfolio-heading"
-        className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
-      >
-        {data.heading.split(' ').map((word, i, arr) =>
-          i === arr.length - 1 ? (
-            <span key={i} className="gradient-text">
-              {word}
-            </span>
-          ) : (
-            <span key={i} className="text-white">
-              {word}{' '}
-            </span>
-          ),
-        )}
-      </h2>
-    </div>
-  );
-}
-
 /* ── Vertical layout ─────────────────────────────────────────────────────── */
 
 function VerticalCards({
   data,
   animate,
 }: {
-  data: PortfolioSectionData;
+  data: PortfolioPageData;
   animate: boolean;
 }) {
   const listRef = useRef<HTMLUListElement>(null);
@@ -179,7 +153,7 @@ function VerticalCards({
   useStaggerReveal(listRef, { cardRefs, reduced: !animate });
 
   return (
-    <ul ref={listRef} className="mt-12 flex flex-col gap-8">
+    <ul ref={listRef} className="flex flex-col gap-8">
       {data.projects.map((project, i) => (
         <li
           key={project.slug}
@@ -202,7 +176,7 @@ function VerticalCards({
 
 /* ── Main section ────────────────────────────────────────────────────────── */
 
-export function PortfolioSection({ data }: { data: PortfolioSectionData }) {
+export function PortfolioSection({ data }: { data: PortfolioPageData }) {
   const sectionRef = useRef<HTMLElement>(null);
   const count = data.projects.length;
 
@@ -241,8 +215,6 @@ export function PortfolioSection({ data }: { data: PortfolioSectionData }) {
           scrub: 0.6,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          // Refresh after the About pin so its pin-spacer is measured first.
-          refreshPriority: -1,
           onUpdate: (self) => {
             bar.style.transform = `scaleX(${self.progress})`;
           },
@@ -272,7 +244,7 @@ export function PortfolioSection({ data }: { data: PortfolioSectionData }) {
           );
         });
 
-      // Re-measure once images have settled (after the About pin exists).
+      // Re-measure once images have settled.
       let refreshTimer: ReturnType<typeof setTimeout> | undefined;
       const scheduleRefresh = () => {
         clearTimeout(refreshTimer);
@@ -297,7 +269,6 @@ export function PortfolioSection({ data }: { data: PortfolioSectionData }) {
   return (
     <section
       ref={sectionRef}
-      id="portfolio"
       aria-labelledby="portfolio-heading"
       className={cn(
         'relative bg-[#050508]',
@@ -306,9 +277,6 @@ export function PortfolioSection({ data }: { data: PortfolioSectionData }) {
     >
       {horizontal ? (
         <div className="flex h-full flex-col pb-8 pt-24">
-          <div className="mx-auto w-full max-w-7xl px-5 sm:px-8">
-            <SectionHeader data={data} />
-          </div>
           <div className="flex min-h-0 flex-1 items-center">
             <div
               data-track
@@ -342,8 +310,7 @@ export function PortfolioSection({ data }: { data: PortfolioSectionData }) {
           </div>
         </div>
       ) : (
-        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 sm:py-24">
-          <SectionHeader data={data} />
+        <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 sm:pb-24">
           <VerticalCards data={data} animate={mode === 'vertical'} />
         </div>
       )}

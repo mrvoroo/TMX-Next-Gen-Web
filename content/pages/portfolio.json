@@ -1,0 +1,38 @@
+{
+  "eyebrow": {
+    "en": "Portfolio",
+    "de": "Portfolio"
+  },
+  "heading": {
+    "en": "Work you can see.",
+    "de": "Arbeit, die man sieht."
+  },
+  "sub": {
+    "en": "Selected websites and applications – up close.",
+    "de": "Ausgewählte Websites und Anwendungen – im Detail."
+  },
+  "ctaHeading": {
+    "en": "Your project next?",
+    "de": "Ihr Projekt als nächstes?"
+  },
+  "ctaButton": {
+    "en": "Start a project",
+    "de": "Projekt anfragen"
+  },
+  "linkLabel": {
+    "en": "View project",
+    "de": "Projekt ansehen"
+  },
+  "founderBadge": {
+    "en": "Founder's project",
+    "de": "Projekt des Gründers"
+  },
+  "metaTitle": {
+    "en": "Portfolio – TMX",
+    "de": "Portfolio – TMX"
+  },
+  "metaDescription": {
+    "en": "Selected projects by TMX.",
+    "de": "Ausgewählte Projekte von TMX."
+  }
+}

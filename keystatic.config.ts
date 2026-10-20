@@ -72,21 +72,40 @@ const servicesSectionFields = () => ({
   }),
 });
 
-const portfolioSectionFields = () => ({
+const portfolioPageFields = () => ({
+  eyebrow: localized('Eyebrow', {
+    defaults: { en: 'Portfolio', de: 'Portfolio' },
+  }),
   heading: localized('Heading', {
-    defaults: { en: 'Selected projects', de: 'Ausgewählte Projekte' },
+    defaults: { en: 'Work you can see.', de: 'Arbeit, die man sieht.' },
   }),
   sub: localized('Subheading', {
     defaults: {
-      en: 'A look at completed projects.',
-      de: 'Ein Einblick in umgesetzte Projekte.',
+      en: 'Selected websites and applications – up close.',
+      de: 'Ausgewählte Websites und Anwendungen – im Detail.',
     },
+  }),
+  ctaHeading: localized('CTA heading', {
+    defaults: { en: 'Your project next?', de: 'Ihr Projekt als nächstes?' },
+  }),
+  ctaButton: localized('CTA button', {
+    defaults: { en: 'Start a project', de: 'Projekt anfragen' },
   }),
   linkLabel: localized('Project link label', {
     defaults: { en: 'View project', de: 'Projekt ansehen' },
   }),
   founderBadge: localized('Founder badge', {
     defaults: { en: "Founder's project", de: 'Projekt des Gründers' },
+  }),
+  metaTitle: localized('Meta title', {
+    defaults: { en: 'Portfolio – TMX', de: 'Portfolio – TMX' },
+  }),
+  metaDescription: localized('Meta description', {
+    multiline: true,
+    defaults: {
+      en: 'Selected projects by TMX.',
+      de: 'Ausgewählte Projekte von TMX.',
+    },
   }),
 });
 
@@ -302,11 +321,11 @@ export default config({
       format: 'json',
       schema: servicesSectionFields(),
     }),
-    portfolioSection: singleton({
-      label: 'Home · Portfolio',
-      path: 'content/home/portfolio',
+    portfolioPage: singleton({
+      label: 'Portfolio page',
+      path: 'content/pages/portfolio',
       format: 'json',
-      schema: portfolioSectionFields(),
+      schema: portfolioPageFields(),
     }),
   },
   collections: {
@@ -376,6 +395,16 @@ export default config({
         }),
         visible: fields.checkbox({ label: 'Visible', defaultValue: true }),
         order: fields.integer({ label: 'Order', defaultValue: 1 }),
+        year: fields.integer({ label: 'Year (optional)' }),
+        accent: fields.select({
+          label: 'Accent',
+          options: [
+            { label: 'Violet', value: 'violet' },
+            { label: 'Cyan', value: 'cyan' },
+            { label: 'Mixed', value: 'mixed' },
+          ],
+          defaultValue: 'mixed',
+        }),
       },
     }),
     services: collection({

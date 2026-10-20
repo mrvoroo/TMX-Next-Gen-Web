@@ -90,7 +90,7 @@ export async function getServicesSection(
   };
 }
 
-/* ── Home · Portfolio ────────────────────────────────────────────────── */
+/* ── Portfolio page ──────────────────────────────────────────────────── */
 
 export interface PortfolioProjectData {
   slug: string;
@@ -101,13 +101,20 @@ export interface PortfolioProjectData {
   url: string | null;
   techTags: string[];
   founder: boolean;
+  year: number | null;
+  accent: 'violet' | 'cyan' | 'mixed';
 }
 
-export interface PortfolioSectionData {
+export interface PortfolioPageData {
+  eyebrow: string;
   heading: string;
   sub: string;
+  ctaHeading: string;
+  ctaButton: string;
   linkLabel: string;
   founderBadge: string;
+  metaTitle: string;
+  metaDescription: string;
   projects: PortfolioProjectData[];
 }
 
@@ -139,12 +146,12 @@ async function imageSize(src: string) {
   return { src, width: 1600, height: 1000 };
 }
 
-/** Portfolio texts + shown projects for `locale`; null while none is shown. */
-export async function getPortfolioSection(
+/** Portfolio page texts + shown projects for `locale`; null while none is shown. */
+export async function getPortfolioPage(
   locale: Locale,
-): Promise<PortfolioSectionData | null> {
+): Promise<PortfolioPageData | null> {
   const [section, shown] = await Promise.all([
-    reader.singletons.portfolioSection.read(),
+    reader.singletons.portfolioPage.read(),
     getShownProjects(),
   ]);
   if (!section || shown.length === 0) return null;
@@ -160,6 +167,8 @@ export async function getPortfolioSection(
       url: entry.url.trim().startsWith('https://') ? entry.url.trim() : null,
       techTags: entry.techTags.filter((tag) => tag.trim() !== ''),
       founder: entry.origin === 'founder',
+      year: entry.year,
+      accent: entry.accent,
     })),
   );
   return { ...c, projects };
