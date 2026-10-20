@@ -6,8 +6,8 @@
  * collection (shown = visible AND clientPermission). With no shown project the
  * page is a static 404. Lives in the (site) group so Lenis/ScrollTrigger run.
  *
- * #portfolio-hero and #portfolio-showcase are the mount points for the 3D
- * layers added in the next steps.
+ * #portfolio-hero (PortfolioHero) renders the glass-crystal scene behind the
+ * server-rendered hero text; #portfolio-showcase follows its pin.
  */
 
 import type { Metadata } from 'next';
@@ -18,6 +18,7 @@ import { routing } from '@/i18n/routing';
 import { localizedMetadata, resolveLocale } from '@/lib/seo';
 import { getPortfolioPage } from '@/lib/content';
 import { PortfolioSection } from '@/components/sections/PortfolioSection';
+import { PortfolioHero } from '@/components/sections/PortfolioHero';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -54,32 +55,37 @@ export default async function PortfolioPage({
 
   return (
     <>
-      <div id="portfolio-hero" className="relative bg-[#050508]">
-        <div className="mx-auto max-w-7xl px-5 pb-12 pt-32 sm:px-8 sm:pb-16 sm:pt-40">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/70">
-            {page.eyebrow}
-          </p>
-          <h1
-            id="portfolio-heading"
-            className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
-          >
-            {page.heading.split(' ').map((word, i, arr) =>
-              i === arr.length - 1 ? (
-                <span key={i} className="gradient-text">
-                  {word}
-                </span>
-              ) : (
-                <span key={i} className="text-white">
-                  {word}{' '}
-                </span>
-              ),
-            )}
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">
-            {page.sub}
-          </p>
-        </div>
-      </div>
+      <PortfolioHero images={page.projects.map((p) => p.image.src)}>
+        <p
+          data-hero-text
+          className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/70"
+        >
+          {page.eyebrow}
+        </p>
+        <h1
+          id="portfolio-heading"
+          data-hero-text
+          className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
+        >
+          {page.heading.split(' ').map((word, i, arr) =>
+            i === arr.length - 1 ? (
+              <span key={i} className="gradient-text">
+                {word}
+              </span>
+            ) : (
+              <span key={i} className="text-white">
+                {word}{' '}
+              </span>
+            ),
+          )}
+        </h1>
+        <p
+          data-hero-text
+          className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
+        >
+          {page.sub}
+        </p>
+      </PortfolioHero>
 
       <div id="portfolio-showcase">
         <PortfolioSection data={page} />
