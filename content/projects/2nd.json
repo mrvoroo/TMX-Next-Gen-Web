@@ -1,0 +1,24 @@
+{
+  "slug": "2nd",
+  "title": {
+    "en": "2nd Project",
+    "de": "2nd Project"
+  },
+  "description": {
+    "en": "2nd Project",
+    "de": "2nd Project"
+  },
+  "image": "/images/portfolio/2nd/image.webp",
+  "imageAlt": {
+    "en": "2nd Project",
+    "de": "2nd Project"
+  },
+  "techTags": [
+    "2nd Project"
+  ],
+  "origin": "tmx",
+  "clientPermission": true,
+  "visible": true,
+  "order": 1,
+  "accent": "mixed"
+}
