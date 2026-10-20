@@ -2,34 +2,18 @@
 
 ## RESUME FROM HERE
 
-## State (main = origin/main, 18b040c)
-- Earlier: next-intl URL routing, localized paths, per-locale SEO, noindex (`SITE_INDEXABLE=false`), Keystatic local mode (`/keystatic` + `/api/keystatic` = 404 in production), Impressum + Datenschutz verbatim, consent banner (empty service registry, compact on legal pages, never above preloader).
-- 2026-10-17:
-  · `4c9c6e3` Kontakt page verbatim from `docs/legal` section D via Keystatic (`contactPage`), localized validation, honeypot, Web3Forms key from env `NEXT_PUBLIC_WEB3FORMS_KEY` (missing → no request, error shown). `WEB3FORMS_ACCESS_KEY` removed from `company.ts`.
-  · `40d0b02` 18 official services as Keystatic collection `services` (slug, pillar, order, visible, name `{en,de}`, icon). Generic service names removed. Home split into server `page.tsx` + client `HomeClient.tsx`. Grids 5/6/5/2, pillar hidden when empty, block numbers computed. Marketing beam nodes use service icons (old SEO/SEA labels removed). #18 `nameDe` = `[[PENDING]]`.
-  · `9fe1a77` + `8ef7a66` English-first admin: every translatable field is one block `{ en, de }` via `localized()` helper; German descriptions by kind (legal / official / normal); readers use `pick`/`pickAll`.
-  · merges `cb606ea`, `85636b5`, `18b040c` — text of all pages verified identical before/after (except intended service names).
+## New on main
+- `21e5cae` contact service chips (payload "services" = official German names joined by "; ", plus "page_language"); `c4a0b78` + `3bb7083` standalone /portfolio page (EN /en/portfolio), Keystatic "projects" (shown = visible AND clientPermission; origin tmx|founder badge; year, accent) + "portfolioPage" singleton; nav link + page only when ≥1 shown project (static 404 otherwise); `f89fa2e` 3D glass crystal hero (desktop MeshTransmissionMaterial, 96 shards, scroll-driven shatter + camera fly-in, pinned; light version <1024px; reduced-motion static; no-WebGL SVG fallback; no external assets; 60 fps at DPR 1); first 3 projects published.
 
-## Next (in order)
-1. Contact form: service selection as grouped multi-select chips from the services collection (4 pillars, + "Allgemeine Anfrage"), selected names sent to Web3Forms.
-2. New About text (owner provides) — replace old "team of experts" copy.
-3. Portfolio as Keystatic collection (title, short description `{en,de}`, preview image, optional link, visible, order). Section + nav link hidden while empty. Screenshots only, no iframes.
-4. Keyword research → pillar pages `/leistungen/<pillar>` (DE) and `/en/services/<pillar>` with each service as an anchor section (`#slug`). Decision pending: "Anfrage zu dieser Leistung" button per service.
-5. Web3Forms account + delivery test; GA4 + Microsoft Clarity via consent registry (load only after consent, Clarity ConsentV2, input masking) + new Datenschutz sections.
-6. How We Work + Why Us sections; Keystatic GitHub mode on live (owner enables GitHub 2FA); lint cleanup (23); Next.js update; sitemap/robots/404; performance + real-device test.
-7. Pre-launch: hosting + domain, company data, DPA checks, zero third-party requests before consent, lawyer review, then `SITE_INDEXABLE=true`.
+## Next
+- Step 3 desktop 3D corridor (prompt ready, Opus 5.5), Step 4 mobile/tablet polish + high-DPR + real-device test. Then About, How We Work, Why Us, keyword research → pillar pages, Web3Forms + GA4 + Clarity, launch checklist.
 
-## Known issues / notes
-- #5 and #16 official names stored WITHOUT "(Chat Funnel)" / "(Online-Marketing)" until owner confirms.
-- Legal + official German fields must not be edited without lawyer/owner check; editing English does not update German.
-- `content/settings/company.json` sometimes shows as modified by CRLF/LF only — consider a `.gitattributes` later.
-- `SmoothScrollProvider` re-applies URL hash for 800 ms after ScrollTrigger refresh; re-test when more pinned sections are added.
-- Never run `npm run build` while `npm run dev` runs (shared `.next`). Dev "Internal Server Error" → stop dev, delete `.next`, restart.
-- Lint: 23 pre-existing problems. Build passes, all public pages static (●).
-- Code must stay host-agnostic.
+## Notes
+- high-DPR and 768px heading area untested; one-time hydration warning from DevBlock TiltCard reduced-motion check; dev may need restart after content edits; serviceDefault unused.
+- Portfolio project titles/descriptions are placeholders (1st/2nd/3rd) — replace with real names + DE/EN descriptions before launch.
 
-## Open owner decisions / data
-Text of #18 · (Chat Funnel)/(Online-Marketing) · About text · company data · GA + Clarity IDs · Web3Forms account · domain · hosting · "Anfrage" button · Portfolio projects + client permissions.
+## Open owner data
+- #18 text, About/strengths info, company data, GA/Clarity IDs, Web3Forms account, domain, hosting.
 
 ---
 
