@@ -11,8 +11,43 @@
 
 import { setRequestLocale } from 'next-intl/server';
 import { resolveLocale } from '@/lib/seo';
-import { getCompany, getContactPage } from '@/lib/content';
-import { ContactForm } from './ContactForm';
+import { getCompany, getContactPage, reader } from '@/lib/content';
+import { pick, type Locale } from '@/lib/localized';
+import { ContactForm, type ContactServiceGroup } from './ContactForm';
+
+/** Pillar order = order on the home page: collection pillar value → singleton key. */
+const PILLARS = [
+  { pillar: 'entwicklung', key: 'dev' },
+  { pillar: 'ki', key: 'ai' },
+  { pillar: 'digitales-marketing', key: 'marketing' },
+  { pillar: 'it-beratung', key: 'it' },
+] as const;
+
+/** Visible services grouped by pillar. Pillars without visible services are dropped. */
+async function getServiceGroups(locale: Locale): Promise<ContactServiceGroup[]> {
+  const [section, entries] = await Promise.all([
+    reader.singletons.servicesSection.read(),
+    reader.collections.services.all(),
+  ]);
+  if (!section) return [];
+
+  return PILLARS.map(({ pillar, key }) => ({
+    id: pillar,
+    title: pick(section[key].title, locale),
+    items: entries
+      .filter((e) => e.entry.pillar === pillar && e.entry.visible)
+      .sort(
+        (a, b) =>
+          (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+          a.slug.localeCompare(b.slug),
+      )
+      .map((e) => ({
+        slug: e.slug,
+        label: pick(e.entry.name, locale, true),
+        nameDe: e.entry.name.de,
+      })),
+  })).filter((group) => group.items.length > 0);
+}
 
 const isPending = (value: string) => value.startsWith('[[');
 
@@ -41,8 +76,13 @@ export default async function KontaktPage({
   setRequestLocale(rawLocale);
   const locale = resolveLocale(rawLocale);
 
-  const [c, company] = await Promise.all([getContactPage(locale), getCompany()]);
-  if (!c || !company) return null;
+  const [c, company, cDe, groups] = await Promise.all([
+    getContactPage(locale),
+    getCompany(),
+    getContactPage('de'),
+    getServiceGroups(locale),
+  ]);
+  if (!c || !company || !cDe) return null;
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
@@ -84,11 +124,13 @@ export default async function KontaktPage({
       <p className="mb-6 text-sm text-white/50">{c.requiredNote}</p>
 
       <ContactForm
+        locale={locale}
+        groups={groups}
+        generalNameDe={cDe.serviceGeneral}
         texts={{
           fieldName: c.fieldName,
           fieldEmail: c.fieldEmail,
           fieldService: c.fieldService,
-          serviceDefault: c.serviceDefault,
           serviceGeneral: c.serviceGeneral,
           fieldMessage: c.fieldMessage,
           checkbox: c.checkbox,
