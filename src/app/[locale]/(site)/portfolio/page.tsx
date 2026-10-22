@@ -63,7 +63,7 @@ export default async function PortfolioPage({
       <h1
         id="portfolio-heading"
         data-hero-text
-        className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
+        className="text-4xl font-black tracking-tight sm:text-5xl md:max-lg:text-6xl lg:text-6xl"
       >
         {page.heading.split(' ').map((word, i, arr) =>
           i === arr.length - 1 ? (
@@ -79,7 +79,7 @@ export default async function PortfolioPage({
       </h1>
       <p
         data-hero-text
-        className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
+        className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg md:max-lg:text-xl md:max-lg:text-white/80 md:max-lg:[text-shadow:0_2px_24px_rgb(5_5_8/0.95)]"
       >
         {page.sub}
       </p>

@@ -34,6 +34,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import type { CrystalSceneProps } from '@/components/three/CrystalScene';
+import { devForceNoWebGL, devForceReducedMotion } from '@/lib/devOverrides';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,10 +76,11 @@ function detectWebGL(): 0 | 1 | 2 {
 }
 
 function computeVariant(): Variant {
-  const gl = detectWebGL();
+  // Dev-only test hooks (?gl=0, ?motion=reduce) — see src/lib/devOverrides.ts.
+  const gl = devForceNoWebGL() ? 0 : detectWebGL();
   if (gl === 0) return 'none';
   const desktop = window.matchMedia(DESKTOP_QUERY).matches && gl === 2;
-  if (window.matchMedia(REDUCED_QUERY).matches) {
+  if (window.matchMedia(REDUCED_QUERY).matches || devForceReducedMotion()) {
     return desktop ? 'reduced-desktop' : 'reduced-light';
   }
   return desktop ? 'desktop' : 'light';
@@ -106,6 +108,8 @@ function subscribe(onChange: () => void) {
   const reduced = window.matchMedia(REDUCED_QUERY);
   window.addEventListener('resize', onResize, { passive: true });
   reduced.addEventListener('change', update);
+  // Re-evaluate on mount: the cached value may predate a client-side navigation.
+  update();
   return () => {
     clearTimeout(timer);
     window.removeEventListener('resize', onResize);

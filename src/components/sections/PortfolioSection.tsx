@@ -6,7 +6,10 @@
  *
  *  - Desktop ≥1024px, ≥2 projects, no reduced motion: the section is pinned and
  *    scrolling moves the slides horizontally (GSAP ScrollTrigger).
- *  - Otherwise (mobile, tablet, 1 project, reduced motion): vertical cards.
+ *  - Mobile/tablet <1024px: vertical cards with scroll-driven 3D motion
+ *    (CSS transforms driven by one scrubbed ScrollTrigger per card).
+ *  - 1 project on desktop: vertical cards with the stagger reveal.
+ *  - Reduced motion: static vertical cards (no transforms, no parallax).
  *
  * The server HTML and the first client render are always the vertical layout
  * (cards visible by default); the layout is switched after hydration.
@@ -24,10 +27,11 @@ import type {
   PortfolioProjectData,
   PortfolioPageData,
 } from '@/lib/content';
+import { devForceReducedMotion } from '@/lib/devOverrides';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Mode = 'pending' | 'vertical' | 'static' | 'horizontal';
+type Mode = 'pending' | 'vertical' | 'cards3d' | 'static' | 'horizontal';
 
 const DESKTOP_QUERY = '(min-width: 1024px)';
 const REDUCED_QUERY = '(prefers-reduced-motion: reduce)';
@@ -122,12 +126,12 @@ export function ProjectText({
           {data.founderBadge}
         </span>
       )}
-      <h3 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
+      <h3 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl md:max-lg:text-4xl">
         {project.title}
       </h3>
       <p
         id={descriptionId(project)}
-        className="max-w-prose text-sm leading-[1.8] text-white/55 sm:text-base"
+        className="max-w-prose text-sm leading-[1.8] text-white/55 sm:text-base md:max-lg:text-lg md:max-lg:leading-[1.75]"
       >
         {project.description}
       </p>
@@ -136,7 +140,7 @@ export function ProjectText({
           {project.techTags.map((tag) => (
             <li
               key={tag}
-              className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/60"
+              className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/60 md:max-lg:text-sm"
             >
               {tag}
             </li>
@@ -164,24 +168,84 @@ export function ProjectText({
 
 /* ── Vertical layout ─────────────────────────────────────────────────────── */
 
+/** Glass card surface + accent glow border per project accent. */
+const CARD_ACCENT: Record<PortfolioProjectData['accent'], string> = {
+  violet:
+    'border-violet-400/30 shadow-[0_0_44px_-14px_rgba(124,58,237,0.65),inset_0_1px_0_0_rgba(167,139,250,0.14)]',
+  cyan:
+    'border-cyan-400/30 shadow-[0_0_44px_-14px_rgba(6,182,212,0.6),inset_0_1px_0_0_rgba(103,232,249,0.14)]',
+  mixed:
+    'border-violet-300/25 shadow-[-18px_0_44px_-20px_rgba(124,58,237,0.6),18px_0_44px_-20px_rgba(6,182,212,0.55),inset_0_1px_0_0_rgba(196,181,253,0.14)]',
+};
+
 function VerticalCards({
   data,
-  animate,
+  mode,
 }: {
   data: PortfolioPageData;
-  animate: boolean;
+  mode: Mode;
 }) {
   const listRef = useRef<HTMLUListElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
+  const scroll3d = mode === 'cards3d';
 
-  // Cards are visible by default; the hook only hides cards below the fold.
-  useStaggerReveal(listRef, { cardRefs, reduced: !animate });
+  // Cards are visible by default; the reveal only hides cards below the fold
+  // (desktop single project). The 3D variant moves cards with transforms instead.
+  useStaggerReveal(listRef, { cardRefs, reduced: mode !== 'vertical' });
+
+  // Mobile/tablet: one scrubbed timeline per card. Cards start tilted back
+  // (rotateX 14° → 0° as the card reaches the viewport center), then tilt away
+  // slightly while leaving. Per-card transformPerspective (not one perspective
+  // on the list) keeps each card's vanishing point at its own center, so cards
+  // far up/down the list are not skewed. Only transform + opacity change;
+  // will-change is set on cards that are in the viewport only.
+  useGSAP(
+    () => {
+      const list = listRef.current;
+      if (!scroll3d || !list) return;
+      const cards = gsap.utils.toArray<HTMLElement>('[data-card]', list);
+
+      cards.forEach((card) => {
+        const img = card.querySelector<HTMLElement>('[data-parallax]');
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true, // Lenis already smooths the scroll
+            invalidateOnRefresh: true,
+            onToggle: (self) => {
+              card.style.willChange = self.isActive ? 'transform, opacity' : 'auto';
+            },
+          },
+        });
+        // Progress 0.5 = card center at viewport center.
+        tl.fromTo(
+          card,
+          { rotateX: 14, z: -140, scale: 0.9, opacity: 0.5, transformPerspective: 900 },
+          { rotateX: 0, z: 0, scale: 1, opacity: 1, duration: 1, ease: 'sine.out' },
+          0,
+        ).to(
+          card,
+          { rotateX: -8, z: -90, scale: 0.95, opacity: 0.6, duration: 1, ease: 'sine.in' },
+          1,
+        );
+        if (img) {
+          tl.fromTo(img, { yPercent: -6 }, { yPercent: 6, duration: 2, ease: 'none' }, 0);
+        }
+      });
+
+      return () => cards.forEach((card) => (card.style.willChange = ''));
+    },
+    { scope: listRef, dependencies: [scroll3d] },
+  );
 
   return (
-    <ul ref={listRef} className="flex flex-col gap-8">
+    <ul ref={listRef} className="flex flex-col gap-8 md:max-lg:gap-12">
       {data.projects.map((project, i) => (
         <li
           key={project.slug}
+          data-card
           ref={(el) => {
             cardRefs.current[i] = el;
           }}
@@ -189,13 +253,14 @@ function VerticalCards({
           <div
             {...projectFocusProps(project, i, data.projects.length)}
             className={cn(
-              'grid gap-6 rounded-3xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-md sm:p-6 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-10 lg:p-8',
+              'grid gap-6 rounded-3xl border bg-white/[0.04] p-4 backdrop-blur-md sm:p-6 md:max-lg:gap-8 md:max-lg:p-8 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-10 lg:p-8',
+              CARD_ACCENT[project.accent],
               projectFocusRing,
             )}
           >
             <BrowserFrame
               project={project}
-              parallax={false}
+              parallax={scroll3d}
               sizes="(min-width: 1280px) 700px, (min-width: 1024px) 55vw, 100vw"
             />
             <ProjectText project={project} data={data} />
@@ -213,10 +278,12 @@ export function PortfolioSection({ data }: { data: PortfolioPageData }) {
   const count = data.projects.length;
 
   const getSnapshot = useCallback((): Mode => {
-    if (window.matchMedia(REDUCED_QUERY).matches) return 'static';
-    return window.matchMedia(DESKTOP_QUERY).matches && count >= 2
-      ? 'horizontal'
-      : 'vertical';
+    // ?motion=reduce is a dev-only test hook (see src/lib/devOverrides.ts).
+    if (window.matchMedia(REDUCED_QUERY).matches || devForceReducedMotion()) {
+      return 'static';
+    }
+    if (!window.matchMedia(DESKTOP_QUERY).matches) return 'cards3d';
+    return count >= 2 ? 'horizontal' : 'vertical';
   }, [count]);
   const mode = useSyncExternalStore<Mode>(
     subscribe,
@@ -373,7 +440,7 @@ export function PortfolioSection({ data }: { data: PortfolioPageData }) {
         </div>
       ) : (
         <div className="mx-auto max-w-7xl px-5 pb-20 sm:px-8 sm:pb-24">
-          <VerticalCards data={data} animate={mode === 'vertical'} />
+          <VerticalCards data={data} mode={mode} />
         </div>
       )}
     </section>
