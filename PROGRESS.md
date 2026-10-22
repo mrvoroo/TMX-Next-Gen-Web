@@ -2,18 +2,39 @@
 
 ## RESUME FROM HERE
 
-## New on main
-- `e2f4aef` desktop 3D corridor (one page-level WebGL context; curved project screens with accent glow + light-wave transition; light frames, dust, reflective floor; HTML overlay synced; shards reassemble above CTA; 60 fps at DPR 1 and 1.75). `39a5117` keyboard focus: every project card is focusable (role="group"), link is the next Tab stop, focus scrolls the corridor. Desktop without WebGL2 still uses the horizontal track.
+## Merged today
+- `feat/portfolio-mobile` is on main as `66de5a7` (`03417f3`): CSS 3D scroll cards below 1024px, tablet hero layout, dev-only `?gl=0` / `?motion=reduce` in `src/lib/devOverrides.ts`. Already contained in main, so it was not merged again.
+- `feat/home-content` merged as `9ba2bc1` (`b9c783f`): About, How I work, Why TMX via Keystatic, first-person copy, new meta descriptions, keywords removed.
+- Hero CTA is on main via that merge (`03bc025`): CTA goes to the contact page, dead anchors fixed, hero texts via Keystatic. Production HTML: `/kontakt` (DE), `/en/contact` (EN).
+- Services were not hidden. Working tree was clean, so there was no `content/services/*.json` commit. All 18 stay `visible: true`: App-Entwicklung, Einrichtung von Chat- und Support-Systemen, Datenanalyse und Auswertung mit KI-Unterstützung, Digitale Beratung (name `[[PENDING]]`), Aufbau digitaler Systeme und Dashboards, Erstellung und Betreuung von E-Commerce-Shops, IT-Dienstleistungen, KI-Beratung und Strategieentwicklung, KI-gestützte Content-Erstellung, Integration von KI in bestehende Systeme und Prozesse, KI-gestützte Kundenservice-Automatisierung, Entwicklung und Implementierung KI-gestützter Lösungen, Tools und Anwendungen, Prozessautomatisierung mit KI, Schulungen und Workshops zu KI-Anwendungen, Mediaeinkauf und Schaltung digitaler Werbung (Media Buying), Automatisierung von Social-Media-Prozessen, Webentwicklung / Webdesign, Betreuung digitaler Werbekampagnen.
+
+## Not merged / still open
+- `fix/hero-cta` does not exist. Its work is commit `03bc025` on `feat/home-content`, now on main through `9ba2bc1`.
+- `feat/portfolio-mobile` was skipped this session because `git log main..feat/portfolio-mobile` was empty (tip `03417f3` already on main).
+
+## Decisions
+- TMX is one freelancer (ich/I; Sie for clients).
+- Languages shown: German and English only (no Arabic).
+- "Freelancer" instead of "Agentur".
+- `personName` in About is optional (brand name, not a fictional person). It is empty.
+- Stats section stays hidden.
+- Only core services should be visible at launch; hidden ones stay in Keystatic. That hide was not in the tree, so all 18 are still visible.
+
+## Legal
+- "wir" in Impressum, Datenschutz, consent, and contact legal fields is untouched → lawyer review.
 
 ## Next
-- Step 4 portfolio mobile/tablet (prompt ready, Sonnet 5.5): CSS 3D scroll cards, focused card straight, tablet hero layout at 768px, dev-only `?gl=0` and `?motion=reduce` hooks; real-device test.
-- Then: About text, How We Work, Why Us (owner must provide real strengths: focus areas, languages, team size, differentiators), keyword research → pillar pages, Web3Forms + GA4 + Clarity, Keystatic GitHub mode, lint/hydration cleanup, sitemap/robots/404, performance (home runs 3–4 separate WebGL contexts — review), launch checklist.
-
-## Notes
-- Project titles/descriptions still placeholders (1st/2nd/3rd), project 1 description empty; no-WebGL path not tested in a real browser yet.
+- Real-device mobile test of `/portfolio` (full-page ~30 fps at 4× CPU throttle with hero WebGL — lighten if it stutters).
+- Keyword research → pillar pages.
+- Web3Forms + GA4 + Clarity.
+- Keystatic GitHub mode.
+- Lint/hydration cleanup (lint is 23: 22 errors, 1 warning).
+- Home has 3–4 WebGL contexts (review).
+- sitemap/robots/404.
+- Launch checklist.
 
 ## Open owner data
-- #18 text, About/strengths info, company data, GA/Clarity IDs, Web3Forms account, domain, hosting.
+- #18 text, real portfolio titles/descriptions, brand/person name for About, company data, GA/Clarity IDs, Web3Forms account, domain, hosting.
 
 ---
 
