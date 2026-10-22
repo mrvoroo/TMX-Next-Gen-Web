@@ -6,19 +6,18 @@
  * collection (shown = visible AND clientPermission). With no shown project the
  * page is a static 404. Lives in the (site) group so Lenis/ScrollTrigger run.
  *
- * #portfolio-hero (PortfolioHero) renders the glass-crystal scene behind the
- * server-rendered hero text; #portfolio-showcase follows its pin.
+ * PortfolioStage renders hero → projects → CTA: on desktop one page-level
+ * crystal/corridor canvas behind the server-rendered hero text, the 3D
+ * corridor and the CTA outro; otherwise hero, vertical cards and CTA.
  */
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import { localizedMetadata, resolveLocale } from '@/lib/seo';
 import { getPortfolioPage } from '@/lib/content';
-import { PortfolioSection } from '@/components/sections/PortfolioSection';
-import { PortfolioHero } from '@/components/sections/PortfolioHero';
+import { PortfolioStage } from '@/components/sections/PortfolioStage';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -53,59 +52,39 @@ export default async function PortfolioPage({
   const page = await getPortfolioPage(locale);
   if (!page) notFound();
 
-  return (
+  const heroText = (
     <>
-      <PortfolioHero images={page.projects.map((p) => p.image.src)}>
-        <p
-          data-hero-text
-          className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/70"
-        >
-          {page.eyebrow}
-        </p>
-        <h1
-          id="portfolio-heading"
-          data-hero-text
-          className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
-        >
-          {page.heading.split(' ').map((word, i, arr) =>
-            i === arr.length - 1 ? (
-              <span key={i} className="gradient-text">
-                {word}
-              </span>
-            ) : (
-              <span key={i} className="text-white">
-                {word}{' '}
-              </span>
-            ),
-          )}
-        </h1>
-        <p
-          data-hero-text
-          className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
-        >
-          {page.sub}
-        </p>
-      </PortfolioHero>
-
-      <div id="portfolio-showcase">
-        <PortfolioSection data={page} />
-      </div>
-
-      <section className="relative bg-[#050508]">
-        <div className="mx-auto max-w-7xl px-5 pb-24 sm:px-8 sm:pb-32">
-          <div className="flex flex-col items-start gap-6 rounded-3xl border border-white/[0.08] bg-white/[0.03] p-8 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:p-12">
-            <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
-              {page.ctaHeading}
-            </h2>
-            <Link
-              href="/kontakt"
-              className="inline-flex items-center rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 px-8 py-3.5 text-sm font-semibold text-white transition-opacity duration-300 hover:opacity-90"
-            >
-              {page.ctaButton}
-            </Link>
-          </div>
-        </div>
-      </section>
+      <p
+        data-hero-text
+        className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/70"
+      >
+        {page.eyebrow}
+      </p>
+      <h1
+        id="portfolio-heading"
+        data-hero-text
+        className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
+      >
+        {page.heading.split(' ').map((word, i, arr) =>
+          i === arr.length - 1 ? (
+            <span key={i} className="gradient-text">
+              {word}
+            </span>
+          ) : (
+            <span key={i} className="text-white">
+              {word}{' '}
+            </span>
+          ),
+        )}
+      </h1>
+      <p
+        data-hero-text
+        className="mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
+      >
+        {page.sub}
+      </p>
     </>
   );
+
+  return <PortfolioStage data={page} heroText={heroText} />;
 }

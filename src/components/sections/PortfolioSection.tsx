@@ -43,6 +43,28 @@ function subscribe(onChange: () => void) {
 
 /* ── Shared pieces ───────────────────────────────────────────────────────── */
 
+export const pad = (n: number) => String(n).padStart(2, '0');
+
+/** Keyboard stop for one project: labelled "01 / 03 Title", described by its text. */
+export function projectFocusProps(
+  project: PortfolioProjectData,
+  index: number,
+  count: number,
+) {
+  return {
+    tabIndex: 0,
+    role: 'group',
+    'aria-label': `${pad(index + 1)} / ${pad(count)} ${project.title}`,
+    'aria-describedby': project.description ? descriptionId(project) : undefined,
+  } as const;
+}
+
+export const projectFocusRing =
+  'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-solid focus-visible:outline-violet-400';
+
+const descriptionId = (project: PortfolioProjectData) =>
+  `project-${project.slug}-description`;
+
 function BrowserFrame({
   project,
   sizes,
@@ -86,7 +108,7 @@ function BrowserFrame({
   );
 }
 
-function ProjectText({
+export function ProjectText({
   project,
   data,
 }: {
@@ -103,7 +125,10 @@ function ProjectText({
       <h3 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl">
         {project.title}
       </h3>
-      <p className="max-w-prose text-sm leading-[1.8] text-white/55 sm:text-base">
+      <p
+        id={descriptionId(project)}
+        className="max-w-prose text-sm leading-[1.8] text-white/55 sm:text-base"
+      >
         {project.description}
       </p>
       {project.techTags.length > 0 && (
@@ -160,14 +185,21 @@ function VerticalCards({
           ref={(el) => {
             cardRefs.current[i] = el;
           }}
-          className="grid gap-6 rounded-3xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-md sm:p-6 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-10 lg:p-8"
         >
-          <BrowserFrame
-            project={project}
-            parallax={false}
-            sizes="(min-width: 1280px) 700px, (min-width: 1024px) 55vw, 100vw"
-          />
-          <ProjectText project={project} data={data} />
+          <div
+            {...projectFocusProps(project, i, data.projects.length)}
+            className={cn(
+              'grid gap-6 rounded-3xl border border-white/[0.08] bg-white/[0.03] p-4 backdrop-blur-md sm:p-6 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-10 lg:p-8',
+              projectFocusRing,
+            )}
+          >
+            <BrowserFrame
+              project={project}
+              parallax={false}
+              sizes="(min-width: 1280px) 700px, (min-width: 1024px) 55vw, 100vw"
+            />
+            <ProjectText project={project} data={data} />
+          </div>
         </li>
       ))}
     </ul>
@@ -244,6 +276,30 @@ export function PortfolioSection({ data }: { data: PortfolioPageData }) {
           );
         });
 
+      // Keyboard: focusing a slide scrubs the pinned track to it. The browser's
+      // own focus scroll would shift the overflow-hidden section instead.
+      const slides = gsap.utils.toArray<HTMLElement>('[data-slide]', section);
+      let focusFrame = 0;
+      const onFocusIn = (event: FocusEvent) => {
+        section.scrollLeft = 0;
+        const slide = (event.target as HTMLElement).closest<HTMLElement>('[data-slide]');
+        const st = scrollTween.scrollTrigger;
+        if (!slide || !st || slides.length === 0) return;
+        const offset = slide.offsetLeft - slides[0].offsetLeft;
+        const progress = Math.min(1, offset / Math.max(1, distance()));
+        cancelAnimationFrame(focusFrame);
+        focusFrame = requestAnimationFrame(() => {
+          section.scrollLeft = 0;
+          const y = st.start + (st.end - st.start) * progress;
+          const { lenis } = window as unknown as {
+            lenis?: { scrollTo: (y: number, o?: object) => void };
+          };
+          if (lenis) lenis.scrollTo(y, { duration: 0.9, force: true });
+          else window.scrollTo({ top: y });
+        });
+      };
+      section.addEventListener('focusin', onFocusIn);
+
       // Re-measure once images have settled.
       let refreshTimer: ReturnType<typeof setTimeout> | undefined;
       const scheduleRefresh = () => {
@@ -257,6 +313,8 @@ export function PortfolioSection({ data }: { data: PortfolioPageData }) {
       refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
 
       return () => {
+        cancelAnimationFrame(focusFrame);
+        section.removeEventListener('focusin', onFocusIn);
         clearTimeout(refreshTimer);
         images.forEach((img) =>
           img.removeEventListener('load', scheduleRefresh),
@@ -285,11 +343,15 @@ export function PortfolioSection({ data }: { data: PortfolioPageData }) {
                 paddingInline: 'max(1.25rem, calc((100% - 80rem) / 2 + 2rem))',
               }}
             >
-              {data.projects.map((project) => (
+              {data.projects.map((project, i) => (
                 <article
                   key={project.slug}
                   data-slide
-                  className="grid w-[75vw] shrink-0 grid-cols-[1.35fr_1fr] items-center gap-10"
+                  {...projectFocusProps(project, i, count)}
+                  className={cn(
+                    'grid w-[75vw] shrink-0 grid-cols-[1.35fr_1fr] items-center gap-10 rounded-3xl',
+                    projectFocusRing,
+                  )}
                 >
                   <BrowserFrame project={project} parallax sizes="45vw" />
                   <ProjectText project={project} data={data} />
