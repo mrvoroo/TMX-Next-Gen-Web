@@ -22,6 +22,7 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { Link } from '@/i18n/navigation';
 import type { PortfolioPageData } from '@/lib/content';
+import { cn } from '@/lib/utils';
 import type { CorridorSceneProps } from '@/components/three/CorridorScene';
 import {
   activeIndex,
@@ -33,7 +34,13 @@ import {
   totalUnits,
 } from '@/components/three/corridorPath';
 import { PortfolioHero, usePortfolioVariant } from './PortfolioHero';
-import { PortfolioSection, ProjectText } from './PortfolioSection';
+import {
+  pad,
+  PortfolioSection,
+  ProjectText,
+  projectFocusProps,
+  projectFocusRing,
+} from './PortfolioSection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,8 +48,6 @@ const CorridorScene = dynamic<CorridorSceneProps>(
   () => import('@/components/three/CorridorScene').then((m) => m.CorridorScene),
   { ssr: false, loading: () => null },
 );
-
-const pad = (n: number) => String(n).padStart(2, '0');
 
 function heroScreens(data: PortfolioPageData) {
   return data.projects
@@ -280,7 +285,13 @@ export function PortfolioStage({
                   >
                     <span className="text-white">{pad(i + 1)}</span> / {pad(count)}
                   </p>
-                  <div className="rounded-3xl border border-white/[0.08] bg-[#050508]/70 p-7">
+                  <div
+                    {...projectFocusProps(project, i, count)}
+                    className={cn(
+                      'rounded-3xl border border-white/[0.08] bg-[#050508]/70 p-7',
+                      projectFocusRing,
+                    )}
+                  >
                     <ProjectText project={project} data={data} />
                   </div>
                 </li>
