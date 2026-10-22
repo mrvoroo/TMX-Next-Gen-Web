@@ -3,14 +3,14 @@
 ## RESUME FROM HERE
 
 ## New on main
-- `21e5cae` contact service chips (payload "services" = official German names joined by "; ", plus "page_language"); `c4a0b78` + `3bb7083` standalone /portfolio page (EN /en/portfolio), Keystatic "projects" (shown = visible AND clientPermission; origin tmx|founder badge; year, accent) + "portfolioPage" singleton; nav link + page only when ≥1 shown project (static 404 otherwise); `f89fa2e` 3D glass crystal hero (desktop MeshTransmissionMaterial, 96 shards, scroll-driven shatter + camera fly-in, pinned; light version <1024px; reduced-motion static; no-WebGL SVG fallback; no external assets; 60 fps at DPR 1); first 3 projects published.
+- `e2f4aef` desktop 3D corridor (one page-level WebGL context; curved project screens with accent glow + light-wave transition; light frames, dust, reflective floor; HTML overlay synced; shards reassemble above CTA; 60 fps at DPR 1 and 1.75). `39a5117` keyboard focus: every project card is focusable (role="group"), link is the next Tab stop, focus scrolls the corridor. Desktop without WebGL2 still uses the horizontal track.
 
 ## Next
-- Step 3 desktop 3D corridor (prompt ready, Opus 5.5), Step 4 mobile/tablet polish + high-DPR + real-device test. Then About, How We Work, Why Us, keyword research → pillar pages, Web3Forms + GA4 + Clarity, launch checklist.
+- Step 4 portfolio mobile/tablet (prompt ready, Sonnet 5.5): CSS 3D scroll cards, focused card straight, tablet hero layout at 768px, dev-only `?gl=0` and `?motion=reduce` hooks; real-device test.
+- Then: About text, How We Work, Why Us (owner must provide real strengths: focus areas, languages, team size, differentiators), keyword research → pillar pages, Web3Forms + GA4 + Clarity, Keystatic GitHub mode, lint/hydration cleanup, sitemap/robots/404, performance (home runs 3–4 separate WebGL contexts — review), launch checklist.
 
 ## Notes
-- high-DPR and 768px heading area untested; one-time hydration warning from DevBlock TiltCard reduced-motion check; dev may need restart after content edits; serviceDefault unused.
-- Portfolio project titles/descriptions are placeholders (1st/2nd/3rd) — replace with real names + DE/EN descriptions before launch.
+- Project titles/descriptions still placeholders (1st/2nd/3rd), project 1 description empty; no-WebGL path not tested in a real browser yet.
 
 ## Open owner data
 - #18 text, About/strengths info, company data, GA/Clarity IDs, Web3Forms account, domain, hosting.
