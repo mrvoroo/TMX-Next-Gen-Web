@@ -90,6 +90,90 @@ export async function getServicesSection(
   };
 }
 
+/* ── Home · About / How I work / Why TMX ─────────────────────────────── */
+
+export interface AboutSectionData {
+  heading: string;
+  sub: string;
+  paragraphs: string[];
+  /** Empty string = not rendered. */
+  personName: string;
+  ctaLabel: string;
+}
+
+export interface ProcessStepData {
+  title: string;
+  text: string;
+}
+
+export interface ProcessSectionData {
+  heading: string;
+  sub: string;
+  steps: ProcessStepData[];
+}
+
+export interface WhyUsCardData {
+  title: string;
+  text: string;
+  icon: string;
+  wide: boolean;
+}
+
+export interface WhyUsSectionData {
+  heading: string;
+  sub: string;
+  cards: WhyUsCardData[];
+}
+
+/** About texts for `locale`; null when the section is hidden. */
+export async function getAboutSection(
+  locale: Locale,
+): Promise<AboutSectionData | null> {
+  const raw = await reader.singletons.aboutSection.read();
+  if (!raw || !raw.visible) return null;
+  const c = pickAll(raw, locale);
+  return {
+    heading: c.heading,
+    sub: c.sub,
+    paragraphs: c.paragraphs.filter((p) => p.trim() !== ''),
+    personName: c.personName.trim(),
+    ctaLabel: c.ctaLabel,
+  };
+}
+
+/** Visible process steps for `locale`; null when hidden or no step is visible. */
+export async function getProcessSection(
+  locale: Locale,
+): Promise<ProcessSectionData | null> {
+  const raw = await reader.singletons.processSection.read();
+  if (!raw || !raw.visible) return null;
+  const c = pickAll(raw, locale);
+  const steps = c.steps
+    .filter((s) => s.visible)
+    .map(({ title, text }) => ({ title, text }));
+  if (steps.length === 0) return null;
+  return { heading: c.heading, sub: c.sub, steps };
+}
+
+/** Visible "Why TMX" cards for `locale`; null when hidden or no card is visible. */
+export async function getWhyUsSection(
+  locale: Locale,
+): Promise<WhyUsSectionData | null> {
+  const raw = await reader.singletons.whyUsSection.read();
+  if (!raw || !raw.visible) return null;
+  const c = pickAll(raw, locale);
+  const cards = c.cards
+    .filter((card) => card.visible)
+    .map(({ title, text, icon, size }) => ({
+      title,
+      text,
+      icon,
+      wide: size === 'wide',
+    }));
+  if (cards.length === 0) return null;
+  return { heading: c.heading, sub: c.sub, cards };
+}
+
 /* ── Portfolio page ──────────────────────────────────────────────────── */
 
 export interface PortfolioProjectData {

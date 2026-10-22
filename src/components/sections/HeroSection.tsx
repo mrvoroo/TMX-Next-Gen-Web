@@ -175,7 +175,7 @@ export function HeroSection({ shouldAnimate }: HeroSectionProps) {
             variants={itemVariants}
             className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/80"
           >
-            TMX — Digital Agency
+            {t('hero.eyebrow')}
           </motion.p>
 
           {/* Main heading — LCP element. Always in DOM at opacity:1. */}

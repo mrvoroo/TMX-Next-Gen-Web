@@ -14,6 +14,7 @@ export interface TranslationSchema {
     ariaLabel: string;
   };
   hero: {
+    eyebrow: string;
     tagline: string;
     sub: string;
     cta: string;
@@ -28,22 +29,6 @@ export interface TranslationSchema {
     yearsLabel: string;
     satisfaction: string;
     satisfactionLabel: string;
-  };
-  about: {
-    heading: string;
-    sub: string;
-    body: string;
-    cta: string;
-  };
-  process: {
-    heading: string;
-    sub: string;
-    steps: Array<{ title: string; desc: string }>;
-  };
-  whyUs: {
-    heading: string;
-    sub: string;
-    cards: Array<{ title: string; desc: string }>;
   };
   contact: {
     heading: string;
@@ -87,7 +72,7 @@ export const translations: Record<Locale, TranslationSchema> = {
   de: {
     nav: {
       home: 'Start',
-      about: 'Über uns',
+      about: 'Über mich',
       services: 'Leistungen',
       portfolio: 'Portfolio',
       contact: 'Kontakt',
@@ -98,8 +83,9 @@ export const translations: Record<Locale, TranslationSchema> = {
       ariaLabel: 'Sprache wechseln',
     },
     hero: {
+      eyebrow: 'TMX — Freelancer für Web, Werbung & KI',
       tagline: 'Digitale Exzellenz. Messbare Ergebnisse.',
-      sub: 'Wir entwickeln maßgeschneiderte digitale Lösungen — von der Webentwicklung über Künstliche Intelligenz bis hin zu digitalem Marketing und IT-Beratung.',
+      sub: 'Ich entwickle maßgeschneiderte digitale Lösungen — von der Webentwicklung über Künstliche Intelligenz bis hin zu digitalem Marketing und IT-Beratung.',
       cta: 'Projekt starten',
       scroll: 'Scrollen',
     },
@@ -113,84 +99,22 @@ export const translations: Record<Locale, TranslationSchema> = {
       satisfaction: '99%',
       satisfactionLabel: 'Kundenzufriedenheit',
     },
-    about: {
-      heading: 'Über TMX',
-      sub: 'Ihr Partner für digitale Transformation',
-      body: 'Wir sind eine full-service Digitalagentur mit Sitz in Deutschland, spezialisiert auf die Entwicklung innovativer digitaler Lösungen. Unser interdisziplinäres Team aus Entwicklern, KI-Experten, Marketing-Strategen und IT-Beratern arbeitet Hand in Hand, um Ihrem Unternehmen nachhaltige Wettbewerbsvorteile zu sichern.',
-      cta: 'Mehr erfahren',
-    },
-    process: {
-      heading: 'So arbeiten wir',
-      sub: 'Unser bewährter Prozess für Ihren Erfolg',
-      steps: [
-        {
-          title: 'Discovery',
-          desc: 'Wir analysieren Ihre Anforderungen, Ziele und den Markt, um eine fundierte Basis für Ihr Projekt zu schaffen.',
-        },
-        {
-          title: 'Strategie',
-          desc: 'Auf Basis der Analyse entwickeln wir eine maßgeschneiderte Strategie und einen konkreten Fahrplan.',
-        },
-        {
-          title: 'Umsetzung',
-          desc: 'Unser Team setzt die geplante Lösung mit modernsten Technologien und agilen Methoden um.',
-        },
-        {
-          title: 'Launch',
-          desc: 'Wir begleiten Sie beim Launch, sorgen für reibungslose Inbetriebnahme und optimieren kontinuierlich.',
-        },
-        {
-          title: 'Support',
-          desc: 'Auch nach dem Launch stehen wir Ihnen mit Wartung, Updates und strategischer Weiterentwicklung zur Seite.',
-        },
-      ],
-    },
-    whyUs: {
-      heading: 'Warum TMX?',
-      sub: 'Was uns auszeichnet',
-      cards: [
-        {
-          title: 'Schnelle Umsetzung',
-          desc: 'Agile Prozesse und ein erfahrenes Team sorgen für kurze Time-to-Market ohne Qualitätsverlust.',
-        },
-        {
-          title: 'Maximale Sicherheit',
-          desc: 'Datenschutz und IT-Sicherheit sind keine Nachgedanken — sie sind Teil unserer DNA.',
-        },
-        {
-          title: 'KI-Expertise',
-          desc: 'Wir setzen modernste KI-Technologien ein, um Ihre Prozesse zu automatisieren und zu optimieren.',
-        },
-        {
-          title: '24/7 Support',
-          desc: 'Unser Support-Team ist rund um die Uhr für Sie da — persönlich, schnell und kompetent.',
-        },
-        {
-          title: 'Messbare Ergebnisse',
-          desc: 'Jede Maßnahme wird mit klaren KPIs verknüpft, transparent gemessen und kontinuierlich optimiert.',
-        },
-        {
-          title: 'Langfristige Partnerschaft',
-          desc: 'Wir denken in nachhaltigen Beziehungen — Ihr Erfolg ist unser Erfolg.',
-        },
-      ],
-    },
     contact: {
       heading: 'Kontakt',
-      sub: 'Lassen Sie uns sprechen',
+      sub: 'Sprechen Sie mich an',
       name: 'Name',
       namePlaceholder: 'Ihr vollständiger Name',
       email: 'E-Mail',
       emailPlaceholder: 'ihre@email.de',
       subject: 'Betreff',
-      subjectPlaceholder: 'Womit können wir Ihnen helfen?',
+      subjectPlaceholder: 'Womit kann ich Ihnen helfen?',
       message: 'Nachricht',
       messagePlaceholder: 'Beschreiben Sie Ihr Projekt oder Ihre Anfrage...',
       gdpr: 'Ich habe die',
       gdprLink: 'Datenschutzerklärung',
       submit: 'Nachricht senden',
       successHeading: 'Nachricht gesendet!',
-      successBody: 'Vielen Dank für Ihre Anfrage. Wir melden uns innerhalb von 24 Stunden bei Ihnen.',
+      successBody: 'Vielen Dank für Ihre Anfrage. Ich melde mich innerhalb von 24 Stunden bei Ihnen.',
     },
     footer: {
       tagline: 'Digitale Exzellenz. Messbare Ergebnisse.',
@@ -207,7 +131,7 @@ export const translations: Record<Locale, TranslationSchema> = {
     meta: {
       title: 'TMX — Digitale Exzellenz',
       description:
-        'TMX ist Ihre full-service Digitalagentur für Webentwicklung, KI, digitales Marketing und IT-Beratung. Messbare Ergebnisse, nachhaltige Lösungen.',
+        'TMX – Freelancer für Webentwicklung, Online-Werbung und KI-Lösungen. Websites, Onlineshops und Kampagnen aus einer Hand.',
       impressumTitle: 'Impressum – TMX',
       datenschutzTitle: 'Datenschutzerklärung – TMX',
       kontaktTitle: 'Kontakt – TMX',
@@ -228,8 +152,9 @@ export const translations: Record<Locale, TranslationSchema> = {
       ariaLabel: 'Switch language',
     },
     hero: {
+      eyebrow: 'TMX — Freelancer for web, advertising & AI',
       tagline: 'Digital Excellence. Measurable Results.',
-      sub: 'We craft bespoke digital solutions — from web development and artificial intelligence to digital marketing and IT consulting.',
+      sub: 'I craft bespoke digital solutions — from web development and artificial intelligence to digital marketing and IT consulting.',
       cta: 'Start a project',
       scroll: 'Scroll',
     },
@@ -243,84 +168,22 @@ export const translations: Record<Locale, TranslationSchema> = {
       satisfaction: '99%',
       satisfactionLabel: 'Client Satisfaction',
     },
-    about: {
-      heading: 'About TMX',
-      sub: 'Your partner for digital transformation',
-      body: 'We are a full-service digital agency based in Germany, specialising in building innovative digital solutions. Our interdisciplinary team of developers, AI experts, marketing strategists, and IT consultants works hand in hand to secure lasting competitive advantages for your business.',
-      cta: 'Learn more',
-    },
-    process: {
-      heading: 'How We Work',
-      sub: 'Our proven process for your success',
-      steps: [
-        {
-          title: 'Discovery',
-          desc: 'We analyse your requirements, goals, and market environment to build a solid foundation for your project.',
-        },
-        {
-          title: 'Strategy',
-          desc: 'Based on our analysis we craft a tailored strategy and a concrete roadmap.',
-        },
-        {
-          title: 'Build',
-          desc: 'Our team implements the planned solution using cutting-edge technologies and agile methodologies.',
-        },
-        {
-          title: 'Launch',
-          desc: 'We accompany you through launch, ensuring a smooth go-live and continuous optimisation.',
-        },
-        {
-          title: 'Support',
-          desc: 'After launch we remain by your side with maintenance, updates, and strategic growth.',
-        },
-      ],
-    },
-    whyUs: {
-      heading: 'Why TMX?',
-      sub: 'What sets us apart',
-      cards: [
-        {
-          title: 'Fast Delivery',
-          desc: 'Agile processes and an experienced team ensure short time-to-market without compromising quality.',
-        },
-        {
-          title: 'Maximum Security',
-          desc: 'Privacy and IT security are not afterthoughts — they are part of our DNA.',
-        },
-        {
-          title: 'AI Expertise',
-          desc: 'We deploy the latest AI technologies to automate and optimise your processes.',
-        },
-        {
-          title: '24/7 Support',
-          desc: 'Our support team is available around the clock — personal, fast, and expert.',
-        },
-        {
-          title: 'Measurable Results',
-          desc: 'Every initiative is tied to clear KPIs, transparently tracked, and continuously improved.',
-        },
-        {
-          title: 'Long-term Partnership',
-          desc: 'We think in sustainable relationships — your success is our success.',
-        },
-      ],
-    },
     contact: {
       heading: 'Contact',
-      sub: "Let's talk",
+      sub: 'Get in touch',
       name: 'Name',
       namePlaceholder: 'Your full name',
       email: 'Email',
       emailPlaceholder: 'you@email.com',
       subject: 'Subject',
-      subjectPlaceholder: 'How can we help you?',
+      subjectPlaceholder: 'How can I help you?',
       message: 'Message',
       messagePlaceholder: 'Describe your project or enquiry...',
       gdpr: 'I have read the',
       gdprLink: 'Privacy Policy',
       submit: 'Send message',
       successHeading: 'Message sent!',
-      successBody: 'Thank you for your enquiry. We will be in touch within 24 hours.',
+      successBody: 'Thank you for your enquiry. I will be in touch within 24 hours.',
     },
     footer: {
       tagline: 'Digital Excellence. Measurable Results.',
@@ -337,7 +200,7 @@ export const translations: Record<Locale, TranslationSchema> = {
     meta: {
       title: 'TMX — Digital Excellence',
       description:
-        'TMX is your full-service digital agency for web development, AI, digital marketing and IT consulting. Measurable results, sustainable solutions.',
+        'TMX – freelancer for web development, online advertising and AI solutions. Websites, online shops and campaigns in one place.',
       impressumTitle: 'Legal Notice – TMX',
       datenschutzTitle: 'Privacy Policy – TMX',
       kontaktTitle: 'Contact – TMX',

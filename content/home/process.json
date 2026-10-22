@@ -1,0 +1,68 @@
+{
+  "visible": true,
+  "heading": {
+    "en": "How I work",
+    "de": "So arbeite ich"
+  },
+  "sub": {
+    "en": "From the first conversation to launch – transparent, in clear steps.",
+    "de": "Vom ersten Gespräch bis zum Launch – transparent und in klaren Schritten."
+  },
+  "steps": [
+    {
+      "title": {
+        "en": "Discovery call",
+        "de": "Erstgespräch"
+      },
+      "text": {
+        "en": "You tell me about your project, your goals and your audience. Together we work out what your project really needs.",
+        "de": "Sie erzählen mir von Ihrem Vorhaben, Ihren Zielen und Ihrer Zielgruppe. Gemeinsam klären wir, was Ihr Projekt wirklich braucht."
+      },
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Concept & proposal",
+        "de": "Konzept & Angebot"
+      },
+      "text": {
+        "en": "I put together a clear concept with scope, timeline and a transparent proposal – with no hidden costs.",
+        "de": "Ich erarbeite ein klares Konzept mit Umfang, Zeitplan und einem transparenten Angebot – ohne versteckte Kosten."
+      },
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Design & development",
+        "de": "Design & Entwicklung"
+      },
+      "text": {
+        "en": "I design and build your project using AI-assisted workflows. You see progress early and can give feedback at any time.",
+        "de": "Ich gestalte und entwickle Ihr Projekt mit KI-gestützten Workflows. Sie sehen Zwischenstände früh und können jederzeit Feedback geben."
+      },
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Launch",
+        "de": "Launch"
+      },
+      "text": {
+        "en": "After thorough testing on desktop and mobile, your project goes live – technically clean and with data protection in mind.",
+        "de": "Nach gründlichen Tests auf Desktop und Mobilgeräten geht Ihr Projekt live – technisch sauber und mit Blick auf den Datenschutz."
+      },
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Support & growth",
+        "de": "Betreuung & Wachstum"
+      },
+      "text": {
+        "en": "If you wish, I keep looking after your website, optimise your campaigns and automate new workflows.",
+        "de": "Auf Wunsch betreue ich Ihre Website weiter, optimiere Ihre Kampagnen und automatisiere neue Abläufe."
+      },
+      "visible": true
+    }
+  ]
+}

@@ -4,8 +4,8 @@
     "de": "Kontakt"
   },
   "intro": {
-    "en": "Tell us about your project – we will get back to you.",
-    "de": "Erzählen Sie uns von Ihrem Vorhaben – wir melden uns bei Ihnen."
+    "en": "Tell me about your project – I will get back to you.",
+    "de": "Erzählen Sie mir von Ihrem Vorhaben – ich melde mich bei Ihnen."
   },
   "labelEmail": {
     "en": "E-mail",
@@ -88,7 +88,7 @@
     "de": "Bitte bestätigen Sie die Datenschutzerklärung."
   },
   "metaDescription": {
-    "en": "Contact TMX – tell us about your project.",
-    "de": "Kontakt zu TMX – schreiben Sie uns Ihr Anliegen."
+    "en": "Contact TMX – tell me about your project.",
+    "de": "Kontakt zu TMX – schreiben Sie mir Ihr Anliegen."
   }
 }

@@ -1,0 +1,91 @@
+{
+  "visible": true,
+  "heading": {
+    "en": "Why TMX",
+    "de": "Warum TMX"
+  },
+  "sub": {
+    "en": "What working with me is like.",
+    "de": "Was die Zusammenarbeit mit mir ausmacht."
+  },
+  "cards": [
+    {
+      "title": {
+        "en": "Everything in one place",
+        "de": "Alles aus einer Hand"
+      },
+      "text": {
+        "en": "Website, advertising and AI automation in one place – with one dedicated point of contact for your entire project.",
+        "de": "Website, Werbung und KI-Automatisierung aus einer Hand – mit einem festen Ansprechpartner für Ihr gesamtes Projekt."
+      },
+      "icon": "Layers",
+      "size": "wide",
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "AI-assisted workflows",
+        "de": "KI-gestützte Workflows"
+      },
+      "text": {
+        "en": "I use current AI tools deliberately at every stage of a project. That shortens the path and leaves more time for the details.",
+        "de": "Ich setze aktuelle KI-Werkzeuge gezielt in jedem Projektschritt ein. Das verkürzt Wege und schafft Zeit für den Feinschliff."
+      },
+      "icon": "Sparkles",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Unusual ideas welcome",
+        "de": "Auch ungewöhnliche Ideen"
+      },
+      "text": {
+        "en": "From a lean landing page to an interactive 3D website: I bring unusual ideas to life technically.",
+        "de": "Von der schlanken Landingpage bis zur interaktiven 3D-Website: Ich setze auch ungewöhnliche Ideen technisch um."
+      },
+      "icon": "Lightbulb",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Ads on every relevant platform",
+        "de": "Werbung auf allen relevanten Plattformen"
+      },
+      "text": {
+        "en": "Campaigns on Instagram, Facebook, TikTok, Snapchat, Pinterest and LinkedIn – planned, launched and managed.",
+        "de": "Kampagnen auf Instagram, Facebook, TikTok, Snapchat, Pinterest und LinkedIn – geplant, geschaltet und betreut."
+      },
+      "icon": "Megaphone",
+      "size": "wide",
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Multilingual",
+        "de": "Mehrsprachig"
+      },
+      "text": {
+        "en": "Communication in German and English – and websites that handle several languages cleanly.",
+        "de": "Kommunikation auf Deutsch und Englisch – und Websites, die mehrere Sprachen sauber abbilden."
+      },
+      "icon": "Languages",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "title": {
+        "en": "Privacy built in",
+        "de": "Datenschutz mitgedacht"
+      },
+      "text": {
+        "en": "Websites for the German market – legal notice, privacy policy and cookie consent are part of the project from day one.",
+        "de": "Websites für den deutschen Markt – Impressum, Datenschutzerklärung und Cookie-Einwilligung sind von Anfang an Teil des Projekts."
+      },
+      "icon": "ShieldCheck",
+      "size": "normal",
+      "visible": true
+    }
+  ]
+}
