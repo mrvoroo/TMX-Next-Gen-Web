@@ -8,6 +8,7 @@ import { ServicesSection } from '@/components/sections/ServicesSection';
 import { ProcessSection }  from '@/components/sections/ProcessSection';
 import { WhyTmxSection }   from '@/components/sections/WhyTmxSection';
 import type {
+  HeroSectionData,
   AboutSectionData,
   ProcessSectionData,
   ServicesSectionData,
@@ -15,11 +16,13 @@ import type {
 } from '@/lib/content';
 
 export default function HomeClient({
+  hero,
   about,
   services,
   process,
   whyUs,
 }: {
+  hero: HeroSectionData | null;
   about: AboutSectionData | null;
   services: ServicesSectionData | null;
   process: ProcessSectionData | null;
@@ -35,7 +38,7 @@ export default function HomeClient({
       )}
 
       {/* SECTION 2 — Hero */}
-      <HeroSection shouldAnimate={!loading} />
+      {hero && <HeroSection data={hero} shouldAnimate={!loading} />}
 
       {/* SECTION 3 — Stats strip */}
       {/* StatsStrip hidden: fake numbers (UWG risk). Re-add with real stats later. */}

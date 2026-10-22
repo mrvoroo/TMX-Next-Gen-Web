@@ -13,13 +13,6 @@ export interface TranslationSchema {
     en: string;
     ariaLabel: string;
   };
-  hero: {
-    eyebrow: string;
-    tagline: string;
-    sub: string;
-    cta: string;
-    scroll: string;
-  };
   stats: {
     projects: string;
     projectsLabel: string;
@@ -82,13 +75,6 @@ export const translations: Record<Locale, TranslationSchema> = {
       en: 'EN',
       ariaLabel: 'Sprache wechseln',
     },
-    hero: {
-      eyebrow: 'TMX — Freelancer für Web, Werbung & KI',
-      tagline: 'Digitale Exzellenz. Messbare Ergebnisse.',
-      sub: 'Ich entwickle maßgeschneiderte digitale Lösungen — von der Webentwicklung über Künstliche Intelligenz bis hin zu digitalem Marketing und IT-Beratung.',
-      cta: 'Projekt starten',
-      scroll: 'Scrollen',
-    },
     stats: {
       projects: '150+',
       projectsLabel: 'Abgeschlossene Projekte',
@@ -150,13 +136,6 @@ export const translations: Record<Locale, TranslationSchema> = {
       de: 'DE',
       en: 'EN',
       ariaLabel: 'Switch language',
-    },
-    hero: {
-      eyebrow: 'TMX — Freelancer for web, advertising & AI',
-      tagline: 'Digital Excellence. Measurable Results.',
-      sub: 'I craft bespoke digital solutions — from web development and artificial intelligence to digital marketing and IT consulting.',
-      cta: 'Start a project',
-      scroll: 'Scroll',
     },
     stats: {
       projects: '150+',

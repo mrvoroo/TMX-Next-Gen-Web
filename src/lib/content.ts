@@ -90,6 +90,25 @@ export async function getServicesSection(
   };
 }
 
+/* ── Home · Hero ─────────────────────────────────────────────────────── */
+
+export interface HeroSectionData {
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  sub: string;
+  ctaLabel: string;
+  scrollLabel: string;
+}
+
+/** Hero texts for `locale`. */
+export async function getHeroSection(
+  locale: Locale,
+): Promise<HeroSectionData | null> {
+  const raw = await reader.singletons.heroSection.read();
+  return raw ? pickAll(raw, locale) : null;
+}
+
 /* ── Home · About / How I work / Why TMX ─────────────────────────────── */
 
 export interface AboutSectionData {

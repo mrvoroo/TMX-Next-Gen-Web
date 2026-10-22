@@ -76,6 +76,19 @@ const servicesSectionFields = () => ({
 const visibleField = (label: string) =>
   fields.checkbox({ label, defaultValue: true });
 
+const heroSectionFields = () => ({
+  eyebrow: localized('Eyebrow'),
+  headlineLine1: localized('Headline · line 1', {
+    description: 'Shown with the gradient. Include the final full stop.',
+  }),
+  headlineLine2: localized('Headline · line 2'),
+  sub: localized('Subheading', { multiline: true }),
+  ctaLabel: localized('CTA button label', {
+    description: 'Links to the contact page.',
+  }),
+  scrollLabel: localized('Scroll indicator label'),
+});
+
 const aboutSectionFields = () => ({
   visible: visibleField('Visible'),
   heading: localized('Heading'),
@@ -383,6 +396,12 @@ export default config({
       path: 'content/legal/consent-banner',
       format: 'json',
       schema: consentFields(),
+    }),
+    heroSection: singleton({
+      label: 'Home · Hero',
+      path: 'content/home/hero',
+      format: 'json',
+      schema: heroSectionFields(),
     }),
     aboutSection: singleton({
       label: 'Home · About',
