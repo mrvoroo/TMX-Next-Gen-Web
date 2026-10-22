@@ -86,7 +86,7 @@ function BrowserFrame({
   );
 }
 
-function ProjectText({
+export function ProjectText({
   project,
   data,
 }: {

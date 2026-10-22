@@ -13,6 +13,10 @@
  *
  * Scroll progress lives in a ref read by the scene's useFrame; the text fade
  * is part of the same scrubbed timeline.
+ *
+ * With `onStageProgress` (desktop, see PortfolioStage) the hero renders no
+ * canvas of its own: it only reports its progress to the page-level canvas
+ * behind it.
  */
 
 import dynamic from 'next/dynamic';
@@ -37,6 +41,8 @@ const CrystalScene = dynamic<CrystalSceneProps>(
   () => import('@/components/three/CrystalScene').then((m) => m.CrystalScene),
   { ssr: false, loading: () => null },
 );
+
+export type PortfolioVariant = Variant;
 
 type Variant =
   | 'pending'
@@ -107,6 +113,10 @@ function subscribe(onChange: () => void) {
   };
 }
 
+export function usePortfolioVariant(): Variant {
+  return useSyncExternalStore<Variant>(subscribe, getSnapshot, () => 'pending');
+}
+
 /* ── No-WebGL fallback ───────────────────────────────────────────────────── */
 
 function CrystalFallback() {
@@ -143,19 +153,22 @@ function CrystalFallback() {
 
 export function PortfolioHero({
   images,
+  onStageProgress,
   children,
 }: {
   images: string[];
+  onStageProgress?: (progress: number) => void;
   children: ReactNode;
 }) {
   const heroRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
+  const staged = onStageProgress !== undefined;
   const refreshTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [inView, setInView] = useState(true);
 
-  const variant = useSyncExternalStore<Variant>(subscribe, getSnapshot, () => 'pending');
+  const variant = usePortfolioVariant();
   const scroll = variant === 'desktop' || variant === 'light';
-  const hasCanvas = variant !== 'pending' && variant !== 'none';
+  const hasCanvas = !staged && variant !== 'pending' && variant !== 'none';
   const quality = variant === 'desktop' || variant === 'reduced-desktop' ? 'high' : 'low';
 
   const screens = useMemo(() => {
@@ -185,17 +198,22 @@ export function PortfolioHero({
   useGSAP(
     () => {
       progressRef.current = 0;
+      onStageProgress?.(0);
       const hero = heroRef.current;
       if (!scroll || !hero) return;
 
       const pinned = variant === 'desktop';
       const proxy = { p: 0 };
+      const report = () => {
+        progressRef.current = proxy.p;
+        onStageProgress?.(proxy.p);
+      };
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
-        onUpdate: () => {
-          progressRef.current = proxy.p;
-        },
+        onUpdate: report,
         scrollTrigger: {
+          // A refresh reverts the timeline (onUpdate fires with 0), then restores it silently.
+          onRefresh: report,
           trigger: hero,
           start: 'top top',
           end: pinned ? '+=130%' : '+=60%',
@@ -212,12 +230,14 @@ export function PortfolioHero({
           '[data-hero-text]',
           { autoAlpha: 0, y: -24, filter: 'blur(10px)', duration: 0.26, stagger: 0.02 },
           0,
-        )
-        .to('[data-hero-bg]', { autoAlpha: 0, duration: 0.12 }, 0.88);
+        );
+      // Staged: the canvas continues into the corridor, only the shade fades.
+      if (staged) tl.to('[data-hero-shade]', { autoAlpha: 0, duration: 0.4 }, 0.3);
+      else tl.to('[data-hero-bg]', { autoAlpha: 0, duration: 0.12 }, 0.88);
 
       scheduleRefresh();
     },
-    { scope: heroRef, dependencies: [variant, scroll, scheduleRefresh] },
+    { scope: heroRef, dependencies: [variant, scroll, staged, onStageProgress, scheduleRefresh] },
   );
 
   const frameloop = !scroll ? 'demand' : inView ? 'always' : 'never';
@@ -226,26 +246,33 @@ export function PortfolioHero({
     <div
       ref={heroRef}
       id="portfolio-hero"
-      className="relative h-[100svh] min-h-[560px] overflow-hidden bg-[#050508]"
+      className={
+        staged
+          ? 'relative h-[100svh] min-h-[560px] overflow-hidden'
+          : 'relative h-[100svh] min-h-[560px] overflow-hidden bg-[#050508]'
+      }
     >
-      <div data-hero-bg aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_45%_42%,rgba(124,58,237,0.22),transparent_70%),radial-gradient(ellipse_40%_35%_at_58%_52%,rgba(6,182,212,0.14),transparent_70%)]" />
-        {variant === 'none' && <CrystalFallback />}
-        {hasCanvas && (
-          <div className="absolute inset-0">
-            <CrystalScene
-              key={variant}
-              progressRef={progressRef}
-              quality={quality}
-              animated={scroll}
-              frameloop={frameloop}
-              images={screens}
-              onReady={scheduleRefresh}
-            />
-          </div>
-        )}
-      </div>
+      {!staged && (
+        <div data-hero-bg aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_45%_42%,rgba(124,58,237,0.22),transparent_70%),radial-gradient(ellipse_40%_35%_at_58%_52%,rgba(6,182,212,0.14),transparent_70%)]" />
+          {variant === 'none' && <CrystalFallback />}
+          {hasCanvas && (
+            <div className="absolute inset-0">
+              <CrystalScene
+                key={variant}
+                progressRef={progressRef}
+                quality={quality}
+                animated={scroll}
+                frameloop={frameloop}
+                images={screens}
+                onReady={scheduleRefresh}
+              />
+            </div>
+          )}
+        </div>
+      )}
       <div
+        data-hero-shade
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-[#050508] via-[#050508]/75 to-transparent"
       />

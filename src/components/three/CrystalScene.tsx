@@ -10,9 +10,21 @@
  * single extra pass regardless of the shard count.
  *
  * Everything is generated locally: no HDRIs, models, fonts or remote textures.
+ *
+ * With `stage` (desktop /portfolio) the same canvas is page-level: after the
+ * hero dolly the camera follows the corridor path (see corridorPath.ts), the
+ * stage children render the corridor, and in the outro the crystal
+ * reassembles at the end of the corridor (reverse shatter).
  */
 
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import {
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  type ReactNode,
+} from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import {
   Environment,
@@ -21,6 +33,15 @@ import {
   useTexture,
 } from '@react-three/drei';
 import * as THREE from 'three';
+import {
+  HERO_END_Z,
+  cameraZ as corridorCameraZ,
+  corridorBlend,
+  finalCameraZ,
+  outroCrystalZ,
+  outroProgress,
+  smoothRange,
+} from './corridorPath';
 
 const ACCENT_FROM = '#7c3aed';
 const ACCENT_TO = '#06b6d4';
@@ -38,6 +59,14 @@ export interface CrystalSceneProps {
   images: string[];
   /** Called after the canvas is created and after textures load. */
   onReady: () => void;
+  stage?: CrystalStage;
+}
+
+export interface CrystalStage {
+  /** Corridor position u in viewport heights, written by the page's ScrollTrigger. */
+  state: { current: { u: number } };
+  count: number;
+  children: ReactNode;
 }
 
 const CONFIG = {
@@ -65,8 +94,11 @@ const CONFIG = {
   },
 } as const;
 
-const CAMERA_END_Z = -3;
+const CAMERA_END_Z = HERO_END_Z;
 const CRYSTAL_Y = 0.35;
+const GLOW_Z = -12;
+const OUTRO_CRYSTAL_Y = 0.8;
+const OUTRO_SCALE = 0.68;
 
 /* ── Helpers ─────────────────────────────────────────────────────────────── */
 
@@ -436,7 +468,16 @@ function GradientScreens(props: {
 
 /* ── Particles ───────────────────────────────────────────────────────────── */
 
-function Particles({ count, animated }: { count: number; animated: boolean }) {
+/** `farZ`: every second particle drifts along the corridor down to farZ instead. */
+function Particles({
+  count,
+  animated,
+  farZ,
+}: {
+  count: number;
+  animated: boolean;
+  farZ?: number;
+}) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const geometry = useMemo(() => new THREE.OctahedronGeometry(1, 0), []);
   const material = useMemo(
@@ -470,9 +511,13 @@ function Particles({ count, animated }: { count: number; animated: boolean }) {
     const from = new THREE.Color(ACCENT_FROM);
     const to = new THREE.Color(ACCENT_TO);
     for (let i = 0; i < count; i++) {
-      do {
-        pos.set((rand() - 0.5) * 22, (rand() - 0.5) * 14, -18 + rand() * 24);
-      } while (pos.lengthSq() < 6);
+      if (farZ !== undefined && i % 2 === 1) {
+        pos.set((rand() - 0.5) * 13, -1.9 + rand() * 6.4, farZ + rand() * (-6 - farZ));
+      } else {
+        do {
+          pos.set((rand() - 0.5) * 22, (rand() - 0.5) * 14, -18 + rand() * 24);
+        } while (pos.lengthSq() < 6);
+      }
       scale.setScalar(0.012 + rand() * 0.03);
       m.compose(pos, q, scale);
       mesh.setMatrixAt(i, m);
@@ -481,10 +526,18 @@ function Particles({ count, animated }: { count: number; animated: boolean }) {
     }
     mesh.instanceMatrix.needsUpdate = true;
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  }, [count]);
+  }, [count, farZ]);
 
-  useFrame((_, delta) => {
-    if (animated && meshRef.current) meshRef.current.rotation.y += delta * 0.015;
+  useFrame(({ clock }, delta) => {
+    const mesh = meshRef.current;
+    if (!animated || !mesh) return;
+    if (farZ === undefined) {
+      mesh.rotation.y += delta * 0.015;
+      return;
+    }
+    // Rotating would swing the corridor dust around the origin; drift instead.
+    const t = clock.elapsedTime;
+    mesh.position.set(Math.sin(t * 0.11) * 0.35, Math.sin(t * 0.17) * 0.22, Math.sin(t * 0.07) * 0.5);
   });
 
   return (
@@ -509,17 +562,29 @@ const GLOW_FRAGMENT = /* glsl */ `
 uniform vec3 uBase;
 uniform vec3 uA;
 uniform vec3 uB;
+uniform float uMix;
 varying vec2 vUv;
 void main() {
   vec2 p = vUv - 0.5;
   p.x *= 1.6;
   float a = 1.0 - smoothstep(0.0, 0.36, length(p - vec2(-0.06, 0.04)));
   float b = 1.0 - smoothstep(0.0, 0.3, length(p - vec2(0.09, -0.05)));
-  vec3 col = uBase + uA * a * a * 0.42 + uB * b * b * 0.3;
+  vec3 col = uBase + (uA * a * a * 0.42 + uB * b * b * 0.3) * uMix;
   gl_FragColor = vec4(col, 1.0);
 }`;
 
-function GlowPlane() {
+/**
+ * Opaque backdrop. In stage mode it dims during the corridor and follows the
+ * camera, then settles behind the reassembled crystal like in the hero.
+ */
+function GlowPlane({
+  stage,
+  progressRef,
+}: {
+  stage?: CrystalStage;
+  progressRef: { current: number };
+}) {
+  const meshRef = useRef<THREE.Mesh>(null);
   const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
@@ -530,6 +595,7 @@ function GlowPlane() {
           uBase: { value: new THREE.Vector3(5 / 255, 5 / 255, 8 / 255) },
           uA: { value: new THREE.Vector3(124 / 255, 58 / 255, 237 / 255) },
           uB: { value: new THREE.Vector3(6 / 255, 182 / 255, 212 / 255) },
+          uMix: { value: 1 },
         },
       }),
     [],
@@ -542,9 +608,47 @@ function GlowPlane() {
     },
     [material, geometry],
   );
+
+  useFrame(({ camera }) => {
+    const mesh = meshRef.current;
+    if (!stage || !mesh) return;
+    const { u } = stage.state.current;
+    const o = outroProgress(u, stage.count);
+    const z = camera.position.z;
+    mesh.position.z = Math.min(GLOW_Z, z - 9 - 10 * o);
+    const dim = 1 - corridorBlend(progressRef.current, u) * 0.88;
+    const { uniforms } = mesh.material as THREE.ShaderMaterial;
+    uniforms.uMix.value = Math.max(dim, 0.12 + 0.88 * smoothRange(0.25, 1, o));
+  });
+
   return (
-    <mesh geometry={geometry} material={material} position={[0, 0, -12]} renderOrder={-1} />
+    <mesh
+      ref={meshRef}
+      geometry={geometry}
+      material={material}
+      position={[0, 0, GLOW_Z]}
+      renderOrder={-1}
+    />
   );
+}
+
+/** Corridor fog: off during the hero, closes in as the corridor appears. */
+function StageFog({
+  stage,
+  progressRef,
+}: {
+  stage: CrystalStage;
+  progressRef: { current: number };
+}) {
+  const fogRef = useRef<THREE.Fog>(null);
+  useFrame(() => {
+    const fog = fogRef.current;
+    if (!fog) return;
+    const blend = corridorBlend(progressRef.current, stage.state.current.u);
+    fog.near = 60 + (9 - 60) * blend;
+    fog.far = 120 + (32 - 120) * blend;
+  });
+  return <fog ref={fogRef} attach="fog" args={['#050508', 60, 120]} />;
 }
 
 /* ── Crystal ─────────────────────────────────────────────────────────────── */
@@ -553,10 +657,12 @@ function Crystal({
   quality,
   progressRef,
   animated,
+  stage,
 }: {
   quality: CrystalQuality;
   progressRef: { current: number };
   animated: boolean;
+  stage?: CrystalStage;
 }) {
   const cfg = CONFIG[quality];
   const meshRef = useRef<THREE.Mesh>(null);
@@ -573,7 +679,9 @@ function Crystal({
     const mesh = meshRef.current;
     if (!mesh) return;
     if (animated) mesh.rotation.y += delta * 0.12;
-    const p = animated ? clamp01(progressRef.current) : 0;
+    const o = stage ? outroProgress(stage.state.current.u, stage.count) : 0;
+    // Outro: reverse shatter, the shards fly back in from the edges.
+    const p = !animated ? 0 : o > 0 ? 1 - o : clamp01(progressRef.current);
     if (p === lastProgress.current) return;
     lastProgress.current = p;
     writeShards(mesh.geometry, shards.data, p, cfg.shardDistance);
@@ -630,11 +738,13 @@ function Rig({
   quality,
   progressRef,
   animated,
+  stage,
   children,
 }: {
   quality: CrystalQuality;
   progressRef: { current: number };
   animated: boolean;
+  stage?: CrystalStage;
   children: React.ReactNode;
 }) {
   const cfg = CONFIG[quality];
@@ -658,11 +768,25 @@ function Rig({
     if (!fit || !tilt) return;
 
     // Narrow viewports: shrink the crystal so it fits horizontally.
-    fit.scale.setScalar(cfg.scale * Math.min(1, Math.max(0.75, size.width / size.height / 1.15)));
+    const fitScale = cfg.scale * Math.min(1, Math.max(0.75, size.width / size.height / 1.15));
+    fit.scale.setScalar(fitScale);
 
     const p = animated ? clamp01(progressRef.current) : 0;
     const dolly = p * p * (3 - 2 * p);
-    camera.position.z = cfg.cameraZ + (CAMERA_END_Z - cfg.cameraZ) * dolly;
+    const heroZ = cfg.cameraZ + (CAMERA_END_Z - cfg.cameraZ) * dolly;
+    camera.position.z = heroZ;
+
+    if (stage) {
+      const { u } = stage.state.current;
+      // min(): the hero scrub may still trail when the corridor starts.
+      if (u > 0) camera.position.z = Math.min(heroZ, corridorCameraZ(u, stage.count));
+      if (outroProgress(u, stage.count) > 0) {
+        fit.position.set(0, OUTRO_CRYSTAL_Y, outroCrystalZ(stage.count));
+        fit.scale.setScalar(fitScale * OUTRO_SCALE);
+      } else {
+        fit.position.set(0, CRYSTAL_Y, 0);
+      }
+    }
 
     if (!animated) return;
     const k = 1 - Math.exp(-delta * 4);
@@ -686,9 +810,11 @@ export function CrystalScene({
   frameloop,
   images,
   onReady,
+  stage,
 }: CrystalSceneProps) {
   const cfg = CONFIG[quality];
   const screenProps = { count: cfg.screens, progressRef, animated };
+  const dustFarZ = stage ? finalCameraZ(stage.count) - 26 : undefined;
 
   return (
     <Canvas
@@ -702,7 +828,8 @@ export function CrystalScene({
       }}
       onCreated={() => onReady()}
     >
-      <GlowPlane />
+      <GlowPlane stage={stage} progressRef={progressRef} />
+      {stage && <StageFog stage={stage} progressRef={progressRef} />}
       <Environment resolution={cfg.envResolution} frames={1}>
         <Lightformer form="rect" intensity={4.5} color={ACCENT_FROM} position={[-4, 1.5, 2]} scale={[3, 7, 1]} target={[0, 0, 0]} />
         <Lightformer form="rect" intensity={5} color={ACCENT_TO} position={[4, -1, 2]} scale={[3, 7, 1]} target={[0, 0, 0]} />
@@ -712,10 +839,10 @@ export function CrystalScene({
       <pointLight position={[-3, 2, 3]} intensity={18} color={ACCENT_FROM} />
       <pointLight position={[3, -1.5, 3]} intensity={14} color={ACCENT_TO} />
 
-      <Particles count={cfg.particles} animated={animated} />
+      <Particles count={cfg.particles} animated={animated} farZ={dustFarZ} />
 
-      <Rig quality={quality} progressRef={progressRef} animated={animated}>
-        <Crystal quality={quality} progressRef={progressRef} animated={animated} />
+      <Rig quality={quality} progressRef={progressRef} animated={animated} stage={stage}>
+        <Crystal quality={quality} progressRef={progressRef} animated={animated} stage={stage} />
         {images.length > 0 ? (
           <Suspense fallback={null}>
             <TexturedScreens urls={images} onLoaded={onReady} {...screenProps} />
@@ -724,6 +851,7 @@ export function CrystalScene({
           <GradientScreens {...screenProps} />
         )}
       </Rig>
+      {stage?.children}
     </Canvas>
   );
 }
