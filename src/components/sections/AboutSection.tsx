@@ -13,9 +13,10 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ArrowRight } from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/useTranslation';
+import { Link } from '@/i18n/navigation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
+import type { AboutSectionData } from '@/lib/content';
 import type { IcosahedronSceneProps } from '@/components/three/IcosahedronScene';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -48,8 +49,7 @@ function ProgressDot({
 }
 
 /* ── Main section ─────────────────────────────────────────────────────────── */
-export function AboutSection() {
-  const { t }   = useTranslation();
+export function AboutSection({ data }: { data: AboutSectionData }) {
   const reduced = useReducedMotion();
 
   const sectionRef = useRef<HTMLElement>(null);
@@ -141,6 +141,9 @@ export function AboutSection() {
       pin:        true,
       pinSpacing: true,
       scrub:      0.8,
+      // Refresh before the later pinned sections so their start positions
+      // include this pin-spacer (see ProcessSection).
+      refreshPriority: 2,
       onUpdate(self) {
         progressRef.current = self.progress;
         progressMV.set(self.progress);
@@ -187,7 +190,7 @@ export function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      aria-label={t('about.heading')}
+      aria-label={data.heading}
       className={cn(
         'relative w-full overflow-hidden bg-[#050508]',
         /*
@@ -218,20 +221,30 @@ export function AboutSection() {
         {/* ── Left / bottom (mobile): Text ─────────────────────────────── */}
         <div className="flex flex-col justify-center py-10 md:py-0 md:pr-12 lg:pr-20">
 
-          {/* Sub-label — uses t('about.sub') (short tagline as eyebrow) */}
+          {/* Optional person / brand label — only rendered when not empty */}
+          {data.personName && (
+            <motion.p
+              style={{ opacity: subLabelOp, y: subLabelY }}
+              className="mb-3 text-xs font-medium tracking-[0.12em] text-white/55"
+            >
+              {data.personName}
+            </motion.p>
+          )}
+
+          {/* Sub-label — short tagline as eyebrow */}
           <motion.p
             style={{ opacity: subLabelOp, y: subLabelY }}
-            className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/80"
+            className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-violet-400/80"
           >
-            {t('about.sub')}
+            {data.sub}
           </motion.p>
 
           {/* Heading — last word gets gradient accent */}
           <motion.h2
             style={{ opacity: headingOp, y: headingY }}
-            className="mb-8 text-4xl font-black leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-6xl"
+            className="mb-6 text-4xl font-black leading-[1.06] tracking-tight text-white sm:text-5xl lg:text-6xl"
           >
-            {t('about.heading')
+            {data.heading
               .split(' ')
               .map((word, i, arr) =>
                 i === arr.length - 1 ? (
@@ -245,17 +258,19 @@ export function AboutSection() {
           </motion.h2>
 
           {/* Body */}
-          <motion.p
+          <motion.div
             style={{ opacity: bodyOp, y: bodyY }}
-            className="mb-10 max-w-prose text-sm leading-[1.85] text-white/48 sm:text-base"
+            className="mb-8 max-w-prose space-y-3.5 text-sm leading-[1.75] text-white/55 sm:text-[0.95rem]"
           >
-            {t('about.body')}
-          </motion.p>
+            {data.paragraphs.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </motion.div>
 
           {/* CTA — ghost button style (distinct from Hero's filled CTA) */}
           <motion.div style={{ opacity: ctaOp, y: ctaY }}>
-            <a
-              href="#services"
+            <Link
+              href="/kontakt"
               className={cn(
                 'group inline-flex items-center gap-2.5 rounded-full',
                 'border border-violet-500/35 bg-violet-600/10',
@@ -264,12 +279,12 @@ export function AboutSection() {
                 'hover:border-violet-400/55 hover:bg-violet-600/18 hover:text-white',
               )}
             >
-              {t('about.cta')}
+              {data.ctaLabel}
               <ArrowRight
                 size={14}
                 className="transition-transform duration-300 group-hover:translate-x-1"
               />
-            </a>
+            </Link>
           </motion.div>
         </div>
 

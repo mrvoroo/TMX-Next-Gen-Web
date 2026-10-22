@@ -1,5 +1,6 @@
 import { collection, config, fields, singleton } from '@keystatic/core';
 import { SERVICE_ICON_NAMES } from './src/config/service-icons';
+import { WHY_ICON_NAMES } from './src/config/why-icons';
 
 /* ── Localized fields ─────────────────────────────────────────────────────
  * Every translatable value is ONE block: English on top, German directly
@@ -70,6 +71,87 @@ const servicesSectionFields = () => ({
   it: fields.object(servicePillarFields(), {
     label: 'Pillar · IT & Consulting',
   }),
+});
+
+const visibleField = (label: string) =>
+  fields.checkbox({ label, defaultValue: true });
+
+const heroSectionFields = () => ({
+  eyebrow: localized('Eyebrow'),
+  headlineLine1: localized('Headline · line 1', {
+    description: 'Shown with the gradient. Include the final full stop.',
+  }),
+  headlineLine2: localized('Headline · line 2'),
+  sub: localized('Subheading', { multiline: true }),
+  ctaLabel: localized('CTA button label', {
+    description: 'Links to the contact page.',
+  }),
+  scrollLabel: localized('Scroll indicator label'),
+});
+
+const aboutSectionFields = () => ({
+  visible: visibleField('Visible'),
+  heading: localized('Heading'),
+  sub: localized('Subheading'),
+  paragraphs: fields.array(localized('Paragraph', { multiline: true }), {
+    label: 'Paragraphs',
+    itemLabel: (props) => props.fields.en.value.slice(0, 60) || 'Paragraph',
+  }),
+  personName: fields.text({
+    label: 'Person / brand name (optional)',
+    description: 'Brand or person name shown in About. Leave empty to hide.',
+  }),
+  ctaLabel: localized('CTA button label'),
+});
+
+const processSectionFields = () => ({
+  visible: visibleField('Visible'),
+  heading: localized('Heading'),
+  sub: localized('Subheading'),
+  steps: fields.array(
+    fields.object({
+      title: localized('Title'),
+      text: localized('Text', { multiline: true }),
+      visible: visibleField('Visible'),
+    }),
+    {
+      label: 'Steps',
+      description: 'Order = order on the site. Numbers (01, 02 …) are automatic.',
+      itemLabel: (props) => props.fields.title.fields.en.value || 'Step',
+    },
+  ),
+});
+
+const whyUsSectionFields = () => ({
+  visible: visibleField('Visible'),
+  heading: localized('Heading'),
+  sub: localized('Subheading'),
+  cards: fields.array(
+    fields.object({
+      title: localized('Title'),
+      text: localized('Text', { multiline: true }),
+      icon: fields.select({
+        label: 'Icon (lucide)',
+        options: WHY_ICON_NAMES.map((name) => ({ label: name, value: name })),
+        defaultValue: 'Layers',
+      }),
+      size: fields.select({
+        label: 'Size',
+        description: 'Wide cards span two columns on desktop.',
+        options: [
+          { label: 'Normal', value: 'normal' },
+          { label: 'Wide', value: 'wide' },
+        ],
+        defaultValue: 'normal',
+      }),
+      visible: visibleField('Visible'),
+    }),
+    {
+      label: 'Cards',
+      description: 'Order = order on the site.',
+      itemLabel: (props) => props.fields.title.fields.en.value || 'Card',
+    },
+  ),
 });
 
 const portfolioPageFields = () => ({
@@ -315,11 +397,35 @@ export default config({
       format: 'json',
       schema: consentFields(),
     }),
+    heroSection: singleton({
+      label: 'Home · Hero',
+      path: 'content/home/hero',
+      format: 'json',
+      schema: heroSectionFields(),
+    }),
+    aboutSection: singleton({
+      label: 'Home · About',
+      path: 'content/home/about',
+      format: 'json',
+      schema: aboutSectionFields(),
+    }),
     servicesSection: singleton({
       label: 'Home · Services',
       path: 'content/home/services',
       format: 'json',
       schema: servicesSectionFields(),
+    }),
+    processSection: singleton({
+      label: 'Home · How I work',
+      path: 'content/home/process',
+      format: 'json',
+      schema: processSectionFields(),
+    }),
+    whyUsSection: singleton({
+      label: 'Home · Why TMX',
+      path: 'content/home/why-us',
+      format: 'json',
+      schema: whyUsSectionFields(),
     }),
     portfolioPage: singleton({
       label: 'Portfolio page',

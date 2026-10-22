@@ -5,12 +5,28 @@ import { Preloader, hasPreloaderPlayed } from '@/components/sections/Preloader';
 import { HeroSection }   from '@/components/sections/HeroSection';
 import { AboutSection }    from '@/components/sections/AboutSection';
 import { ServicesSection } from '@/components/sections/ServicesSection';
-import type { ServicesSectionData } from '@/lib/content';
+import { ProcessSection }  from '@/components/sections/ProcessSection';
+import { WhyTmxSection }   from '@/components/sections/WhyTmxSection';
+import type {
+  HeroSectionData,
+  AboutSectionData,
+  ProcessSectionData,
+  ServicesSectionData,
+  WhyUsSectionData,
+} from '@/lib/content';
 
 export default function HomeClient({
+  hero,
+  about,
   services,
+  process,
+  whyUs,
 }: {
+  hero: HeroSectionData | null;
+  about: AboutSectionData | null;
   services: ServicesSectionData | null;
+  process: ProcessSectionData | null;
+  whyUs: WhyUsSectionData | null;
 }) {
   const [loading, setLoading] = useState(() => !hasPreloaderPlayed());
 
@@ -22,16 +38,22 @@ export default function HomeClient({
       )}
 
       {/* SECTION 2 — Hero */}
-      <HeroSection shouldAnimate={!loading} />
+      {hero && <HeroSection data={hero} shouldAnimate={!loading} />}
 
       {/* SECTION 3 — Stats strip */}
       {/* StatsStrip hidden: fake numbers (UWG risk). Re-add with real stats later. */}
 
       {/* SECTION 4 — About (pinned scroll-driven assembly) */}
-      <AboutSection />
+      {about && <AboutSection data={about} />}
 
       {/* SECTION 5 — Services (4 pillar sub-blocks) */}
       {services && <ServicesSection data={services} />}
+
+      {/* SECTION 6 — How I work (pinned horizontal timeline on desktop) */}
+      {process && <ProcessSection data={process} />}
+
+      {/* SECTION 7 — Why TMX (bento grid) */}
+      {whyUs && <WhyTmxSection data={whyUs} />}
     </>
   );
 }

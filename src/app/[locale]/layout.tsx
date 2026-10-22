@@ -27,14 +27,6 @@ export async function generateMetadata({
       title: t('title'),
       description: t('description'),
     }),
-    keywords: [
-      'Digitalagentur',
-      'Webentwicklung',
-      'Künstliche Intelligenz',
-      'Digitales Marketing',
-      'IT-Beratung',
-      'Digital Agency',
-    ],
     metadataBase: new URL(SITE_URL),
     robots: SITE_INDEXABLE
       ? { index: true, follow: true }

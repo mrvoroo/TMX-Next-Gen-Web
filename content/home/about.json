@@ -1,0 +1,30 @@
+{
+  "visible": true,
+  "heading": {
+    "en": "About TMX",
+    "de": "Über TMX"
+  },
+  "sub": {
+    "en": "One point of contact. The full digital spectrum.",
+    "de": "Ein Ansprechpartner. Das ganze digitale Spektrum."
+  },
+  "paragraphs": [
+    {
+      "en": "Behind TMX is me – a freelancer for web development, online advertising and artificial intelligence. I build websites, landing pages and online shops for businesses – from a clear company website to an interactive 3D experience.",
+      "de": "Hinter TMX stehe ich – als Freelancer für Webentwicklung, Online-Werbung und künstliche Intelligenz. Ich entwickle Websites, Landingpages und Onlineshops für Unternehmen – von der klaren Unternehmensseite bis zum interaktiven 3D-Erlebnis."
+    },
+    {
+      "en": "I also plan and manage paid advertising campaigns on Instagram, Facebook, TikTok, Snapchat, Pinterest and LinkedIn, and set up AI tools and automations that simplify recurring tasks in your business.",
+      "de": "Außerdem plane und betreue ich bezahlte Werbekampagnen auf Instagram, Facebook, TikTok, Snapchat, Pinterest und LinkedIn und setze KI-Tools und Automatisierungen ein, die wiederkehrende Abläufe in Ihrem Unternehmen vereinfachen."
+    },
+    {
+      "en": "My approach: I work with modern, AI-assisted workflows. That way, ambitious projects come together in less time – with the same care in every detail. And from the first idea to launch, you have one dedicated point of contact.",
+      "de": "Mein Ansatz: Ich arbeite mit modernen, KI-gestützten Workflows. So entstehen anspruchsvolle Projekte in kürzerer Zeit – mit derselben Sorgfalt in jedem Detail. Und Sie haben von der ersten Idee bis zum Launch einen festen Ansprechpartner."
+    }
+  ],
+  "personName": "",
+  "ctaLabel": {
+    "en": "Discuss your project",
+    "de": "Projekt besprechen"
+  }
+}

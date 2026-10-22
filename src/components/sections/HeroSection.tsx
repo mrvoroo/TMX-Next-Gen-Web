@@ -9,7 +9,8 @@ import {
   type Variants,
 } from 'framer-motion';
 import { ArrowRight, ChevronDown } from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/useTranslation';
+import { Link } from '@/i18n/navigation';
+import type { HeroSectionData } from '@/lib/content';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
 import type { ParticleNetworkProps } from '@/components/three/ParticleNetwork';
@@ -55,11 +56,13 @@ function makeItemVariants(reduced: boolean): Variants {
 /* ── Magnetic CTA button ─────────────────────────────────────────────────── */
 interface MagneticButtonProps {
   children: React.ReactNode;
-  href?: string;
   reduced: boolean;
 }
 
-function MagneticButton({ children, href = '#contact', reduced }: MagneticButtonProps) {
+/* Locale-aware link (/kontakt on DE, /en/contact on EN) with motion props. */
+const MotionLink = motion.create(Link);
+
+function MagneticButton({ children, reduced }: MagneticButtonProps) {
   const btnRef = useRef<HTMLAnchorElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -83,9 +86,9 @@ function MagneticButton({ children, href = '#contact', reduced }: MagneticButton
   }, [x, y]);
 
   return (
-    <motion.a
+    <MotionLink
       ref={btnRef}
-      href={href}
+      href="/kontakt"
       style={reduced ? {} : { x: springX, y: springY }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -105,17 +108,17 @@ function MagneticButton({ children, href = '#contact', reduced }: MagneticButton
         size={16}
         className="transition-transform duration-300 group-hover:translate-x-1"
       />
-    </motion.a>
+    </MotionLink>
   );
 }
 
 /* ── Hero section ────────────────────────────────────────────────────────── */
 interface HeroSectionProps {
+  data: HeroSectionData;
   shouldAnimate: boolean;
 }
 
-export function HeroSection({ shouldAnimate }: HeroSectionProps) {
-  const { t } = useTranslation();
+export function HeroSection({ data, shouldAnimate }: HeroSectionProps) {
   const reduced = useReducedMotion();
   const itemVariants = makeItemVariants(reduced);
 
@@ -175,7 +178,7 @@ export function HeroSection({ shouldAnimate }: HeroSectionProps) {
             variants={itemVariants}
             className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-violet-400/80"
           >
-            TMX — Digital Agency
+            {data.eyebrow}
           </motion.p>
 
           {/* Main heading — LCP element. Always in DOM at opacity:1. */}
@@ -189,19 +192,9 @@ export function HeroSection({ shouldAnimate }: HeroSectionProps) {
               'lg:text-7xl',
             )}
           >
-            {/* Accent first word, then rest in white */}
-            {t('hero.tagline')
-              .split('. ')
-              .map((part, i, arr) => (
-                <span key={i}>
-                  {i === 0 ? (
-                    <span className="gradient-text">{part}</span>
-                  ) : (
-                    part
-                  )}
-                  {i < arr.length - 1 ? '. ' : ''}
-                </span>
-              ))}
+            {/* Accent line 1, then line 2 in white */}
+            <span className="gradient-text">{data.headlineLine1}</span>{' '}
+            {data.headlineLine2}
           </motion.h1>
 
           {/* Sub-text */}
@@ -209,13 +202,13 @@ export function HeroSection({ shouldAnimate }: HeroSectionProps) {
             variants={itemVariants}
             className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-white/55 sm:text-lg"
           >
-            {t('hero.sub')}
+            {data.sub}
           </motion.p>
 
           {/* CTA button */}
           <motion.div variants={itemVariants}>
-            <MagneticButton href="#contact" reduced={reduced}>
-              {t('hero.cta')}
+            <MagneticButton reduced={reduced}>
+              {data.ctaLabel}
             </MagneticButton>
           </motion.div>
         </motion.div>
@@ -230,7 +223,7 @@ export function HeroSection({ shouldAnimate }: HeroSectionProps) {
         aria-hidden="true"
       >
         <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-white/30">
-          {t('hero.scroll')}
+          {data.scrollLabel}
         </span>
         <motion.div
           animate={reduced ? {} : { y: [0, 6, 0] }}
