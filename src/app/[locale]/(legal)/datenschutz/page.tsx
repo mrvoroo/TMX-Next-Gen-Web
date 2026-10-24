@@ -89,7 +89,7 @@ export default async function DatenschutzPage({
       )}
 
       <header className="mb-12">
-        <h1 className="text-4xl font-black text-white sm:text-5xl">{c.title}</h1>
+        <h1 className="text-[clamp(1.5rem,7.5vw,2.25rem)] font-black text-white [hyphens:auto] [overflow-wrap:anywhere] sm:text-5xl">{c.title}</h1>
         <p className="mt-3 text-white/50 text-sm">
           {fill(c.lastUpdatedLine, company)}
         </p>

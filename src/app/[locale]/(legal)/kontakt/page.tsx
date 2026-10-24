@@ -87,7 +87,7 @@ export default async function KontaktPage({
   return (
     <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
       <header className="mb-10">
-        <h1 className="text-4xl font-black text-white sm:text-5xl">{c.title}</h1>
+        <h1 className="text-[clamp(1.5rem,7.5vw,2.25rem)] font-black text-white [hyphens:auto] [overflow-wrap:anywhere] sm:text-5xl">{c.title}</h1>
         <p className="mt-3 text-white/60">{c.intro}</p>
       </header>
 
