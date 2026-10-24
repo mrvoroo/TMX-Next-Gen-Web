@@ -9,6 +9,10 @@ export const SERVICE_EXAMPLE_NAMES = [
   'shop-cart',
   'dashboard-live',
   'support-chat',
+  'budget-mix',
+  'ad-funnel',
+  'post-scheduler',
+  'data-insights',
 ] as const;
 
 export type ServiceExampleName = (typeof SERVICE_EXAMPLE_NAMES)[number];
@@ -19,6 +23,10 @@ export const SERVICE_EXAMPLE_LABELS: Record<ServiceExampleName, string> = {
   'shop-cart': 'Online shop with cart (e-commerce)',
   'dashboard-live': 'Live KPI dashboard (dashboards)',
   'support-chat': 'Support chat widget (chat & support)',
+  'budget-mix': 'Ad budget split by platform (media buying)',
+  'ad-funnel': 'Campaign funnel with platform filter (ad campaigns)',
+  'post-scheduler': 'Automatic weekly post schedule (social media automation)',
+  'data-insights': '12-week chart with insights (data analysis)',
 };
 
 export const isServiceExample = (v: unknown): v is ServiceExampleName =>
