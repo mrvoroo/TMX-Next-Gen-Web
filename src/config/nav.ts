@@ -4,7 +4,7 @@ type AppPathname = keyof typeof routing.pathnames;
 
 export interface NavLink {
   key: 'nav.home' | 'nav.about' | 'nav.services' | 'nav.portfolio' | 'nav.contact';
-  pathname: AppPathname;
+  pathname: Exclude<AppPathname, '/leistungen/[pillar]'>;
   hash?: string;
 }
 
