@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ConsentBanner } from '@/components/ui/ConsentBanner';
 import { ConsentScripts } from '@/components/providers/ConsentScripts';
-import { getConsentBanner, hasPortfolio } from '@/lib/content';
+import { getConsentBanner, getPillarLinks, hasPortfolio } from '@/lib/content';
 import { SITE_INDEXABLE, SITE_URL } from '@/config/site';
 import { localizedMetadata, resolveLocale } from '@/lib/seo';
 
@@ -48,9 +48,10 @@ export default async function RootLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const [consentBanner, showPortfolio] = await Promise.all([
+  const [consentBanner, showPortfolio, pillarLinks] = await Promise.all([
     getConsentBanner(resolveLocale(locale)),
     hasPortfolio(),
+    getPillarLinks(resolveLocale(locale)),
   ]);
 
   return (
@@ -74,7 +75,7 @@ export default async function RootLayout({
         <NextIntlClientProvider>
           <Header hasPortfolio={showPortfolio} />
           <main>{children}</main>
-          <Footer />
+          <Footer pillarLinks={pillarLinks} />
           {consentBanner ? <ConsentBanner content={consentBanner} /> : null}
           <ConsentScripts />
         </NextIntlClientProvider>

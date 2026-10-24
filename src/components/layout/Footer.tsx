@@ -17,6 +17,8 @@ import { Link } from '@/i18n/navigation';
 import { COMPANY_BRAND, SOCIAL_LINKEDIN, SOCIAL_INSTAGRAM, SOCIAL_XING } from '@/config/company';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { openConsentSettings } from '@/lib/consent';
+import { PILLAR_PATHNAME } from '@/config/pillars';
+import type { PillarLinkData } from '@/lib/content';
 
 /* ── Minimal SVG icons (inline, no extra package) ────────────────────────── */
 function IconLinkedIn() {
@@ -78,7 +80,7 @@ function SocialIcon({
 }
 
 /* ── Component ───────────────────────────────────────────────────────────── */
-export function Footer() {
+export function Footer({ pillarLinks = [] }: { pillarLinks?: PillarLinkData[] }) {
   const { t } = useTranslation();
   const year = new Date().getFullYear();
 
@@ -100,6 +102,30 @@ export function Footer() {
             </Link>
             <p className="mt-2 text-sm text-white/40">{t('footer.tagline')}</p>
           </div>
+
+          {/* Pillar pages — only pillars with at least one visible service */}
+          {pillarLinks.length > 0 ? (
+            <nav aria-labelledby="footer-services-heading">
+              <p
+                id="footer-services-heading"
+                className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/30"
+              >
+                {t('nav.services')}
+              </p>
+              <ul className="space-y-2 text-sm text-white/50">
+                {pillarLinks.map((link) => (
+                  <li key={link.key}>
+                    <Link
+                      href={{ pathname: PILLAR_PATHNAME, params: { pillar: link.slug } }}
+                      className="transition-colors hover:text-white"
+                    >
+                      {link.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
 
           {/* Legal links */}
           <nav aria-label="Rechtliche Links">
