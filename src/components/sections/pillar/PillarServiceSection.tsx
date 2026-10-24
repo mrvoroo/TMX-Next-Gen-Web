@@ -3,6 +3,8 @@ import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import type { PillarPageData, PillarServiceData } from '@/lib/content';
 import { getServiceIcon } from '@/components/sections/services/icons';
+import { ExampleFrame } from '@/components/examples/ExampleFrame';
+import { ServiceExample } from '@/components/examples/ServiceExample';
 
 function IconBadge({ Icon }: { Icon: LucideIcon }) {
   return (
@@ -129,6 +131,14 @@ export function PillarServiceSection({
           </div>
         ) : null}
       </div>
+
+      {service.example !== 'none' ? (
+        <div data-reveal className="mx-auto mt-12 max-w-7xl px-5 sm:mt-16 sm:px-8">
+          <ExampleFrame label={page.exampleLabel} note={page.exampleNote}>
+            <ServiceExample name={service.example} />
+          </ExampleFrame>
+        </div>
+      ) : null}
     </section>
   );
 }
