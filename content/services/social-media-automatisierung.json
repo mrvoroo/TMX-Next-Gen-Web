@@ -7,5 +7,37 @@
     "en": "Automation of social media processes",
     "de": "Automatisierung von Social-Media-Prozessen"
   },
-  "icon": "Share2"
+  "icon": "Share2",
+  "intro": {
+    "en": "I automate recurring social media processes – such as scheduling posts or pre-sorting messages.",
+    "de": "Ich automatisiere wiederkehrende Social-Media-Prozesse – etwa die Planung von Beiträgen oder die Vorsortierung von Nachrichten."
+  },
+  "benefits": [
+    {
+      "en": "Regular presence with less effort",
+      "de": "Regelmäßige Präsenz mit weniger Aufwand"
+    },
+    {
+      "en": "Scheduling across several platforms",
+      "de": "Planung über mehrere Plattformen"
+    },
+    {
+      "en": "More time for your content",
+      "de": "Mehr Zeit für Ihre Inhalte"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify channels and workflows",
+      "de": "Kanäle und Abläufe klären"
+    },
+    {
+      "en": "Set up the tools",
+      "de": "Werkzeuge einrichten"
+    },
+    {
+      "en": "Testing and handover",
+      "de": "Test und Übergabe"
+    }
+  ]
 }

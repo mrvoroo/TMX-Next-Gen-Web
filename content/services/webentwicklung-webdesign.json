@@ -7,5 +7,45 @@
     "en": "Web development / web design",
     "de": "Webentwicklung / Webdesign"
   },
-  "icon": "Globe"
+  "icon": "Globe",
+  "intro": {
+    "en": "I design and build websites that present your business clearly – from the first draft to a finished, fast site on every device.",
+    "de": "Ich gestalte und entwickle Websites, die Ihr Unternehmen klar präsentieren – vom ersten Entwurf bis zum fertigen, schnellen Auftritt auf allen Geräten."
+  },
+  "benefits": [
+    {
+      "en": "Custom design instead of a builder template",
+      "de": "Individuelles Design statt Baukasten-Vorlage"
+    },
+    {
+      "en": "Optimised for smartphone, tablet and desktop",
+      "de": "Optimiert für Smartphone, Tablet und Desktop"
+    },
+    {
+      "en": "Fast loading times and a clean technical foundation",
+      "de": "Schnelle Ladezeiten und eine saubere technische Basis"
+    },
+    {
+      "en": "Content you can edit yourself later",
+      "de": "Inhalte später selbst bearbeitbar"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify goals and content",
+      "de": "Ziele und Inhalte klären"
+    },
+    {
+      "en": "Design draft and feedback",
+      "de": "Design-Entwurf und Abstimmung"
+    },
+    {
+      "en": "Development and testing",
+      "de": "Entwicklung und Tests"
+    },
+    {
+      "en": "Launch and handover",
+      "de": "Launch und Übergabe"
+    }
+  ]
 }

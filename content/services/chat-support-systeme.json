@@ -7,5 +7,37 @@
     "en": "Setting up chat and support systems",
     "de": "Einrichtung von Chat- und Support-Systemen"
   },
-  "icon": "MessageSquare"
+  "icon": "MessageSquare",
+  "intro": {
+    "en": "I set up chat and support systems through which your customers can reach you quickly and easily.",
+    "de": "Ich richte Chat- und Support-Systeme ein, über die Ihre Kunden Sie schnell und unkompliziert erreichen."
+  },
+  "benefits": [
+    {
+      "en": "All enquiries in one place",
+      "de": "Anfragen zentral an einem Ort"
+    },
+    {
+      "en": "Faster replies for your customers",
+      "de": "Schnellere Antworten für Ihre Kunden"
+    },
+    {
+      "en": "Can be extended with AI support if you wish",
+      "de": "Auf Wunsch mit KI-Unterstützung erweiterbar"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Define channels and workflows",
+      "de": "Kanäle und Abläufe festlegen"
+    },
+    {
+      "en": "Setup and integration",
+      "de": "Einrichtung und Anbindung"
+    },
+    {
+      "en": "Testing and onboarding",
+      "de": "Test und Einweisung"
+    }
+  ]
 }

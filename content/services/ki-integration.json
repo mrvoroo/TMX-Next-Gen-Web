@@ -7,5 +7,41 @@
     "en": "Integration of AI into existing systems and processes",
     "de": "Integration von KI in bestehende Systeme und Prozesse"
   },
-  "icon": "Cpu"
+  "icon": "Cpu",
+  "intro": {
+    "en": "I integrate AI into your existing systems and processes – so your current tools work smarter without rebuilding everything.",
+    "de": "Ich integriere KI in Ihre bestehenden Systeme und Prozesse – damit vorhandene Werkzeuge klüger arbeiten, ohne alles neu aufzubauen."
+  },
+  "benefits": [
+    {
+      "en": "Builds on your existing systems",
+      "de": "Aufbau auf vorhandenen Systemen"
+    },
+    {
+      "en": "Step-by-step rollout",
+      "de": "Schrittweise Einführung"
+    },
+    {
+      "en": "Clear documentation",
+      "de": "Klare Dokumentation"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Review of the current setup",
+      "de": "Bestandsaufnahme"
+    },
+    {
+      "en": "Integration concept",
+      "de": "Konzept der Integration"
+    },
+    {
+      "en": "Implementation and testing",
+      "de": "Umsetzung und Tests"
+    },
+    {
+      "en": "Rollout",
+      "de": "Einführung"
+    }
+  ]
 }

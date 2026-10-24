@@ -7,5 +7,41 @@
     "en": "Media buying and placement of digital advertising",
     "de": "Mediaeinkauf und Schaltung digitaler Werbung (Media Buying)"
   },
-  "icon": "Megaphone"
+  "icon": "Megaphone",
+  "intro": {
+    "en": "I plan, buy and place digital advertising on Instagram, Facebook, TikTok, Snapchat, Pinterest and LinkedIn – matched to your audience and budget.",
+    "de": "Ich plane, kaufe und schalte digitale Werbung auf Instagram, Facebook, TikTok, Snapchat, Pinterest und LinkedIn – passend zu Ihrer Zielgruppe und Ihrem Budget."
+  },
+  "benefits": [
+    {
+      "en": "Choice of the right platforms",
+      "de": "Auswahl der passenden Plattformen"
+    },
+    {
+      "en": "Precise audience targeting",
+      "de": "Zielgruppengenaue Ausrichtung"
+    },
+    {
+      "en": "Transparent budget planning",
+      "de": "Transparente Budgetplanung"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Set goals and budget",
+      "de": "Ziele und Budget festlegen"
+    },
+    {
+      "en": "Choose audiences and platforms",
+      "de": "Zielgruppen und Plattformen wählen"
+    },
+    {
+      "en": "Create and launch ads",
+      "de": "Anzeigen erstellen und schalten"
+    },
+    {
+      "en": "Evaluation",
+      "de": "Auswertung"
+    }
+  ]
 }

@@ -7,5 +7,37 @@
     "en": "IT services",
     "de": "IT-Dienstleistungen"
   },
-  "icon": "Server"
+  "icon": "Server",
+  "intro": {
+    "en": "I support you with IT tasks around your website and digital tools – from setup to ongoing maintenance.",
+    "de": "Ich unterstütze Sie bei IT-Aufgaben rund um Ihre Website und Ihre digitalen Werkzeuge – von der Einrichtung bis zur laufenden Pflege."
+  },
+  "benefits": [
+    {
+      "en": "Help with setup and maintenance",
+      "de": "Unterstützung bei Einrichtung und Pflege"
+    },
+    {
+      "en": "Help with technical questions",
+      "de": "Hilfe bei technischen Fragen"
+    },
+    {
+      "en": "One point of contact for your digital topics",
+      "de": "Ein Ansprechpartner für Ihre digitalen Themen"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify your request",
+      "de": "Anliegen klären"
+    },
+    {
+      "en": "Implement the solution",
+      "de": "Lösung umsetzen"
+    },
+    {
+      "en": "Documentation and handover",
+      "de": "Dokumentation und Übergabe"
+    }
+  ]
 }

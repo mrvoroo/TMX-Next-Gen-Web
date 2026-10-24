@@ -7,5 +7,41 @@
     "en": "Process automation with AI",
     "de": "Prozessautomatisierung mit KI"
   },
-  "icon": "RefreshCw"
+  "icon": "RefreshCw",
+  "intro": {
+    "en": "I automate recurring workflows with AI – from data entry to routing enquiries.",
+    "de": "Ich automatisiere wiederkehrende Abläufe mit KI – von der Datenerfassung bis zur Weiterleitung von Anfragen."
+  },
+  "benefits": [
+    {
+      "en": "Less manual routine work",
+      "de": "Weniger manuelle Routinearbeit"
+    },
+    {
+      "en": "Fewer errors in repetitive tasks",
+      "de": "Weniger Fehler bei wiederkehrenden Aufgaben"
+    },
+    {
+      "en": "More time for what matters",
+      "de": "Mehr Zeit für das Wesentliche"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Analyse workflows",
+      "de": "Abläufe analysieren"
+    },
+    {
+      "en": "Plan the automation",
+      "de": "Automatisierung planen"
+    },
+    {
+      "en": "Implementation and testing",
+      "de": "Umsetzung und Test"
+    },
+    {
+      "en": "Handover and support",
+      "de": "Übergabe und Betreuung"
+    }
+  ]
 }

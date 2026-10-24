@@ -7,5 +7,41 @@
     "en": "AI-powered customer service automation",
     "de": "KI-gestützte Kundenservice-Automatisierung"
   },
-  "icon": "Bot"
+  "icon": "Bot",
+  "intro": {
+    "en": "I automate parts of your customer service with AI – for example with a chatbot that answers common questions around the clock.",
+    "de": "Ich automatisiere Teile Ihres Kundenservice mit KI – zum Beispiel mit einem Chatbot, der häufige Fragen rund um die Uhr beantwortet."
+  },
+  "benefits": [
+    {
+      "en": "Answers outside business hours too",
+      "de": "Antworten auch außerhalb der Geschäftszeiten"
+    },
+    {
+      "en": "Relief from recurring questions",
+      "de": "Entlastung bei wiederkehrenden Fragen"
+    },
+    {
+      "en": "Handover to a person when needed",
+      "de": "Übergabe an einen Menschen, wenn nötig"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Collect common enquiries",
+      "de": "Häufige Anfragen sammeln"
+    },
+    {
+      "en": "Build a knowledge base",
+      "de": "Wissensbasis aufbauen"
+    },
+    {
+      "en": "Setup and testing",
+      "de": "Einrichtung und Test"
+    },
+    {
+      "en": "Ongoing improvement",
+      "de": "Laufende Verbesserung"
+    }
+  ]
 }

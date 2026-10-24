@@ -7,5 +7,41 @@
     "en": "Training and workshops on AI applications",
     "de": "Schulungen und Workshops zu KI-Anwendungen"
   },
-  "icon": "GraduationCap"
+  "icon": "GraduationCap",
+  "intro": {
+    "en": "In training sessions and workshops I show you and your team how to use AI applications safely and effectively in everyday work.",
+    "de": "In Schulungen und Workshops zeige ich Ihnen und Ihrem Team, wie Sie KI-Anwendungen im Arbeitsalltag sicher und sinnvoll nutzen."
+  },
+  "benefits": [
+    {
+      "en": "Practical, with examples from your daily work",
+      "de": "Praxisnah mit Beispielen aus Ihrem Arbeitsalltag"
+    },
+    {
+      "en": "For beginners and advanced users",
+      "de": "Für Einsteiger und Fortgeschrittene"
+    },
+    {
+      "en": "Guidance on data protection and responsible use",
+      "de": "Hinweise zu Datenschutz und verantwortungsvollem Einsatz"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify needs",
+      "de": "Bedarf klären"
+    },
+    {
+      "en": "Tailor the content",
+      "de": "Inhalte zuschneiden"
+    },
+    {
+      "en": "Run the workshop",
+      "de": "Workshop durchführen"
+    },
+    {
+      "en": "Materials to refer back to",
+      "de": "Unterlagen zum Nachlesen"
+    }
+  ]
 }
