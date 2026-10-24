@@ -9,11 +9,12 @@ import type { ServicesSectionData } from '@/lib/content';
 export function ServicesSection({ data }: { data: ServicesSectionData }) {
   /* A pillar without visible services hides its whole block. */
   const blocks = [
-    { key: 'dev',       pillar: data.dev,       Block: DevBlock },
-    { key: 'ai',        pillar: data.ai,        Block: AiBlock },
-    { key: 'marketing', pillar: data.marketing, Block: MarketingBlock },
-    { key: 'it',        pillar: data.it,        Block: ItBlock },
-  ].filter((b) => b.pillar.items.length > 0);
+    { key: 'dev',       pillarKey: 'entwicklung',         pillar: data.dev,       Block: DevBlock },
+    { key: 'ai',        pillarKey: 'ki',                  pillar: data.ai,        Block: AiBlock },
+    { key: 'marketing', pillarKey: 'digitales-marketing', pillar: data.marketing, Block: MarketingBlock },
+    { key: 'it',        pillarKey: 'it-beratung',         pillar: data.it,        Block: ItBlock },
+  ] as const;
+  const visibleBlocks = blocks.filter((b) => b.pillar.items.length > 0);
 
   return (
     <section id="services" className="relative bg-[#050508]">
@@ -35,12 +36,13 @@ export function ServicesSection({ data }: { data: ServicesSectionData }) {
 
       {/* 5a Development (tilt cards) · 5b AI (particles) · 5c Marketing (SVG beams)
           · 5d IT & Consulting (glass + spotlight) */}
-      {blocks.map(({ key, pillar, Block }, i) => (
+      {visibleBlocks.map(({ key, pillarKey, pillar, Block }, i) => (
         <div
           key={key}
           className={i === 0 ? 'border-t border-white/[0.05] mt-16' : 'border-t border-white/[0.05]'}
         >
           <Block
+            pillar={pillarKey}
             title={pillar.title}
             sub={pillar.sub}
             items={pillar.items}

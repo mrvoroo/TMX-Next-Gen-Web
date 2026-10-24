@@ -9,7 +9,15 @@
  * Form content is never logged.
  */
 
-import { Fragment, useId, useState, useSyncExternalStore } from 'react';
+import {
+  Fragment,
+  Suspense,
+  useEffect,
+  useId,
+  useState,
+  useSyncExternalStore,
+} from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -119,16 +127,19 @@ function ServicePillar({
   group,
   selected,
   onToggle,
+  open,
+  onOpenChange,
   isDesktop,
   animate,
 }: {
   group: ContactServiceGroup;
   selected: Set<string>;
   onToggle: (value: string) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   isDesktop: boolean;
   animate: boolean;
 }) {
-  const [open, setOpen] = useState(false);
   const panelId = useId();
   const count = group.items.filter((item) => selected.has(item.nameDe)).length;
 
@@ -144,7 +155,7 @@ function ServicePillar({
             type="button"
             aria-expanded={open}
             aria-controls={panelId}
-            onClick={() => setOpen((prev) => !prev)}
+            onClick={() => onOpenChange(!open)}
             className="flex w-full items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-xs font-semibold uppercase tracking-widest text-violet-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
           >
             <span className="min-w-0 break-words">{group.title}</span>
@@ -187,6 +198,35 @@ function ServicePillar({
   );
 }
 
+/**
+ * Reads ?service=<slug> and reports the matching visible service once.
+ * Own component so useSearchParams sits in a Suspense boundary and the page
+ * stays static. Unknown or hidden slugs are not in `groups` and are ignored.
+ */
+function ServiceFromQuery({
+  groups,
+  onMatch,
+}: {
+  groups: ContactServiceGroup[];
+  onMatch: (groupId: string, nameDe: string) => void;
+}) {
+  const slug = useSearchParams().get('service');
+
+  useEffect(() => {
+    if (!slug) return;
+    for (const group of groups) {
+      const item = group.items.find((i) => i.slug === slug);
+      if (item) {
+        onMatch(group.id, item.nameDe);
+        return;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
+
+  return null;
+}
+
 export function ContactForm({
   texts,
   groups,
@@ -202,6 +242,7 @@ export function ContactForm({
   const [status, setStatus] = useState<Status>('idle');
   const [errors, setErrors] = useState<Errors>({});
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set());
   const isDesktop = useIsDesktop();
   const reducedMotion = useReducedMotion();
   const animate = !reducedMotion;
@@ -213,6 +254,20 @@ export function ContactForm({
       else next.add(value);
       return next;
     });
+  }
+
+  function setGroupOpen(id: string, open: boolean) {
+    setOpenGroups((prev) => {
+      const next = new Set(prev);
+      if (open) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  function preselect(groupId: string, nameDe: string) {
+    setSelected((prev) => new Set(prev).add(nameDe));
+    setGroupOpen(groupId, true);
   }
 
   function clearError(key: FieldKey) {
@@ -380,6 +435,9 @@ export function ContactForm({
         <p id="contact-service-label" className={LABEL_CLASS}>
           {texts.fieldService}
         </p>
+        <Suspense fallback={null}>
+          <ServiceFromQuery groups={groups} onMatch={preselect} />
+        </Suspense>
         <div className="space-y-5">
           {groups.map((group) => (
             <ServicePillar
@@ -387,6 +445,8 @@ export function ContactForm({
               group={group}
               selected={selected}
               onToggle={toggleService}
+              open={openGroups.has(group.id)}
+              onOpenChange={(open) => setGroupOpen(group.id, open)}
               isDesktop={isDesktop}
               animate={animate}
             />

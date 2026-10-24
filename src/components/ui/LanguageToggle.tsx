@@ -2,14 +2,30 @@
 
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { cn } from '@/lib/utils';
+import { useParams } from 'next/navigation';
 import { useRouter, usePathname } from '@/i18n/navigation';
+import { PILLAR_PATHNAME, translatePillarSlug } from '@/config/pillars';
 
 export function LanguageToggle({ className }: { className?: string }) {
   const { locale } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
+  const params = useParams<{ pillar?: string }>();
   const switchTo = (next: 'de' | 'en') => {
-    router.replace(pathname, { locale: next });
+    if (pathname === PILLAR_PATHNAME) {
+      // The pillar slug is localized: map it to the other language.
+      const slug = translatePillarSlug(String(params.pillar ?? ''), locale, next);
+      if (slug) {
+        router.replace(
+          { pathname: PILLAR_PATHNAME, params: { pillar: slug } },
+          { locale: next },
+        );
+      }
+      return;
+    }
+    router.replace(pathname as Exclude<typeof pathname, typeof PILLAR_PATHNAME>, {
+      locale: next,
+    });
   };
 
   return (

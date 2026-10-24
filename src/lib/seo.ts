@@ -16,8 +16,16 @@ export function resolveLocale(locale: string): AppLocale {
   return hasLocale(routing.locales, locale) ? locale : routing.defaultLocale;
 }
 
-function localizedUrl(locale: AppLocale, href: AppPathname): string {
-  return `${SITE_URL}${getPathname({ locale, href })}`;
+/** Dynamic-segment values per locale (localized slugs). */
+type ParamsFor = (locale: AppLocale) => Record<string, string>;
+
+function localizedUrl(
+  locale: AppLocale,
+  href: AppPathname,
+  params?: ParamsFor,
+): string {
+  const target = params ? { pathname: href, params: params(locale) } : href;
+  return `${SITE_URL}${getPathname({ locale, href: target as never })}`;
 }
 
 /**
@@ -27,16 +35,19 @@ function localizedUrl(locale: AppLocale, href: AppPathname): string {
 export function localizedMetadata({
   locale,
   href,
+  params,
   title,
   description,
 }: {
   locale: string;
   href: AppPathname;
+  /** Required for pathnames with a dynamic segment, e.g. the pillar pages. */
+  params?: ParamsFor;
   title: string;
   description?: string;
 }): Metadata {
   const current = resolveLocale(locale);
-  const url = localizedUrl(current, href);
+  const url = localizedUrl(current, href, params);
 
   return {
     title,
@@ -45,9 +56,9 @@ export function localizedMetadata({
       canonical: url,
       languages: {
         ...Object.fromEntries(
-          routing.locales.map((l) => [l, localizedUrl(l, href)]),
+          routing.locales.map((l) => [l, localizedUrl(l, href, params)]),
         ),
-        'x-default': localizedUrl(routing.defaultLocale, href),
+        'x-default': localizedUrl(routing.defaultLocale, href, params),
       },
     },
     openGraph: {

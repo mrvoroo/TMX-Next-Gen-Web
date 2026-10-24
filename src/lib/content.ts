@@ -4,6 +4,7 @@ import { cache } from 'react';
 import sharp from 'sharp';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
+import { PILLARS, type PillarKey } from '@/config/pillars';
 import { pick, pickAll, type Locale } from './localized';
 
 export const reader = createReader(process.cwd(), keystaticConfig);
@@ -87,6 +88,115 @@ export async function getServicesSection(
     ai: { ...c.ai, items: pillarOf('ki') },
     marketing: { ...c.marketing, items: pillarOf('digitales-marketing') },
     it: { ...c.it, items: pillarOf('it-beratung') },
+  };
+}
+
+/* ── Pillar pages ────────────────────────────────────────────────────── */
+
+export interface PillarServiceData {
+  slug: string;
+  /** Verbatim German name on DE; English name on EN (falls back to German). */
+  name: string;
+  icon: string;
+  /** Empty string / empty arrays = block not rendered. */
+  intro: string;
+  benefits: string[];
+  steps: string[];
+}
+
+export interface PillarPageData {
+  key: PillarKey;
+  heroTitle: string;
+  /** Empty string = not rendered. */
+  heroSub: string;
+  metaTitle: string;
+  metaDescription: string;
+  ctaLabel: string;
+  benefitsHeading: string;
+  stepsHeading: string;
+  services: PillarServiceData[];
+}
+
+export interface PillarLinkData {
+  key: PillarKey;
+  /** Localized URL slug of the pillar page. */
+  slug: string;
+  title: string;
+}
+
+const nonEmpty = (values: string[]) => values.filter((v) => v.trim() !== '');
+
+/** Visible services (by order, then slug) of the collection. */
+const getVisibleServices = cache(async () => {
+  const entries = await reader.collections.services.all();
+  return entries
+    .filter((e) => e.entry.visible)
+    .sort(
+      (a, b) =>
+        (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+        a.slug.localeCompare(b.slug),
+    );
+});
+
+/** Pillars with at least one visible service (page + links exist only for these). */
+export async function getVisiblePillarKeys(): Promise<PillarKey[]> {
+  const visible = await getVisibleServices();
+  return PILLARS.filter((p) => visible.some((e) => e.entry.pillar === p.key)).map(
+    (p) => p.key,
+  );
+}
+
+/** Links to every pillar page that has ≥1 visible service, for `locale`. */
+export async function getPillarLinks(locale: Locale): Promise<PillarLinkData[]> {
+  const [section, keys] = await Promise.all([
+    reader.singletons.servicesSection.read(),
+    getVisiblePillarKeys(),
+  ]);
+  if (!section) return [];
+  return PILLARS.filter((p) => keys.includes(p.key)).map((p) => ({
+    key: p.key,
+    slug: p.slugs[locale],
+    title: pick(section[p.section].title, locale),
+  }));
+}
+
+/** Pillar page content for `locale`; null when the pillar has no visible service. */
+export async function getPillarPage(
+  locale: Locale,
+  key: PillarKey,
+): Promise<PillarPageData | null> {
+  const pillar = PILLARS.find((p) => p.key === key);
+  if (!pillar) return null;
+
+  const [pages, section, visible] = await Promise.all([
+    reader.singletons.pillarPages.read(),
+    reader.singletons.servicesSection.read(),
+    getVisibleServices(),
+  ]);
+  const services = visible.filter((e) => e.entry.pillar === key);
+  if (!pages || !section || services.length === 0) return null;
+
+  const c = pickAll(pages, locale);
+  const own = c[pillar.section];
+  const homeTitle = pick(section[pillar.section].title, locale);
+
+  return {
+    key,
+    heroTitle: own.heroTitle.trim() || homeTitle,
+    heroSub: own.heroSub.trim(),
+    metaTitle: own.metaTitle.trim(),
+    metaDescription: own.metaDescription.trim(),
+    ctaLabel: c.ctaLabel,
+    benefitsHeading: c.benefitsHeading.trim(),
+    stepsHeading: c.stepsHeading.trim(),
+    services: services.map(({ slug, entry }) => ({
+      slug,
+      name: pick(entry.name, locale, true),
+      icon: entry.icon,
+      intro: pick(entry.intro, locale).trim(),
+      benefits: nonEmpty(entry.benefits.map((b) => pick(b, locale))),
+      steps: nonEmpty(entry.steps.map((s) => pick(s, locale))),
+    })),
   };
 }
 

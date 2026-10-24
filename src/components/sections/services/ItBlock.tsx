@@ -8,17 +8,20 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { cn } from '@/lib/utils';
 import { getServiceIcon } from './icons';
 import { ServiceGrid } from './ServiceGrid';
+import { PillarTitleLink, ServiceCardLink } from './links';
+import type { PillarKey } from '@/config/pillars';
 import type { PillarBlockProps } from './types';
 
 /* ── Individual glassmorphic card ────────────────────────────────────────── */
 interface ItCardProps {
   Icon: LucideIcon;
   label: string;
+  pillar: PillarKey;
   slug: string;
   cardRef: (el: HTMLDivElement | null) => void;
 }
 
-function ItCard({ Icon, label, slug, cardRef }: ItCardProps) {
+function ItCard({ Icon, label, pillar, slug, cardRef }: ItCardProps) {
   return (
     <div
       ref={cardRef}
@@ -42,12 +45,13 @@ function ItCard({ Icon, label, slug, cardRef }: ItCardProps) {
         className="absolute inset-x-0 bottom-0 h-px rounded-b-2xl bg-gradient-to-r from-transparent via-violet-500/25 to-transparent"
         aria-hidden="true"
       />
+      <ServiceCardLink pillar={pillar} slug={slug} label={label} />
     </div>
   );
 }
 
 /* ── Exported block ───────────────────────────────────────────────────────── */
-export function ItBlock({ title, sub, items, number }: PillarBlockProps) {
+export function ItBlock({ pillar, title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const blockRef   = useRef<HTMLDivElement>(null);   // spotlight tracking target + GSAP context root
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -117,7 +121,7 @@ export function ItBlock({ title, sub, items, number }: PillarBlockProps) {
             {number}
           </p>
           <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {title}
+            <PillarTitleLink pillar={pillar}>{title}</PillarTitleLink>
           </h3>
           <p className="text-sm text-white/45 sm:text-base">
             {sub}
@@ -130,6 +134,7 @@ export function ItBlock({ title, sub, items, number }: PillarBlockProps) {
           {items.map((item, i) => (
             <ItCard
               key={item.slug}
+              pillar={pillar}
               slug={item.slug}
               Icon={getServiceIcon(item.icon)}
               label={item.name}

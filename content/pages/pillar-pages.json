@@ -1,0 +1,86 @@
+{
+  "ctaLabel": {
+    "en": "Ask about this service",
+    "de": "Anfrage zu dieser Leistung"
+  },
+  "benefitsHeading": {
+    "en": "What you get",
+    "de": "Was Sie bekommen"
+  },
+  "stepsHeading": {
+    "en": "How it works",
+    "de": "So läuft es ab"
+  },
+  "dev": {
+    "heroTitle": {
+      "en": "Development",
+      "de": "Entwicklung"
+    },
+    "heroSub": {
+      "en": "",
+      "de": ""
+    },
+    "metaTitle": {
+      "en": "",
+      "de": ""
+    },
+    "metaDescription": {
+      "en": "",
+      "de": ""
+    }
+  },
+  "ai": {
+    "heroTitle": {
+      "en": "Artificial Intelligence",
+      "de": "Künstliche Intelligenz"
+    },
+    "heroSub": {
+      "en": "",
+      "de": ""
+    },
+    "metaTitle": {
+      "en": "",
+      "de": ""
+    },
+    "metaDescription": {
+      "en": "",
+      "de": ""
+    }
+  },
+  "marketing": {
+    "heroTitle": {
+      "en": "Digital Marketing",
+      "de": "Digitales Marketing"
+    },
+    "heroSub": {
+      "en": "",
+      "de": ""
+    },
+    "metaTitle": {
+      "en": "",
+      "de": ""
+    },
+    "metaDescription": {
+      "en": "",
+      "de": ""
+    }
+  },
+  "it": {
+    "heroTitle": {
+      "en": "IT & Consulting",
+      "de": "IT & Beratung"
+    },
+    "heroSub": {
+      "en": "",
+      "de": ""
+    },
+    "metaTitle": {
+      "en": "",
+      "de": ""
+    },
+    "metaDescription": {
+      "en": "",
+      "de": ""
+    }
+  }
+}

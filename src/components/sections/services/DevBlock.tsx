@@ -13,16 +13,20 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { cn } from '@/lib/utils';
 import { getServiceIcon } from './icons';
 import { ServiceGrid } from './ServiceGrid';
+import { PillarTitleLink, ServiceCardLink } from './links';
+import type { PillarKey } from '@/config/pillars';
 import type { PillarBlockProps } from './types';
 
 /* ── Individual tilt card ─────────────────────────────────────────────────── */
 interface TiltCardProps {
   Icon: LucideIcon;
   label: string;
+  pillar: PillarKey;
+  slug: string;
   reduced: boolean;
 }
 
-function TiltCard({ Icon, label, reduced }: TiltCardProps) {
+function TiltCard({ Icon, label, pillar, slug, reduced }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   /*
@@ -115,13 +119,15 @@ function TiltCard({ Icon, label, reduced }: TiltCardProps) {
           className="absolute inset-x-0 bottom-0 h-px rounded-b-2xl bg-gradient-to-r from-transparent via-violet-500/30 to-transparent"
           aria-hidden="true"
         />
+
+        <ServiceCardLink pillar={pillar} slug={slug} label={label} />
       </motion.div>
     </div>
   );
 }
 
 /* ── Exported block ───────────────────────────────────────────────────────── */
-export function DevBlock({ title, sub, items, number }: PillarBlockProps) {
+export function DevBlock({ pillar, title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   /* One ref per wrapper div (not per TiltCard) so GSAP targets the outer el */
@@ -138,7 +144,7 @@ export function DevBlock({ title, sub, items, number }: PillarBlockProps) {
           {number}
         </p>
         <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          {title}
+          <PillarTitleLink pillar={pillar}>{title}</PillarTitleLink>
         </h3>
         <p className="text-sm text-white/45 sm:text-base">
           {sub}
@@ -155,7 +161,13 @@ export function DevBlock({ title, sub, items, number }: PillarBlockProps) {
             ref={(el) => { cardRefs.current[i] = el; }}
             className="flex min-w-0"
           >
-            <TiltCard Icon={getServiceIcon(item.icon)} label={item.name} reduced={reduced} />
+            <TiltCard
+              Icon={getServiceIcon(item.icon)}
+              label={item.name}
+              pillar={pillar}
+              slug={item.slug}
+              reduced={reduced}
+            />
           </div>
         ))}
       </ServiceGrid>

@@ -9,6 +9,8 @@ import { cn } from '@/lib/utils';
 import type { AiParticlesProps } from '@/components/three/AiParticles';
 import { getServiceIcon } from './icons';
 import { ServiceGrid } from './ServiceGrid';
+import { PillarTitleLink, ServiceCardLink } from './links';
+import type { PillarKey } from '@/config/pillars';
 import type { PillarBlockProps } from './types';
 
 /*
@@ -24,11 +26,12 @@ const AiParticles = dynamic<AiParticlesProps>(
 interface AiCardProps {
   Icon: LucideIcon;
   label: string;
+  pillar: PillarKey;
   slug: string;
   cardRef: (el: HTMLDivElement | null) => void;
 }
 
-function AiCard({ Icon, label, slug, cardRef }: AiCardProps) {
+function AiCard({ Icon, label, pillar, slug, cardRef }: AiCardProps) {
   return (
     <div
       ref={cardRef}
@@ -49,11 +52,12 @@ function AiCard({ Icon, label, slug, cardRef }: AiCardProps) {
         className="absolute inset-x-0 bottom-0 h-px rounded-b-2xl bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"
         aria-hidden="true"
       />
+      <ServiceCardLink pillar={pillar} slug={slug} label={label} />
     </div>
   );
 }
 
-export function AiBlock({ title, sub, items, number }: PillarBlockProps) {
+export function AiBlock({ pillar, title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -91,7 +95,7 @@ export function AiBlock({ title, sub, items, number }: PillarBlockProps) {
             {number}
           </p>
           <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {title}
+            <PillarTitleLink pillar={pillar}>{title}</PillarTitleLink>
           </h3>
           <p className="text-sm text-white/45 sm:text-base">
             {sub}
@@ -103,6 +107,7 @@ export function AiBlock({ title, sub, items, number }: PillarBlockProps) {
           {items.map((item, i) => (
             <AiCard
               key={item.slug}
+              pillar={pillar}
               slug={item.slug}
               Icon={getServiceIcon(item.icon)}
               label={item.name}

@@ -8,6 +8,8 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { cn } from '@/lib/utils';
 import { getServiceIcon } from './icons';
 import { ServiceGrid } from './ServiceGrid';
+import { PillarTitleLink, ServiceCardLink } from './links';
+import type { PillarKey } from '@/config/pillars';
 import type { PillarBlockProps } from './types';
 
 /* ── Hub-and-spoke SVG geometry ─────────────────────────────────────────────
@@ -48,11 +50,12 @@ function lineLen(x1: number, y1: number, x2: number, y2: number) {
 interface ServiceCardProps {
   Icon: LucideIcon;
   label: string;
+  pillar: PillarKey;
   slug: string;
   cardRef: (el: HTMLDivElement | null) => void;
 }
 
-function ServiceCard({ Icon, label, slug, cardRef }: ServiceCardProps) {
+function ServiceCard({ Icon, label, pillar, slug, cardRef }: ServiceCardProps) {
   return (
     <div
       ref={cardRef}
@@ -73,6 +76,7 @@ function ServiceCard({ Icon, label, slug, cardRef }: ServiceCardProps) {
         <Icon size={19} strokeWidth={1.5} aria-hidden="true" />
       </div>
       <p className="text-sm font-semibold leading-snug text-white/80 [hyphens:auto] [overflow-wrap:anywhere]">{label}</p>
+      <ServiceCardLink pillar={pillar} slug={slug} label={label} />
     </div>
   );
 }
@@ -109,7 +113,7 @@ function TravelingDot({ x1, y1, x2, y2, delay, reducedMotion }: TravelingDotProp
 }
 
 /* ── Exported block ───────────────────────────────────────────────────────── */
-export function MarketingBlock({ title, sub, items, number }: PillarBlockProps) {
+export function MarketingBlock({ pillar, title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -135,7 +139,7 @@ export function MarketingBlock({ title, sub, items, number }: PillarBlockProps) 
             {number}
           </p>
           <h3 className="mb-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {title}
+            <PillarTitleLink pillar={pillar}>{title}</PillarTitleLink>
           </h3>
           <p className="text-sm text-white/45 sm:text-base">
             {sub}
@@ -241,6 +245,7 @@ export function MarketingBlock({ title, sub, items, number }: PillarBlockProps) 
           {items.map((item, i) => (
             <ServiceCard
               key={item.slug}
+              pillar={pillar}
               slug={item.slug}
               Icon={getServiceIcon(item.icon)}
               label={item.name}

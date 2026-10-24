@@ -15,5 +15,9 @@ export const routing = defineRouting({
     '/datenschutz': { de: '/datenschutz', en: '/privacy-policy' },
     '/kontakt': { de: '/kontakt', en: '/contact' },
     '/portfolio': { de: '/portfolio', en: '/portfolio' },
+    '/leistungen/[pillar]': {
+      de: '/leistungen/[pillar]',
+      en: '/services/[pillar]',
+    },
   },
 });
