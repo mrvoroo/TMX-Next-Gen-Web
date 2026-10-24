@@ -82,5 +82,13 @@
       "en": "IT support for your website and digital tools plus digital consulting for small and medium-sized businesses – by a freelancer.",
       "de": "IT-Unterstützung rund um Website und digitale Werkzeuge sowie digitale Beratung für kleine und mittlere Unternehmen – vom Freelancer."
     }
+  },
+  "exampleLabel": {
+    "en": "Example · interactive demo",
+    "de": "Beispiel · interaktive Demo"
+  },
+  "exampleNote": {
+    "en": "Fictional brand and sample data – not a client project.",
+    "de": "Fiktive Marke und Beispieldaten – kein Kundenprojekt."
   }
 }
