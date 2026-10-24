@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import '../../globals.css';
 import { DEMO_LANGS, isDemoLang } from '@/config/demos';
 import { SITE_URL } from '@/config/site';
+import { ScrollToTop } from '@/components/providers/ScrollToTop';
 
 export const dynamicParams = false;
 
@@ -35,7 +36,10 @@ export default async function DemoRootLayout({
       <head>
         <link rel="preload" href="/fonts/inter-variable.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        {children}
+        <ScrollToTop />
+      </body>
     </html>
   );
 }

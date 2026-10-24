@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ConsentBanner } from '@/components/ui/ConsentBanner';
 import { ConsentScripts } from '@/components/providers/ConsentScripts';
+import { ScrollToTop } from '@/components/providers/ScrollToTop';
 import { getConsentBanner, getPillarLinks, hasPortfolio } from '@/lib/content';
 import { SITE_INDEXABLE, SITE_URL } from '@/config/site';
 import { localizedMetadata, resolveLocale } from '@/lib/seo';
@@ -78,6 +79,7 @@ export default async function RootLayout({
           <Footer pillarLinks={pillarLinks} />
           {consentBanner ? <ConsentBanner content={consentBanner} /> : null}
           <ConsentScripts />
+          <ScrollToTop />
         </NextIntlClientProvider>
       </body>
     </html>
