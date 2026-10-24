@@ -1,8 +1,16 @@
-import { Check } from 'lucide-react';
+import { Check, type LucideIcon } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import type { PillarPageData, PillarServiceData } from '@/lib/content';
 import { getServiceIcon } from '@/components/sections/services/icons';
+
+function IconBadge({ Icon }: { Icon: LucideIcon }) {
+  return (
+    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 to-cyan-500/10 text-violet-400 ring-1 ring-violet-500/20">
+      <Icon size={22} strokeWidth={1.5} aria-hidden="true" />
+    </div>
+  );
+}
 
 /**
  * One full section per visible service (server component). Blocks with no
@@ -17,7 +25,6 @@ export function PillarServiceSection({
   page: PillarPageData;
   index: number;
 }) {
-  const Icon = getServiceIcon(service.icon);
   const hasBenefits = service.benefits.length > 0;
   const hasSteps = service.steps.length > 0;
   const hasDetails = hasBenefits || hasSteps;
@@ -38,9 +45,7 @@ export function PillarServiceSection({
         )}
       >
         <div data-reveal className="min-w-0">
-          <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600/20 to-cyan-500/10 text-violet-400 ring-1 ring-violet-500/20">
-            <Icon size={22} strokeWidth={1.5} aria-hidden="true" />
-          </div>
+          <IconBadge Icon={getServiceIcon(service.icon)} />
           <h2
             id={`${service.slug}-heading`}
             className="text-2xl font-bold tracking-tight text-white [hyphens:auto] [overflow-wrap:anywhere] sm:text-3xl"
