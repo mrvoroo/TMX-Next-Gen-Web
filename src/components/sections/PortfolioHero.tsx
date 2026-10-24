@@ -33,6 +33,7 @@ import {
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useIdleReady } from '@/hooks/useIdleReady';
 import type { CrystalSceneProps } from '@/components/three/CrystalScene';
 import { devForceNoWebGL, devForceReducedMotion } from '@/lib/devOverrides';
 
@@ -172,7 +173,9 @@ export function PortfolioHero({
 
   const variant = usePortfolioVariant();
   const scroll = variant === 'desktop' || variant === 'light';
-  const hasCanvas = !staged && variant !== 'pending' && variant !== 'none';
+  // WebGL crystal only after first paint + idle, so it never delays the text.
+  const sceneReady = useIdleReady();
+  const hasCanvas = sceneReady && !staged && variant !== 'pending' && variant !== 'none';
   const quality = variant === 'desktop' || variant === 'reduced-desktop' ? 'high' : 'low';
 
   const screens = useMemo(() => {

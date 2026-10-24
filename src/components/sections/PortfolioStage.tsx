@@ -33,6 +33,7 @@ import {
   smoothRange,
   totalUnits,
 } from '@/components/three/corridorPath';
+import { useIdleReady } from '@/hooks/useIdleReady';
 import { PortfolioHero, usePortfolioVariant } from './PortfolioHero';
 import {
   pad,
@@ -66,6 +67,8 @@ export function PortfolioStage({
 }) {
   const variant = usePortfolioVariant();
   const staged = variant === 'desktop';
+  // Mount the WebGL corridor after first paint + idle (keeps FCP/LCP fast).
+  const sceneReady = useIdleReady();
   const count = data.projects.length;
 
   const stageRef = useRef<HTMLDivElement>(null);
@@ -246,6 +249,7 @@ export function PortfolioStage({
           className="pointer-events-none fixed inset-0 z-0 bg-[#050508]"
         >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_45%_42%,rgba(124,58,237,0.22),transparent_70%),radial-gradient(ellipse_40%_35%_at_58%_52%,rgba(6,182,212,0.14),transparent_70%)]" />
+          {sceneReady && (
           <CorridorScene
             progressRef={heroProgress}
             corridorRef={corridorState}
@@ -254,6 +258,7 @@ export function PortfolioStage({
             images={innerScreens}
             onReady={scheduleRefresh}
           />
+          )}
         </div>
       )}
 
