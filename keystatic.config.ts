@@ -417,9 +417,18 @@ export default config({
           label: 'Privacy policy last updated',
           description: 'Inserted where the texts use {{lastUpdated}}.',
         }),
-        socialLinkedin: fields.text({ label: 'LinkedIn URL' }),
-        socialInstagram: fields.text({ label: 'Instagram URL' }),
-        socialXing: fields.text({ label: 'Xing URL' }),
+        socialLinkedin: fields.text({
+          label: 'LinkedIn URL',
+          description: 'Full link starting with https:// – empty = icon hidden in the footer.',
+        }),
+        socialInstagram: fields.text({
+          label: 'Instagram URL',
+          description: 'Full link starting with https:// – empty = icon hidden in the footer.',
+        }),
+        socialXing: fields.text({
+          label: 'Xing URL',
+          description: 'Full link starting with https:// – empty = icon hidden in the footer.',
+        }),
         showMstvResponsible: fields.checkbox({
           label: 'Show MStV responsible person',
           description: 'Shows the MStV line on the legal notice page.',

@@ -18,6 +18,31 @@ export async function getCompany() {
   return reader.singletons.company.read();
 }
 
+/* ── Social links (footer) ───────────────────────────────────────────── */
+
+export interface SocialLinks {
+  linkedin: string | null;
+  instagram: string | null;
+  xing: string | null;
+}
+
+/** Only real https:// URLs are returned; empty / [[PENDING]] / other → null. */
+const toSocialUrl = (v: string | undefined | null) => {
+  const url = (v ?? '').trim();
+  return /^https:\/\/\S+$/.test(url) ? url : null;
+};
+
+/** Social profile links from Keystatic → Settings → Company. */
+export async function getSocialLinks(): Promise<SocialLinks> {
+  const c = await reader.singletons.company.read();
+  return {
+    linkedin: toSocialUrl(c?.socialLinkedin),
+    instagram: toSocialUrl(c?.socialInstagram),
+    xing: toSocialUrl(c?.socialXing),
+  };
+}
+
+
 export async function getImpressum(locale: Locale) {
   const data = await reader.singletons.legalImpressum.read();
   return data ? pickAll(data, locale) : null;

@@ -60,13 +60,6 @@ export const COMPANY_DPO_NAME: string | null = null;
 /** DPO e-mail address (only relevant if COMPANY_DPO_NAME is set). */
 export const COMPANY_DPO_EMAIL = '[[PENDING]]';
 
-/** LinkedIn profile URL (leave "[[PENDING]]" if not yet decided). */
-export const SOCIAL_LINKEDIN = '[[PENDING]]';
-
-/** Instagram profile URL. */
-export const SOCIAL_INSTAGRAM = '[[PENDING]]';
-
-/** Xing profile URL. */
-export const SOCIAL_XING = '[[PENDING]]';
+/* Social profile links live in Keystatic → Settings → Company (see getSocialLinks). */
 
 export const COMPANY_BRAND = 'TMX';

@@ -9,16 +9,17 @@
  * Links:
  *   - /impressum, /datenschutz  ← real routes (built as app/(legal)/)
  *   - "Cookie-Einstellungen" button — reopens the consent banner settings layer
- *   - Social placeholders from src/config/company.ts
+ *   - Social links from Keystatic → Settings → Company (only https:// URLs;
+ *     icons without a link are not rendered)
  */
 
 import type { ReactNode } from 'react';
 import { Link } from '@/i18n/navigation';
-import { COMPANY_BRAND, SOCIAL_LINKEDIN, SOCIAL_INSTAGRAM, SOCIAL_XING } from '@/config/company';
+import { COMPANY_BRAND } from '@/config/company';
 import { useTranslation } from '@/lib/i18n/useTranslation';
 import { openConsentSettings } from '@/lib/consent';
 import { PILLAR_PATHNAME } from '@/config/pillars';
-import type { PillarLinkData } from '@/lib/content';
+import type { PillarLinkData, SocialLinks } from '@/lib/content';
 
 /* ── Minimal SVG icons (inline, no extra package) ────────────────────────── */
 function IconLinkedIn() {
@@ -45,10 +46,6 @@ function IconXing() {
   );
 }
 
-function isPendingSocialUrl(url: string) {
-  return url === '[[PENDING]]' || url.trim() === '';
-}
-
 function SocialIcon({
   href,
   label,
@@ -58,20 +55,12 @@ function SocialIcon({
   label: string;
   children: ReactNode;
 }) {
-  const className = 'text-white/40 transition-colors hover:text-white';
-  if (isPendingSocialUrl(href)) {
-    return (
-      <span className={className} aria-disabled="true" aria-label={label}>
-        {children}
-      </span>
-    );
-  }
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={className}
+      className="text-white/55 transition-colors hover:text-white"
       aria-label={label}
     >
       {children}
@@ -80,7 +69,14 @@ function SocialIcon({
 }
 
 /* ── Component ───────────────────────────────────────────────────────────── */
-export function Footer({ pillarLinks = [] }: { pillarLinks?: PillarLinkData[] }) {
+export function Footer({
+  pillarLinks = [],
+  social = { linkedin: null, instagram: null, xing: null },
+}: {
+  pillarLinks?: PillarLinkData[];
+  social?: SocialLinks;
+}) {
+  const hasSocial = Boolean(social.linkedin || social.instagram || social.xing);
   const { t } = useTranslation();
   const year = new Date().getFullYear();
 
@@ -160,26 +156,31 @@ export function Footer({ pillarLinks = [] }: { pillarLinks?: PillarLinkData[] })
             </ul>
           </nav>
 
-          {/* Social */}
-          <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/30">
-              Social
-            </p>
-            <div className="flex items-center gap-4">
-              {/* LinkedIn */}
-              <SocialIcon href={SOCIAL_LINKEDIN} label={t('footer.socialAriaLinkedIn')}>
-                <IconLinkedIn />
-              </SocialIcon>
-              {/* Instagram */}
-              <SocialIcon href={SOCIAL_INSTAGRAM} label={t('footer.socialAriaInstagram')}>
-                <IconInstagram />
-              </SocialIcon>
-              {/* Xing */}
-              <SocialIcon href={SOCIAL_XING} label={t('footer.socialAriaXing')}>
-                <IconXing />
-              </SocialIcon>
+          {/* Social – only profiles with a real link are shown */}
+          {hasSocial && (
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/50">
+                Social
+              </p>
+              <div className="flex items-center gap-4">
+                {social.linkedin && (
+                  <SocialIcon href={social.linkedin} label={t('footer.socialAriaLinkedIn')}>
+                    <IconLinkedIn />
+                  </SocialIcon>
+                )}
+                {social.instagram && (
+                  <SocialIcon href={social.instagram} label={t('footer.socialAriaInstagram')}>
+                    <IconInstagram />
+                  </SocialIcon>
+                )}
+                {social.xing && (
+                  <SocialIcon href={social.xing} label={t('footer.socialAriaXing')}>
+                    <IconXing />
+                  </SocialIcon>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Divider */}
