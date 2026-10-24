@@ -1,6 +1,10 @@
 import { collection, config, fields, singleton } from '@keystatic/core';
 import { SERVICE_ICON_NAMES } from './src/config/service-icons';
 import { WHY_ICON_NAMES } from './src/config/why-icons';
+import {
+  SERVICE_EXAMPLE_LABELS,
+  SERVICE_EXAMPLE_NAMES,
+} from './src/config/service-examples';
 
 /* ── Localized fields ─────────────────────────────────────────────────────
  * Every translatable value is ONE block: English on top, German directly
@@ -93,6 +97,17 @@ const pillarPagesFields = () => ({
   }),
   stepsHeading: localized('Steps heading', {
     defaults: { en: 'How it works', de: 'So läuft es ab' },
+  }),
+  exampleLabel: localized('Example badge', {
+    description: 'Badge above every interactive example on the pillar pages.',
+    defaults: { en: 'Example · interactive demo', de: 'Beispiel · interaktive Demo' },
+  }),
+  exampleNote: localized('Example note', {
+    description: 'Short line under every example. Keep it clear that this is not client work.',
+    defaults: {
+      en: 'Fictional brand and sample data – not a client project.',
+      de: 'Fiktive Marke und Beispieldaten – kein Kundenprojekt.',
+    },
   }),
   dev: fields.object(
     pillarPageFields({ en: 'Development', de: 'Entwicklung' }),
@@ -618,6 +633,15 @@ export default config({
           label: 'Steps (pillar page)',
           description: 'Short points, numbered automatically. Empty = block hidden.',
           itemLabel: (props) => props.fields.en.value || 'Step',
+        }),
+        example: fields.select({
+          label: 'Interactive example (pillar page)',
+          description: 'Optional live demo shown under this service.',
+          options: SERVICE_EXAMPLE_NAMES.map((name) => ({
+            label: SERVICE_EXAMPLE_LABELS[name],
+            value: name,
+          })),
+          defaultValue: 'none',
         }),
       },
     }),

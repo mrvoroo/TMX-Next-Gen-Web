@@ -43,5 +43,6 @@
       "en": "Rollout",
       "de": "Einführung"
     }
-  ]
+  ],
+  "example": "dashboard-live"
 }

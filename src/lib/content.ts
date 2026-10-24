@@ -5,6 +5,10 @@ import sharp from 'sharp';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 import { PILLARS, type PillarKey } from '@/config/pillars';
+import {
+  isServiceExample,
+  type ServiceExampleName,
+} from '@/config/service-examples';
 import { pick, pickAll, type Locale } from './localized';
 
 export const reader = createReader(process.cwd(), keystaticConfig);
@@ -102,6 +106,8 @@ export interface PillarServiceData {
   intro: string;
   benefits: string[];
   steps: string[];
+  /** Interactive demo under the service; 'none' = not rendered. */
+  example: ServiceExampleName;
 }
 
 export interface PillarPageData {
@@ -114,6 +120,8 @@ export interface PillarPageData {
   ctaLabel: string;
   benefitsHeading: string;
   stepsHeading: string;
+  exampleLabel: string;
+  exampleNote: string;
   services: PillarServiceData[];
 }
 
@@ -189,6 +197,8 @@ export async function getPillarPage(
     ctaLabel: c.ctaLabel,
     benefitsHeading: c.benefitsHeading.trim(),
     stepsHeading: c.stepsHeading.trim(),
+    exampleLabel: c.exampleLabel.trim(),
+    exampleNote: c.exampleNote.trim(),
     services: services.map(({ slug, entry }) => ({
       slug,
       name: pick(entry.name, locale, true),
@@ -196,6 +206,7 @@ export async function getPillarPage(
       intro: pick(entry.intro, locale).trim(),
       benefits: nonEmpty(entry.benefits.map((b) => pick(b, locale))),
       steps: nonEmpty(entry.steps.map((s) => pick(s, locale))),
+      example: isServiceExample(entry.example) ? entry.example : 'none',
     })),
   };
 }
