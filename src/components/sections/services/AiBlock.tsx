@@ -8,6 +8,9 @@ import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { cn } from '@/lib/utils';
 import type { AiParticlesProps } from '@/components/three/AiParticles';
 import { getServiceIcon } from './icons';
+import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useIdleReady } from '@/hooks/useIdleReady';
+import { NetworkBackdrop } from '@/components/three/NetworkBackdrop';
 import { ServiceGrid } from './ServiceGrid';
 import { PillarTitleLink, ServiceCardLink } from './links';
 import type { PillarKey } from '@/config/pillars';
@@ -59,6 +62,8 @@ function AiCard({ Icon, label, pillar, slug, cardRef }: AiCardProps) {
 
 export function AiBlock({ pillar, title, sub, items, number }: PillarBlockProps) {
   const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
+  const sceneReady = useIdleReady();
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -77,12 +82,14 @@ export function AiBlock({ pillar, title, sub, items, number }: PillarBlockProps)
      */
     <div className="relative bg-[#070612] overflow-hidden">
       {/* Ambient particle canvas — absolute, behind cards, pointer-events-none */}
-      {!reduced && (
+      {/* WebGL on desktop (after first paint + idle), a light SVG on phones */}
+      {!reduced && isMobile === false && sceneReady && (
         <AiParticles
           reducedMotion={reduced}
           onReady={() => {/* no-op: reveal no longer gated on canvas */}}
         />
       )}
+      {isMobile === true && <NetworkBackdrop tone="cyan" animated={!reduced} />}
 
       {/* Content sits above the canvas via relative z-10 */}
       <div

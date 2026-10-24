@@ -4,6 +4,7 @@ import { useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import gsap from 'gsap';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 import type {
   PortalShaderProps,
   PortalConfig,
@@ -57,6 +58,9 @@ interface PreloaderProps {
 export function Preloader({ onComplete }: PreloaderProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  // Phones get a CSS orb instead of the WebGL portal (no shader compile on load).
+  const isMobile = useIsMobile();
+  const orbRef = useRef<HTMLDivElement>(null);
 
   /*
    * shaderState — mutable bag written by GSAP on the JS thread,
@@ -73,6 +77,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
+    /* Viewport not known yet (first client render) → wait for it. */
+    if (!reducedMotion && isMobile === null) return;
 
     preloaderStarted = true;
     window.dispatchEvent(new Event('tmx:preloader-start'));
@@ -105,6 +111,21 @@ export function Preloader({ onComplete }: PreloaderProps) {
       }, 300);
       return () => {
         clearTimeout(t);
+        release();
+      };
+    }
+
+    /* ── Phone path: CSS orb, GSAP on transform/opacity only (~1.8 s) ── */
+    if (isMobile) {
+      const orb = orbRef.current;
+      const ctx = gsap.context(() => {
+        const tl = gsap.timeline();
+        tl.fromTo(orb, { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'power2.out' }, 0);
+        tl.to(orb, { scale: 6, duration: 0.45, ease: 'power3.in' }, 1.2);
+        tl.to(overlay, { opacity: 0, duration: 0.3, ease: 'power1.in', onComplete: finish }, 1.4);
+      }, overlay);
+      return () => {
+        ctx.revert();
         release();
       };
     }
@@ -158,7 +179,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
       ctx.revert();
       release();
     };
-  }, [onComplete, reducedMotion]);
+  }, [onComplete, reducedMotion, isMobile]);
 
   /* ── Render ─────────────────────────────────────────────────────────────── */
   return (
@@ -191,6 +212,30 @@ export function Preloader({ onComplete }: PreloaderProps) {
               boxShadow: `0 0 60px 20px ${PORTAL_CONFIG.haloColor}33`,
             }}
           />
+        </div>
+      ) : isMobile === null ? null : isMobile ? (
+        /* Phone: the same orb in CSS – a spinning conic ring over a radial core. */
+        <div className="absolute inset-0 flex items-center justify-center">
+          <style>{`@keyframes tmx-orb-spin { to { transform: rotate(360deg) } } .tmx-orb-spin { animation: tmx-orb-spin 1.6s linear infinite }`}</style>
+          <div
+            ref={orbRef}
+            className="relative"
+            style={{ width: 'clamp(150px, 42vmin, 240px)', height: 'clamp(150px, 42vmin, 240px)', opacity: 0, willChange: 'transform, opacity' }}
+          >
+            <div
+              className="tmx-orb-spin absolute inset-0 rounded-full"
+              style={{
+                background: `conic-gradient(from 0deg, ${PORTAL_CONFIG.rimColorA}, ${PORTAL_CONFIG.streakColor}, ${PORTAL_CONFIG.haloColor}, ${PORTAL_CONFIG.rimColorA})`,
+                boxShadow: `0 0 70px 18px ${PORTAL_CONFIG.haloColor}40`,
+              }}
+            />
+            <div
+              className="absolute inset-[10%] rounded-full"
+              style={{
+                background: `radial-gradient(circle at center, ${PORTAL_CONFIG.coreColor} 0%, ${PORTAL_CONFIG.bodyColor} 45%, ${PORTAL_CONFIG.background} 100%)`,
+              }}
+            />
+          </div>
         </div>
       ) : (
         /*
