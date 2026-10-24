@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check, Droplets, Eye, Minus, Plus, ShoppingBag, Sun, Truck, Undo2, Leaf, X } from 'lucide-react';
 import type { DemoLang } from '@/config/demos';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { DemoDialog } from '../DemoDialog';
 
@@ -16,13 +17,11 @@ const C = { bg: '#f4f5ef', ink: '#14261b', green: '#1f3d2b', lime: '#c6f36b', cl
 const FREE_SHIPPING = 49;
 
 type Cat = 'all' | 'indoor' | 'cacti' | 'easy';
-type Shape = 'monstera' | 'round' | 'cactus' | 'snake' | 'trailing' | 'palm';
 
 interface Product {
   id: number;
-  shape: Shape;
-  leaf: string;
-  pot: string;
+  /** Photo in /public/images/demos/plants (Unsplash licence, see docs/legal/image-credits.md). */
+  img: string;
   bg: string;
   cats: Cat[];
   price: number;
@@ -31,14 +30,14 @@ interface Product {
 }
 
 const PRODUCTS: Product[] = [
-  { id: 0, shape: 'monstera', leaf: '#2f7a4b', pot: '#e9e2d6', bg: '#dfe7d6', cats: ['indoor'], price: 34.9, light: 2, water: 2 },
-  { id: 1, shape: 'cactus', leaf: '#5d8f5a', pot: '#d9a07b', bg: '#efe3d4', cats: ['cacti', 'easy'], price: 14.5, light: 3, water: 1 },
-  { id: 2, shape: 'snake', leaf: '#3e6b45', pot: '#1f3d2b', bg: '#dde4dc', cats: ['indoor', 'easy'], price: 24.0, light: 1, water: 1 },
-  { id: 3, shape: 'trailing', leaf: '#4f9a5f', pot: '#f4f5ef', bg: '#e4ebd9', cats: ['indoor', 'easy'], price: 19.9, light: 2, water: 2 },
-  { id: 4, shape: 'round', leaf: '#6aa56b', pot: '#c97f5c', bg: '#f0e6da', cats: ['indoor'], price: 29.0, light: 2, water: 3 },
-  { id: 5, shape: 'palm', leaf: '#3f8a58', pot: '#e9e2d6', bg: '#dbe5df', cats: ['indoor'], price: 49.0, light: 3, water: 2 },
-  { id: 6, shape: 'cactus', leaf: '#7ba36a', pot: '#f4f5ef', bg: '#e8e4d8', cats: ['cacti', 'easy'], price: 11.9, light: 3, water: 1 },
-  { id: 7, shape: 'round', leaf: '#2f6e48', pot: '#1f3d2b', bg: '#dfe6d4', cats: ['indoor', 'easy'], price: 22.5, light: 1, water: 2 },
+  { id: 0, img: 'monstera', bg: '#dfe7d6', cats: ['indoor'], price: 34.9, light: 2, water: 2 },
+  { id: 1, img: 'kugelkaktus', bg: '#efe3d4', cats: ['cacti', 'easy'], price: 14.5, light: 3, water: 1 },
+  { id: 2, img: 'bogenhanf', bg: '#dde4dc', cats: ['indoor', 'easy'], price: 24.0, light: 1, water: 1 },
+  { id: 3, img: 'efeutute', bg: '#e4ebd9', cats: ['indoor', 'easy'], price: 19.9, light: 2, water: 2 },
+  { id: 4, img: 'pilea', bg: '#f0e6da', cats: ['indoor'], price: 29.0, light: 2, water: 3 },
+  { id: 5, img: 'kolbenfaden', bg: '#dbe5df', cats: ['indoor', 'easy'], price: 32.0, light: 1, water: 2 },
+  { id: 6, img: 'saeulenkaktus', bg: '#e8e4d8', cats: ['cacti', 'easy'], price: 11.9, light: 3, water: 1 },
+  { id: 7, img: 'haworthia', bg: '#dfe6d4', cats: ['cacti', 'easy'], price: 12.9, light: 2, water: 1 },
 ];
 
 const T = {
@@ -52,6 +51,7 @@ const T = {
     heroSub: 'Pflanzen, die zu Ihrem Zuhause passen – mit ehrlicher Pflegeanleitung und sicher verpackt bis an die Tür.',
     heroCta: 'Jetzt entdecken',
     heroFinder: 'Pflegeleichte zeigen',
+    heroAlt: 'Zimmerpflanzen in hellen Töpfen auf einer Kommode vor einer weißen Wand',
     usp: [
       ['Versand in 2–3 Werktagen', Truck],
       ['30 Tage Rückgabe', Undo2],
@@ -61,8 +61,8 @@ const T = {
     cats: { all: 'Alle', indoor: 'Zimmerpflanzen', cacti: 'Kakteen & Sukkulenten', easy: 'Pflegeleicht' } as Record<Cat, string>,
     sort: 'Sortieren',
     sorts: { rec: 'Empfehlung', asc: 'Preis aufsteigend', desc: 'Preis absteigend' },
-    names: ['Monstera „Lea“', 'Kugelkaktus „Pico“', 'Bogenhanf „Sam“', 'Efeutute „Lou“', 'Pilea „Mo“', 'Kentia-Palme „Ida“', 'Säulenkaktus „Ben“', 'Glücksfeder „Ella“'],
-    details: ['Ø 21 cm Topf · 65 cm hoch', 'Ø 9 cm Topf · 12 cm hoch', 'Ø 14 cm Topf · 45 cm hoch', 'Ø 12 cm Topf · hängend', 'Ø 12 cm Topf · 25 cm hoch', 'Ø 24 cm Topf · 110 cm hoch', 'Ø 9 cm Topf · 20 cm hoch', 'Ø 14 cm Topf · 40 cm hoch'],
+    names: ['Monstera „Lea“', 'Mini-Kaktus „Pico“', 'Bogenhanf „Sam“', 'Efeutute „Lou“', 'Pilea „Mo“', 'Kolbenfaden „Ida“', 'Säulenkaktus „Ben“', 'Haworthia „Ella“'],
+    details: ['Ø 21 cm Topf · 65 cm hoch', 'Ø 9 cm Topf · 12 cm hoch', 'Ø 14 cm Topf · 45 cm hoch', 'Ø 12 cm Topf · hängend', 'Ø 12 cm Topf · 25 cm hoch', 'Ø 17 cm Topf · 50 cm hoch', 'Ø 9 cm Topf · 20 cm hoch', 'Ø 11 cm Topf · 14 cm hoch'],
     add: 'In den Warenkorb',
     added: 'Hinzugefügt',
     quick: 'Schnellansicht',
@@ -92,7 +92,7 @@ const T = {
     newsletterBtn: 'Anmelden',
     newsletterDone: 'Demo – es wurde nichts gespeichert oder versendet.',
     email: 'E-Mail-Adresse',
-    footer: 'Feldgrün ist eine fiktive Marke.',
+    footer: 'Feldgrün ist eine fiktive Marke. Fotos: Unsplash (Unsplash-Lizenz).',
   },
   en: {
     nav: ['Shop', 'Care', 'About'],
@@ -104,6 +104,7 @@ const T = {
     heroSub: 'Plants that suit your home – with honest care guides and safely packed all the way to your door.',
     heroCta: 'Shop now',
     heroFinder: 'Show easy-care plants',
+    heroAlt: 'Houseplants in light pots on a sideboard against a white wall',
     usp: [
       ['Delivery in 2–3 working days', Truck],
       ['30-day returns', Undo2],
@@ -113,8 +114,8 @@ const T = {
     cats: { all: 'All', indoor: 'Houseplants', cacti: 'Cacti & succulents', easy: 'Easy care' } as Record<Cat, string>,
     sort: 'Sort',
     sorts: { rec: 'Recommended', asc: 'Price: low to high', desc: 'Price: high to low' },
-    names: ['Monstera “Lea”', 'Ball cactus “Pico”', 'Snake plant “Sam”', 'Pothos “Lou”', 'Pilea “Mo”', 'Kentia palm “Ida”', 'Column cactus “Ben”', 'ZZ plant “Ella”'],
-    details: ['Ø 21 cm pot · 65 cm tall', 'Ø 9 cm pot · 12 cm tall', 'Ø 14 cm pot · 45 cm tall', 'Ø 12 cm pot · trailing', 'Ø 12 cm pot · 25 cm tall', 'Ø 24 cm pot · 110 cm tall', 'Ø 9 cm pot · 20 cm tall', 'Ø 14 cm pot · 40 cm tall'],
+    names: ['Monstera “Lea”', 'Mini cactus “Pico”', 'Snake plant “Sam”', 'Pothos “Lou”', 'Pilea “Mo”', 'Chinese evergreen “Ida”', 'Column cactus “Ben”', 'Haworthia “Ella”'],
+    details: ['Ø 21 cm pot · 65 cm tall', 'Ø 9 cm pot · 12 cm tall', 'Ø 14 cm pot · 45 cm tall', 'Ø 12 cm pot · trailing', 'Ø 12 cm pot · 25 cm tall', 'Ø 17 cm pot · 50 cm tall', 'Ø 9 cm pot · 20 cm tall', 'Ø 11 cm pot · 14 cm tall'],
     add: 'Add to cart',
     added: 'Added',
     quick: 'Quick view',
@@ -144,92 +145,20 @@ const T = {
     newsletterBtn: 'Sign up',
     newsletterDone: 'Demo – nothing was saved or sent.',
     email: 'Email address',
-    footer: 'Feldgrün is a fictional brand.',
+    footer: 'Feldgrün is a fictional brand. Photos: Unsplash (Unsplash License).',
   },
 };
 
-export function PlantSvg({ p, className }: { p: Pick<Product, 'shape' | 'leaf' | 'pot'>; className?: string }) {
-  const { leaf, pot } = p;
+export function PlantSvg({ p, className, sizes = '(min-width: 1024px) 25vw, 50vw', priority = false }: { p: Pick<Product, 'img' | 'id'>; className?: string; sizes?: string; priority?: boolean }) {
   return (
-    <svg viewBox="0 0 200 220" className={className} aria-hidden="true">
-      <ellipse cx="100" cy="206" rx="52" ry="7" fill="#000" opacity="0.08" />
-      {p.shape === 'monstera' && (
-        <g fill={leaf}>
-          {[-40, -12, 18, 44].map((r, i) => (
-            <g key={i} transform={`rotate(${r} 100 140)`}>
-              <path d="M100 140C70 120 64 70 100 40c36 30 30 80 0 100z" />
-              <path d="M100 52v80M100 80l-18-10M100 100l20-12M100 70l16-10" stroke="#fff" strokeOpacity="0.35" strokeWidth="3" />
-            </g>
-          ))}
-        </g>
-      )}
-      {p.shape === 'round' && (
-        <g>
-          <path d="M100 150V90M100 120l-30-30M100 110l32-36M100 132l-40-8M100 128l38-4" stroke={leaf} strokeWidth="4" />
-          {[
-            [70, 88, 20],
-            [132, 72, 22],
-            [60, 122, 17],
-            [138, 122, 18],
-            [100, 70, 24],
-          ].map(([x, y, r], i) => (
-            <circle key={i} cx={x} cy={y} r={r} fill={leaf} opacity={0.85 + i * 0.03} />
-          ))}
-        </g>
-      )}
-      {p.shape === 'cactus' && (
-        <g fill={leaf}>
-          <rect x="82" y="60" width="36" height="100" rx="18" />
-          <rect x="54" y="92" width="22" height="46" rx="11" />
-          <rect x="62" y="122" width="26" height="14" rx="7" />
-          <rect x="124" y="80" width="22" height="50" rx="11" />
-          <rect x="112" y="114" width="26" height="14" rx="7" />
-          <g stroke="#fff" strokeOpacity="0.45" strokeWidth="2">
-            <path d="M100 70v80M90 76v70M110 76v70" />
-          </g>
-          <circle cx="100" cy="58" r="7" fill="#f28da4" />
-        </g>
-      )}
-      {p.shape === 'snake' && (
-        <g fill={leaf}>
-          {[-16, -6, 4, 14].map((r, i) => (
-            <path key={i} transform={`rotate(${r} 100 150)`} d={`M100 150c-12-30-10-${70 + i * 10} 0-${100 + i * 8}c10 ${30 + i * 8} 12 ${70 + i * 10} 0 ${100 + i * 8}z`} opacity={1 - i * 0.08} />
-          ))}
-          <path d="M96 140c-4-30-4-60 4-90" stroke="#d8e9a8" strokeOpacity="0.5" strokeWidth="3" fill="none" />
-        </g>
-      )}
-      {p.shape === 'trailing' && (
-        <g fill={leaf}>
-          {[
-            [100, 130],
-            [80, 120],
-            [120, 118],
-            [60, 150],
-            [140, 150],
-            [50, 180],
-            [152, 182],
-            [92, 110],
-          ].map(([x, y], i) => (
-            <path key={i} d={`M${x} ${y}c-14-4-18-20-6-28 6 4 16 14 6 28z`} transform={`rotate(${i * 37} ${x} ${y})`} />
-          ))}
-          <path d="M70 150c-20 10-20 30-18 40M130 150c20 10 22 30 20 40" stroke={leaf} strokeWidth="3" fill="none" />
-        </g>
-      )}
-      {p.shape === 'palm' && (
-        <g stroke={leaf} strokeWidth="5" fill="none" strokeLinecap="round">
-          {[-60, -30, 0, 30, 60].map((r, i) => (
-            <g key={i} transform={`rotate(${r} 100 150)`}>
-              <path d="M100 150C100 110 100 80 100 30" />
-              {[50, 66, 82, 98, 114].map((y) => (
-                <path key={y} d={`M100 ${y}l-16 10M100 ${y}l16 10`} strokeWidth="4" />
-              ))}
-            </g>
-          ))}
-        </g>
-      )}
-      <path d="M62 150h76l-8 50a8 8 0 0 1-8 6H78a8 8 0 0 1-8-6z" fill={pot} stroke="#14261b" strokeOpacity="0.12" strokeWidth="2" />
-      <rect x="58" y="144" width="84" height="12" rx="4" fill={pot} stroke="#14261b" strokeOpacity="0.12" strokeWidth="2" />
-    </svg>
+    <Image
+      src={`/images/demos/plants/${p.img}.webp`}
+      alt=""
+      fill
+      sizes={sizes}
+      priority={priority}
+      className={cn('object-cover', className)}
+    />
   );
 }
 
@@ -361,23 +290,23 @@ export function FeldgruenSite({ lang }: { lang: DemoLang }) {
               </a>
             </div>
           </div>
-          <div className="relative h-72 sm:h-96 lg:h-auto">
-            <div className="absolute inset-0" style={{ background: 'radial-gradient(60% 60% at 60% 50%, #2f5c40 0%, transparent 70%)' }} />
-            {[
-              { p: PRODUCTS[5], cls: 'left-[8%] bottom-0 w-[46%]', d: 0 },
-              { p: PRODUCTS[0], cls: 'right-[4%] bottom-0 w-[44%]', d: 0.15 },
-              { p: PRODUCTS[1], cls: 'left-[42%] bottom-0 w-[24%]', d: 0.3 },
-            ].map(({ p, cls, d }) => (
-              <motion.div
-                key={p.id}
-                className={cn('absolute', cls)}
-                initial={reduced ? false : { y: 60, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.9, delay: d, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <PlantSvg p={p} className="w-full" />
-              </motion.div>
-            ))}
+          <div className="relative h-72 overflow-hidden sm:h-96 lg:h-auto lg:min-h-[30rem]">
+            <motion.div
+              className="absolute inset-0"
+              initial={reduced ? false : { scale: 1.08, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Image
+                src="/images/demos/plants/hero-regal.webp"
+                alt={t.heroAlt}
+                fill
+                priority
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </motion.div>
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-[#1f3d2b] via-[#1f3d2b]/20 to-transparent lg:via-transparent" />
           </div>
         </div>
         <ul className="mt-5 grid gap-3 sm:grid-cols-3">
@@ -437,7 +366,7 @@ export function FeldgruenSite({ lang }: { lang: DemoLang }) {
                 className="group flex min-w-0 flex-col overflow-hidden rounded-3xl bg-white"
               >
                 <div className="relative aspect-[4/5] overflow-hidden" style={{ background: p.bg }}>
-                  <PlantSvg p={p} className="absolute inset-x-[8%] bottom-[4%] w-[84%] transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1" />
+                  <PlantSvg p={p} className="transition-transform duration-700 group-hover:scale-105" />
                   <button
                     type="button"
                     onClick={() => setQuick(p)}
@@ -578,8 +507,8 @@ export function FeldgruenSite({ lang }: { lang: DemoLang }) {
                     const p = PRODUCTS[Number(id)];
                     return (
                       <li key={id} className="flex items-center gap-4 rounded-2xl bg-white p-3">
-                        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl" style={{ background: p.bg }}>
-                          <PlantSvg p={p} className="h-full w-full" />
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl" style={{ background: p.bg }}>
+                          <PlantSvg p={p} sizes="64px" />
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-bold">{t.names[p.id]}</p>
@@ -622,8 +551,8 @@ export function FeldgruenSite({ lang }: { lang: DemoLang }) {
       <DemoDialog open={quick !== null} onClose={() => setQuick(null)} title={quick ? t.names[quick.id] : ''} closeLabel={t.close} className="bg-white text-[#14261b]">
         {quick && (
           <div className="grid gap-5 sm:grid-cols-2">
-            <div className="rounded-2xl p-4" style={{ background: quick.bg }}>
-              <PlantSvg p={quick} className="w-full" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl" style={{ background: quick.bg }}>
+              <PlantSvg p={quick} sizes="(min-width: 640px) 240px, 90vw" />
             </div>
             <div className="flex flex-col">
               <p className="text-sm opacity-75">{t.details[quick.id]}</p>

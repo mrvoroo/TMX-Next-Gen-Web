@@ -12,6 +12,8 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import type { HeroSectionData } from '@/lib/content';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useIsMobile } from '@/hooks/useMediaQuery';
+import { NetworkBackdrop } from '@/components/three/NetworkBackdrop';
 import { cn } from '@/lib/utils';
 import type { ParticleNetworkProps } from '@/components/three/ParticleNetwork';
 
@@ -120,6 +122,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ data, shouldAnimate }: HeroSectionProps) {
   const reduced = useReducedMotion();
+  const isMobile = useIsMobile();
   const itemVariants = makeItemVariants(reduced);
 
   return (
@@ -147,8 +150,9 @@ export function HeroSection({ data, shouldAnimate }: HeroSectionProps) {
         aria-hidden="true"
       />
 
-      {/* ── Lazy-loaded R3F particle network ── */}
-      <ParticleNetwork reducedMotion={reduced} />
+      {/* ── Particle network: WebGL on desktop, a light SVG on phones ── */}
+      {isMobile === false && <ParticleNetwork reducedMotion={reduced} />}
+      {isMobile === true && <NetworkBackdrop tone="violet" animated={!reduced} />}
 
       {/* ── Content — sits above the canvas ──────────────────────────────── */}
       {/*

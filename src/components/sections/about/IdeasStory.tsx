@@ -104,7 +104,6 @@ function Chip({
   const rotate = useTransform(p, stops, [rot, rot, 0, 0, 0, 0]);
   const scale = useTransform(p, [0, S.chaosEnd, S.orderStart, S.solveStart, S.merged], [size0, size0, 1, 1, 0.25]);
   const opacity = useTransform(p, [0, S.solveStart + 0.03, S.merged], [1, 1, 0]);
-  const blur = useTransform(p, [0, S.chaosEnd, S.orderStart * 0.85], ['blur(0.6px)', 'blur(0.6px)', 'blur(0px)']);
   const tint = useTransform(p, [S.chaosEnd, S.orderStart], [0, 1]);
   const borderColor = useTransform(tint, [0, 1], ['rgba(255,255,255,0.14)', `${GROUP_COLOR[g]}99`]);
   const color = useTransform(tint, [0, 1], ['rgba(255,255,255,0.7)', '#ffffff']);
@@ -112,13 +111,13 @@ function Chip({
   return (
     <motion.span
       aria-hidden="true"
-      style={{ x, y, rotate, scale, opacity, filter: blur }}
+      style={{ x, y, rotate, scale, opacity }}
       className="absolute left-0 top-0 will-change-transform"
     >
       <motion.span
         // animationDelay staggers the idle float per chip
         style={{ borderColor, color, animationDelay: `${(i % 6) * -0.7}s` }}
-        className="idea-float block [transform:translate(-50%,-50%)] whitespace-nowrap rounded-full border bg-white/[0.05] px-2 py-1 text-[10px] font-semibold backdrop-blur-sm min-[380px]:text-[11px]"
+        className="idea-float block [transform:translate(-50%,-50%)] whitespace-nowrap rounded-full border bg-[#15131f] px-2 py-1 text-[10px] font-semibold min-[380px]:text-[11px]"
       >
         {text}
       </motion.span>
@@ -198,7 +197,7 @@ function Solution({ p, title, rows, reduced }: { p: MotionValue<number>; title: 
         style={reduced ? undefined : { scale, opacity }}
         className="absolute left-1/2 top-1/2 w-[78%] max-w-[17rem] -translate-x-1/2 -translate-y-1/2"
       >
-        <div className="relative rounded-3xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 p-px shadow-[0_0_80px_-10px_rgba(124,58,237,0.8)]">
+        <div className="relative rounded-3xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 p-px shadow-[0_0_60px_-12px_rgba(124,58,237,0.75)]">
           <div className="rounded-[calc(1.5rem-1px)] bg-[#0b0a14]/95 p-5">
             <p className="flex items-center gap-2 text-sm font-black text-white">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-cyan-400">

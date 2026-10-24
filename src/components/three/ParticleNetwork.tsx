@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -134,9 +134,30 @@ export interface ParticleNetworkProps {
 }
 
 export function ParticleNetwork({ reducedMotion = false }: ParticleNetworkProps) {
+  // Render only while on screen and the tab is visible (no hidden GPU/CPU work).
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [running, setRunning] = useState(true);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    let onScreen = true;
+    const update = () => setRunning(onScreen && document.visibilityState === 'visible');
+    const io = new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      update();
+    });
+    io.observe(el);
+    document.addEventListener('visibilitychange', update);
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', update);
+    };
+  }, []);
+
   return (
-    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div ref={wrapRef} className="absolute inset-0 pointer-events-none" aria-hidden="true">
       <Canvas
+        frameloop={running ? 'always' : 'never'}
         camera={{ position: [0, 0, 9], fov: 58 }}
         gl={{
           antialias: false,
