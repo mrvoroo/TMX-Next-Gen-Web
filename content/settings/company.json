@@ -15,9 +15,9 @@
   "supervisoryAuthority": "[[PENDING]]",
   "logRetention": "[[PENDING]]",
   "lastUpdated": "[[PENDING]]",
-  "socialLinkedin": "[[PENDING]]",
-  "socialInstagram": "[[PENDING]]",
-  "socialXing": "[[PENDING]]",
+  "socialLinkedin": "https://www.linkedin.com/",
+  "socialInstagram": "https://www.instagram.com/",
+  "socialXing": "https://help.xing.com/hc/en-us?segment=b2c",
   "showMstvResponsible": true,
   "showConsumerDispute": false,
   "hasSocialProfiles": false

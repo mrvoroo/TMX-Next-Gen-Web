@@ -1,5 +1,6 @@
 import { collection, config, fields, singleton } from '@keystatic/core';
 import { SERVICE_ICON_NAMES } from './src/config/service-icons';
+import { DEMOS, DEMO_SLUGS } from './src/config/demos';
 import { WHY_ICON_NAMES } from './src/config/why-icons';
 import {
   SERVICE_EXAMPLE_LABELS,
@@ -236,6 +237,13 @@ const portfolioPageFields = () => ({
   founderBadge: localized('Founder badge', {
     defaults: { en: "Founder's project", de: 'Projekt des Gründers' },
   }),
+  conceptBadge: localized('Concept project badge', {
+    description: 'Shown on projects with origin "Concept project" (fictional brand built by TMX).',
+    defaults: { en: 'Concept project · fictional brand', de: 'Konzeptprojekt · fiktive Marke' },
+  }),
+  demoLabel: localized('Live demo button', {
+    defaults: { en: 'Open live demo', de: 'Live-Demo ansehen' },
+  }),
   metaTitle: localized('Meta title', {
     defaults: { en: 'Portfolio – TMX', de: 'Portfolio – TMX' },
   }),
@@ -409,9 +417,18 @@ export default config({
           label: 'Privacy policy last updated',
           description: 'Inserted where the texts use {{lastUpdated}}.',
         }),
-        socialLinkedin: fields.text({ label: 'LinkedIn URL' }),
-        socialInstagram: fields.text({ label: 'Instagram URL' }),
-        socialXing: fields.text({ label: 'Xing URL' }),
+        socialLinkedin: fields.text({
+          label: 'LinkedIn URL',
+          description: 'Full link starting with https:// – empty = icon hidden in the footer.',
+        }),
+        socialInstagram: fields.text({
+          label: 'Instagram URL',
+          description: 'Full link starting with https:// – empty = icon hidden in the footer.',
+        }),
+        socialXing: fields.text({
+          label: 'Xing URL',
+          description: 'Full link starting with https:// – empty = icon hidden in the footer.',
+        }),
         showMstvResponsible: fields.checkbox({
           label: 'Show MStV responsible person',
           description: 'Shows the MStV line on the legal notice page.',
@@ -554,12 +571,22 @@ export default config({
           options: [
             { label: 'TMX project', value: 'tmx' },
             { label: 'Founder project (before TMX)', value: 'founder' },
+            { label: 'Concept project (fictional brand, demo site)', value: 'concept' },
           ],
           defaultValue: 'tmx',
         }),
+        demo: fields.select({
+          label: 'Live demo (concept projects)',
+          description: 'Links the project to one of the built-in demo sites (/demo/…). Only used with origin "Concept project".',
+          options: [
+            { label: 'None', value: 'none' },
+            ...DEMO_SLUGS.map((slug) => ({ label: `${DEMOS[slug].brand} (${slug})`, value: slug })),
+          ],
+          defaultValue: 'none',
+        }),
         clientPermission: fields.checkbox({
           label: 'Client permission',
-          description: "Show only with the client's (written) permission.",
+          description: "Show only with the client's (written) permission. Not needed for concept projects.",
           defaultValue: false,
         }),
         visible: fields.checkbox({ label: 'Visible', defaultValue: true }),

@@ -18,6 +18,7 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
 import type { AboutSectionData } from '@/lib/content';
 import type { IcosahedronSceneProps } from '@/components/three/IcosahedronScene';
+import { IdeasStory } from './about/IdeasStory';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -192,7 +193,7 @@ export function AboutSection({ data }: { data: AboutSectionData }) {
       id="about"
       aria-label={data.heading}
       className={cn(
-        'relative w-full overflow-hidden bg-[#050508]',
+        'relative w-full overflow-clip bg-[#050508]',
         /*
          * Desktop (md+): h-screen so GSAP pin has a defined height to work with.
          * Mobile: min-h-screen so content can expand naturally — no pin, no
@@ -288,30 +289,24 @@ export function AboutSection({ data }: { data: AboutSectionData }) {
           </motion.div>
         </div>
 
-        {/* ── Right / top (mobile): 3D scene ───────────────────────────── */}
-        <div
-          className={cn(
-            'relative',
-            /*
-             * Mobile: fixed height above the text, renders before text in DOM
-             *   (order-first) so visually it appears at the top.
-             * Desktop: fills the full right column height.
-             */
-            isMobile ? 'order-first h-[42vh]' : 'h-full',
-          )}
-        >
-          {/*
-           * Only render once mounted so isMobile is correct and the Canvas
-           * never tries to run on the server.
-           */}
-          {mounted && (
-            <IcosahedronScene
-              progressRef={progressRef}
-              reducedMotion={reduced}
-              isMobile={isMobile}
-            />
-          )}
-        </div>
+        {/* ── Right (desktop): 3D scene · Top (mobile): ideas → solution story ── */}
+        {mounted && isMobile ? (
+          /* Mobile: no WebGL – a scroll story with a sticky stage (see IdeasStory). */
+          <div className="order-first -mx-5 px-5 sm:-mx-8 sm:px-8">
+            <IdeasStory reduced={Boolean(reduced)} />
+          </div>
+        ) : (
+          <div className="relative h-full">
+            {/* Only render once mounted so the Canvas never runs on the server. */}
+            {mounted && (
+              <IcosahedronScene
+                progressRef={progressRef}
+                reducedMotion={reduced}
+                isMobile={false}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── Desktop progress dots (decorative, one per text stage) ─────── */}

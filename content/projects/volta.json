@@ -1,0 +1,30 @@
+{
+  "slug": "volta",
+  "title": {
+    "en": "VOLTA – 3D product page",
+    "de": "VOLTA – 3D-Produktseite"
+  },
+  "description": {
+    "en": "Product page with a rotatable 3D model, real-time colour configurator, animated specs and pre-order flow. Fictional brand.",
+    "de": "Produktseite mit drehbarem 3D-Modell, Farbkonfigurator in Echtzeit, animierten Kennzahlen und Vorbestellung. Fiktive Marke."
+  },
+  "image": "/images/portfolio/volta/preview.webp",
+  "imageAlt": {
+    "en": "VOLTA demo home page with a 3D e-bike in electric blue",
+    "de": "Startseite der VOLTA-Demo mit 3D-E-Bike in Elektroblau"
+  },
+  "url": "",
+  "techTags": [
+    "Next.js",
+    "React Three Fiber",
+    "Framer Motion",
+    "Tailwind CSS"
+  ],
+  "origin": "concept",
+  "demo": "volta",
+  "clientPermission": false,
+  "visible": true,
+  "order": 1,
+  "year": 2026,
+  "accent": "mixed"
+}

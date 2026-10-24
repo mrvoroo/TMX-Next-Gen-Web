@@ -1,0 +1,30 @@
+{
+  "slug": "feldgruen",
+  "title": {
+    "en": "Feldgrün – plant shop",
+    "de": "Feldgrün – Pflanzen-Onlineshop"
+  },
+  "description": {
+    "en": "Shop with filters, sorting, quick view and a cart that shows progress towards free shipping. Fictional brand.",
+    "de": "Shop mit Filtern, Sortierung, Schnellansicht und Warenkorb mit Fortschritt bis zum kostenlosen Versand. Fiktive Marke."
+  },
+  "image": "/images/portfolio/feldgruen/preview.webp",
+  "imageAlt": {
+    "en": "Feldgrün demo home page with plant illustrations",
+    "de": "Startseite der Feldgrün-Demo mit Pflanzen-Illustrationen"
+  },
+  "url": "",
+  "techTags": [
+    "Next.js",
+    "E-Commerce",
+    "Framer Motion",
+    "Tailwind CSS"
+  ],
+  "origin": "concept",
+  "demo": "feldgruen",
+  "clientPermission": false,
+  "visible": true,
+  "order": 2,
+  "year": 2026,
+  "accent": "cyan"
+}
