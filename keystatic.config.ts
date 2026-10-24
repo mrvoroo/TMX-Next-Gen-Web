@@ -73,6 +73,48 @@ const servicesSectionFields = () => ({
   }),
 });
 
+const pillarPageFields = (defaults: { en: string; de: string }) => ({
+  heroTitle: localized('Hero title', { defaults }),
+  heroSub: localized('Hero subtitle', { multiline: true }),
+  metaTitle: localized('Meta title'),
+  metaDescription: localized('Meta description', { multiline: true }),
+});
+
+const pillarPagesFields = () => ({
+  ctaLabel: localized('Service CTA button label', {
+    description: 'Links to the contact page with the service pre-selected.',
+    defaults: {
+      en: 'Ask about this service',
+      de: 'Anfrage zu dieser Leistung',
+    },
+  }),
+  benefitsHeading: localized('Benefits heading', {
+    defaults: { en: 'What you get', de: 'Was Sie bekommen' },
+  }),
+  stepsHeading: localized('Steps heading', {
+    defaults: { en: 'How it works', de: 'So läuft es ab' },
+  }),
+  dev: fields.object(
+    pillarPageFields({ en: 'Development', de: 'Entwicklung' }),
+    { label: 'Pillar · Development (entwicklung)' },
+  ),
+  ai: fields.object(
+    pillarPageFields({
+      en: 'Artificial Intelligence',
+      de: 'Künstliche Intelligenz',
+    }),
+    { label: 'Pillar · Artificial Intelligence (ki)' },
+  ),
+  marketing: fields.object(
+    pillarPageFields({ en: 'Digital Marketing', de: 'Digitales Marketing' }),
+    { label: 'Pillar · Digital Marketing (digitales-marketing)' },
+  ),
+  it: fields.object(
+    pillarPageFields({ en: 'IT & Consulting', de: 'IT & Beratung' }),
+    { label: 'Pillar · IT & Consulting (it-beratung)' },
+  ),
+});
+
 const visibleField = (label: string) =>
   fields.checkbox({ label, defaultValue: true });
 
@@ -427,6 +469,12 @@ export default config({
       format: 'json',
       schema: whyUsSectionFields(),
     }),
+    pillarPages: singleton({
+      label: 'Pillar pages',
+      path: 'content/pages/pillar-pages',
+      format: 'json',
+      schema: pillarPagesFields(),
+    }),
     portfolioPage: singleton({
       label: 'Portfolio page',
       path: 'content/pages/portfolio',
@@ -559,6 +607,17 @@ export default config({
             value: name,
           })),
           defaultValue: 'Globe',
+        }),
+        intro: localized('Intro (pillar page)', { multiline: true }),
+        benefits: fields.array(localized('Benefit'), {
+          label: 'Benefits (pillar page)',
+          description: 'Short points. Empty = block hidden.',
+          itemLabel: (props) => props.fields.en.value || 'Benefit',
+        }),
+        steps: fields.array(localized('Step'), {
+          label: 'Steps (pillar page)',
+          description: 'Short points, numbered automatically. Empty = block hidden.',
+          itemLabel: (props) => props.fields.en.value || 'Step',
         }),
       },
     }),
