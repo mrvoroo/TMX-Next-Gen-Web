@@ -13,6 +13,7 @@ export const SERVICE_EXAMPLE_NAMES = [
   'ad-funnel',
   'post-scheduler',
   'data-insights',
+  'ai-check',
 ] as const;
 
 export type ServiceExampleName = (typeof SERVICE_EXAMPLE_NAMES)[number];
@@ -27,6 +28,7 @@ export const SERVICE_EXAMPLE_LABELS: Record<ServiceExampleName, string> = {
   'ad-funnel': 'Campaign funnel with platform filter (ad campaigns)',
   'post-scheduler': 'Automatic weekly post schedule (social media automation)',
   'data-insights': '12-week chart with insights (data analysis)',
+  'ai-check': 'AI potential check tool (AI consulting) – mode via AI_TOOL_MODE',
 };
 
 export const isServiceExample = (v: unknown): v is ServiceExampleName =>

@@ -5,6 +5,8 @@ import type { PillarPageData, PillarServiceData } from '@/lib/content';
 import { getServiceIcon } from '@/components/sections/services/icons';
 import { ExampleFrame } from '@/components/examples/ExampleFrame';
 import { ServiceExample } from '@/components/examples/ServiceExample';
+import { AiPotentialCheck } from '@/components/examples/ai/AiPotentialCheck';
+import { getAiToolMode } from '@/lib/ai-check/config';
 
 function IconBadge({ Icon }: { Icon: LucideIcon }) {
   return (
@@ -132,7 +134,17 @@ export function PillarServiceSection({
         ) : null}
       </div>
 
-      {service.example !== 'none' ? (
+      {service.example === 'ai-check' ? (
+        // Own badge and notices; hidden completely when AI_TOOL_MODE=off.
+        (() => {
+          const mode = getAiToolMode();
+          return mode === 'off' ? null : (
+            <div data-reveal className="mx-auto mt-12 max-w-7xl px-5 sm:mt-16 sm:px-8">
+              <AiPotentialCheck mode={mode} />
+            </div>
+          );
+        })()
+      ) : service.example !== 'none' ? (
         <div data-reveal className="mx-auto mt-12 max-w-7xl px-5 sm:mt-16 sm:px-8">
           <ExampleFrame label={page.exampleLabel} note={page.exampleNote}>
             <ServiceExample name={service.example} />
