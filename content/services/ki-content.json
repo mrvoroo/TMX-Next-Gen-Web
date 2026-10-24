@@ -7,5 +7,41 @@
     "en": "AI-powered content creation",
     "de": "KI-gestützte Content-Erstellung"
   },
-  "icon": "FileText"
+  "icon": "FileText",
+  "intro": {
+    "en": "I create content with AI support – for example texts, images or post ideas for your website and social media, always reviewed by a person.",
+    "de": "Ich erstelle Inhalte mit KI-Unterstützung – zum Beispiel Texte, Bilder oder Beitragsideen für Website und Social Media, immer mit menschlicher Prüfung."
+  },
+  "benefits": [
+    {
+      "en": "Faster first drafts",
+      "de": "Schneller zu ersten Entwürfen"
+    },
+    {
+      "en": "Consistent style across all channels",
+      "de": "Einheitlicher Stil über alle Kanäle"
+    },
+    {
+      "en": "Human review before publishing",
+      "de": "Menschliche Kontrolle vor der Veröffentlichung"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Define goals and tone of voice",
+      "de": "Ziele und Tonalität festlegen"
+    },
+    {
+      "en": "Create drafts",
+      "de": "Entwürfe erstellen"
+    },
+    {
+      "en": "Review and polish",
+      "de": "Prüfung und Feinschliff"
+    },
+    {
+      "en": "Approval",
+      "de": "Freigabe"
+    }
+  ]
 }

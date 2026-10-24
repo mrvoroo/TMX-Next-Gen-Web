@@ -7,5 +7,37 @@
     "en": "Digital consulting",
     "de": "[[PENDING]]"
   },
-  "icon": "Compass"
+  "icon": "Compass",
+  "intro": {
+    "en": "I advise you on digital topics – which tools, channels and solutions make sense for your business.",
+    "de": "Ich berate Sie zu digitalen Themen – welche Werkzeuge, Kanäle und Lösungen für Ihr Unternehmen sinnvoll sind."
+  },
+  "benefits": [
+    {
+      "en": "An independent view of your digital situation",
+      "de": "Unabhängiger Blick auf Ihre digitale Situation"
+    },
+    {
+      "en": "Clear recommendations instead of jargon",
+      "de": "Klare Empfehlungen statt Fachbegriffe"
+    },
+    {
+      "en": "Prioritised next steps",
+      "de": "Priorisierte nächste Schritte"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Initial conversation",
+      "de": "Erstgespräch"
+    },
+    {
+      "en": "Analysis",
+      "de": "Analyse"
+    },
+    {
+      "en": "Recommendations",
+      "de": "Empfehlungen"
+    }
+  ]
 }

@@ -7,5 +7,41 @@
     "en": "App development",
     "de": "App-Entwicklung"
   },
-  "icon": "Smartphone"
+  "icon": "Smartphone",
+  "intro": {
+    "en": "I develop apps for your business – from the idea and first prototype to a usable application.",
+    "de": "Ich entwickle Apps für Ihr Unternehmen – von der Idee über den ersten Prototyp bis zur nutzbaren Anwendung."
+  },
+  "benefits": [
+    {
+      "en": "Feature set that fits your goal",
+      "de": "Funktionsumfang passend zu Ihrem Ziel"
+    },
+    {
+      "en": "User-friendly interface",
+      "de": "Nutzerfreundliche Oberfläche"
+    },
+    {
+      "en": "Step-by-step delivery with early test versions",
+      "de": "Schrittweise Umsetzung mit frühen Testversionen"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Idea and requirements",
+      "de": "Idee und Anforderungen"
+    },
+    {
+      "en": "Prototype",
+      "de": "Prototyp"
+    },
+    {
+      "en": "Development",
+      "de": "Entwicklung"
+    },
+    {
+      "en": "Release and further development",
+      "de": "Veröffentlichung und Weiterentwicklung"
+    }
+  ]
 }

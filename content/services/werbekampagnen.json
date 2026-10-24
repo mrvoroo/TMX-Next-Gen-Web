@@ -7,5 +7,41 @@
     "en": "Management of digital advertising campaigns",
     "de": "Betreuung digitaler Werbekampagnen"
   },
-  "icon": "Target"
+  "icon": "Target",
+  "intro": {
+    "en": "I manage your running ad campaigns – with regular evaluation and optimisation so your budget is used wisely.",
+    "de": "Ich betreue Ihre laufenden Werbekampagnen – mit regelmäßiger Auswertung und Optimierung, damit Ihr Budget sinnvoll eingesetzt wird."
+  },
+  "benefits": [
+    {
+      "en": "Ongoing optimisation of ads and audiences",
+      "de": "Laufende Optimierung von Anzeigen und Zielgruppen"
+    },
+    {
+      "en": "Regular, easy-to-read reports",
+      "de": "Regelmäßige, verständliche Berichte"
+    },
+    {
+      "en": "One dedicated point of contact",
+      "de": "Ein fester Ansprechpartner"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Review of the current campaigns",
+      "de": "Bestandsaufnahme"
+    },
+    {
+      "en": "Optimisation plan",
+      "de": "Optimierungsplan"
+    },
+    {
+      "en": "Ongoing management",
+      "de": "Laufende Betreuung"
+    },
+    {
+      "en": "Regular reports",
+      "de": "Regelmäßige Berichte"
+    }
+  ]
 }

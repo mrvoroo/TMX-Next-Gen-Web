@@ -7,5 +7,45 @@
     "en": "Building and maintaining e-commerce shops",
     "de": "Erstellung und Betreuung von E-Commerce-Shops"
   },
-  "icon": "ShoppingCart"
+  "icon": "ShoppingCart",
+  "intro": {
+    "en": "I build online shops that present your products convincingly and make buying easy – and look after them after launch if you wish.",
+    "de": "Ich baue Onlineshops, die Ihre Produkte überzeugend präsentieren und den Kauf einfach machen – und betreue sie auf Wunsch auch nach dem Start."
+  },
+  "benefits": [
+    {
+      "en": "Clear product pages and a simple checkout",
+      "de": "Übersichtliche Produktseiten und ein einfacher Checkout"
+    },
+    {
+      "en": "Optimised for mobile devices",
+      "de": "Für Mobilgeräte optimiert"
+    },
+    {
+      "en": "Integration of common payment methods",
+      "de": "Anbindung gängiger Zahlungsarten"
+    },
+    {
+      "en": "Ongoing support and maintenance after launch",
+      "de": "Laufende Betreuung und Pflege nach dem Start"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify product range and payment options",
+      "de": "Sortiment und Zahlungswege klären"
+    },
+    {
+      "en": "Shop design",
+      "de": "Shop-Design"
+    },
+    {
+      "en": "Setup and testing",
+      "de": "Einrichtung und Tests"
+    },
+    {
+      "en": "Launch and support",
+      "de": "Start und Betreuung"
+    }
+  ]
 }

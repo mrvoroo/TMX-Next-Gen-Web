@@ -7,5 +7,41 @@
     "en": "Building digital systems and dashboards",
     "de": "Aufbau digitaler Systeme und Dashboards"
   },
-  "icon": "LayoutDashboard"
+  "icon": "LayoutDashboard",
+  "intro": {
+    "en": "I build digital systems and dashboards that show your key figures and workflows clearly in one place.",
+    "de": "Ich baue digitale Systeme und Dashboards, die Ihre wichtigsten Zahlen und Abläufe übersichtlich an einem Ort zeigen."
+  },
+  "benefits": [
+    {
+      "en": "Relevant data at a glance",
+      "de": "Relevante Daten auf einen Blick"
+    },
+    {
+      "en": "Tailored to your workflows",
+      "de": "Zugeschnitten auf Ihre Abläufe"
+    },
+    {
+      "en": "Less manual reporting",
+      "de": "Weniger manuelle Auswertung"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify data sources and goals",
+      "de": "Datenquellen und Ziele klären"
+    },
+    {
+      "en": "Build the dashboard",
+      "de": "Aufbau des Dashboards"
+    },
+    {
+      "en": "Test with real data",
+      "de": "Test mit echten Daten"
+    },
+    {
+      "en": "Rollout",
+      "de": "Einführung"
+    }
+  ]
 }

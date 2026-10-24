@@ -7,5 +7,41 @@
     "en": "Development and implementation of AI-powered solutions, tools and applications",
     "de": "Entwicklung und Implementierung KI-gestützter Lösungen, Tools und Anwendungen"
   },
-  "icon": "Brain"
+  "icon": "Brain",
+  "intro": {
+    "en": "I develop AI-powered solutions, tools and applications that take over or simplify specific tasks in your business.",
+    "de": "Ich entwickle KI-gestützte Lösungen, Tools und Anwendungen, die konkrete Aufgaben in Ihrem Unternehmen übernehmen oder erleichtern."
+  },
+  "benefits": [
+    {
+      "en": "Solutions for your specific use case",
+      "de": "Lösungen für Ihren konkreten Anwendungsfall"
+    },
+    {
+      "en": "Use of current AI models",
+      "de": "Einsatz aktueller KI-Modelle"
+    },
+    {
+      "en": "Data protection considered from the start",
+      "de": "Datenschutz von Anfang an mitgedacht"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Define the use case",
+      "de": "Anwendungsfall definieren"
+    },
+    {
+      "en": "Prototype",
+      "de": "Prototyp"
+    },
+    {
+      "en": "Implementation",
+      "de": "Umsetzung"
+    },
+    {
+      "en": "Rollout and optimisation",
+      "de": "Einführung und Optimierung"
+    }
+  ]
 }

@@ -7,5 +7,41 @@
     "en": "Data analysis and evaluation with AI support",
     "de": "Datenanalyse und Auswertung mit KI-Unterstützung"
   },
-  "icon": "BarChart2"
+  "icon": "BarChart2",
+  "intro": {
+    "en": "I analyse and evaluate your data with AI support – so you can make decisions on a clear basis.",
+    "de": "Ich analysiere und werte Ihre Daten mit KI-Unterstützung aus – damit Sie Entscheidungen auf einer klaren Grundlage treffen."
+  },
+  "benefits": [
+    {
+      "en": "Clear reports instead of columns of numbers",
+      "de": "Verständliche Auswertungen statt Zahlenkolonnen"
+    },
+    {
+      "en": "Spot patterns and anomalies faster",
+      "de": "Muster und Auffälligkeiten schneller erkennen"
+    },
+    {
+      "en": "Careful handling of your data",
+      "de": "Sorgfältiger Umgang mit Ihren Daten"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Clarify the question",
+      "de": "Fragestellung klären"
+    },
+    {
+      "en": "Prepare the data",
+      "de": "Daten aufbereiten"
+    },
+    {
+      "en": "Analysis",
+      "de": "Analyse"
+    },
+    {
+      "en": "Results and recommendations",
+      "de": "Ergebnisse und Empfehlungen"
+    }
+  ]
 }

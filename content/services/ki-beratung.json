@@ -7,5 +7,37 @@
     "en": "AI consulting and strategy development",
     "de": "KI-Beratung und Strategieentwicklung"
   },
-  "icon": "Lightbulb"
+  "icon": "Lightbulb",
+  "intro": {
+    "en": "I advise you on where AI makes sense in your business – and develop a realistic strategy for getting started with you.",
+    "de": "Ich berate Sie, wo KI in Ihrem Unternehmen sinnvoll ist – und entwickle mit Ihnen eine realistische Strategie für den Einstieg."
+  },
+  "benefits": [
+    {
+      "en": "An honest view of opportunities and limits",
+      "de": "Ehrliche Einschätzung von Chancen und Grenzen"
+    },
+    {
+      "en": "Concrete, prioritised actions",
+      "de": "Konkrete, priorisierte Maßnahmen"
+    },
+    {
+      "en": "Explained clearly, without jargon",
+      "de": "Verständlich erklärt, ohne Fachchinesisch"
+    }
+  ],
+  "steps": [
+    {
+      "en": "Conversation about goals and workflows",
+      "de": "Gespräch zu Zielen und Abläufen"
+    },
+    {
+      "en": "Analysis",
+      "de": "Analyse"
+    },
+    {
+      "en": "Strategy and action plan",
+      "de": "Strategie und Maßnahmenplan"
+    }
+  ]
 }
