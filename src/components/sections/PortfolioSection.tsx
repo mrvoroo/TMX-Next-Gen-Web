@@ -20,7 +20,7 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { ExternalLink } from 'lucide-react';
+import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import { useStaggerReveal } from '@/hooks/useStaggerReveal';
 import { cn } from '@/lib/utils';
 import type {
@@ -126,6 +126,11 @@ export function ProjectText({
           {data.founderBadge}
         </span>
       )}
+      {project.concept && (
+        <span className="inline-flex rounded-full border border-amber-300/35 bg-amber-300/10 px-3 py-1 text-xs font-semibold text-amber-200">
+          {data.conceptBadge}
+        </span>
+      )}
       <h3 className="text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl md:max-lg:text-4xl">
         {project.title}
       </h3>
@@ -146,6 +151,20 @@ export function ProjectText({
             </li>
           ))}
         </ul>
+      )}
+      {project.demoHref && (
+        // Plain <a>: the demos live outside the next-intl tree (own root layout).
+        <a
+          href={project.demoHref}
+          className="group mt-2 inline-flex items-center gap-2.5 rounded-full bg-gradient-to-r from-violet-600 to-cyan-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-900/30 transition-all duration-300 hover:shadow-violet-700/40"
+        >
+          {data.demoLabel}
+          <ArrowUpRight
+            size={15}
+            aria-hidden="true"
+            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </a>
       )}
       {project.url && (
         <a

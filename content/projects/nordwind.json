@@ -1,0 +1,30 @@
+{
+  "slug": "nordwind",
+  "title": {
+    "en": "Nordwind – café & roastery",
+    "de": "Nordwind – Café & Rösterei"
+  },
+  "description": {
+    "en": "Website with menu, live opening-hours status and table booking in a few clicks. Fictional brand.",
+    "de": "Website mit Speisekarte, Live-Anzeige der Öffnungszeiten und Tischreservierung in wenigen Klicks. Fiktive Marke."
+  },
+  "image": "/images/portfolio/nordwind/preview.webp",
+  "imageAlt": {
+    "en": "Nordwind demo home page with a coffee cup",
+    "de": "Startseite der Nordwind-Demo mit Kaffeetasse"
+  },
+  "url": "",
+  "techTags": [
+    "Next.js",
+    "Landingpage",
+    "Framer Motion",
+    "Tailwind CSS"
+  ],
+  "origin": "concept",
+  "demo": "nordwind",
+  "clientPermission": false,
+  "visible": true,
+  "order": 3,
+  "year": 2026,
+  "accent": "violet"
+}

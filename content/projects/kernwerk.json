@@ -1,0 +1,30 @@
+{
+  "slug": "kernwerk",
+  "title": {
+    "en": "Kernwerk – real-estate portal",
+    "de": "Kernwerk – Immobilienportal"
+  },
+  "description": {
+    "en": "Property search with filters, shortlist, brochure request and mortgage calculator. Fictional brand, made-up listings.",
+    "de": "Objektsuche mit Filtern, Merkliste, Exposé-Anfrage und Finanzierungsrechner. Fiktive Marke, erfundene Angebote."
+  },
+  "image": "/images/portfolio/kernwerk/preview.webp",
+  "imageAlt": {
+    "en": "Kernwerk demo home page with search form",
+    "de": "Startseite der Kernwerk-Demo mit Suchmaske"
+  },
+  "url": "",
+  "techTags": [
+    "Next.js",
+    "Suche & Filter",
+    "Rechner",
+    "Tailwind CSS"
+  ],
+  "origin": "concept",
+  "demo": "kernwerk",
+  "clientPermission": false,
+  "visible": true,
+  "order": 5,
+  "year": 2026,
+  "accent": "mixed"
+}

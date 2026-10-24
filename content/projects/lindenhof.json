@@ -1,0 +1,30 @@
+{
+  "slug": "lindenhof",
+  "title": {
+    "en": "Lindenhof – practice with booking",
+    "de": "Lindenhof – Praxis mit Online-Termin"
+  },
+  "description": {
+    "en": "Calm practice design with 3-step online booking, treatments with prices and FAQ. Fictional practice.",
+    "de": "Ruhiges Praxis-Design mit Online-Terminbuchung in drei Schritten, Leistungen mit Preisen und FAQ. Fiktive Praxis."
+  },
+  "image": "/images/portfolio/lindenhof/preview.webp",
+  "imageAlt": {
+    "en": "Lindenhof demo home page with booking widget",
+    "de": "Startseite der Lindenhof-Demo mit Buchungs-Widget"
+  },
+  "url": "",
+  "techTags": [
+    "Next.js",
+    "Buchungssystem",
+    "Barrierearm",
+    "Tailwind CSS"
+  ],
+  "origin": "concept",
+  "demo": "lindenhof",
+  "clientPermission": false,
+  "visible": true,
+  "order": 4,
+  "year": 2026,
+  "accent": "cyan"
+}

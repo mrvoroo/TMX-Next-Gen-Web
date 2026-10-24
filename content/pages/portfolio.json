@@ -8,8 +8,8 @@
     "de": "Arbeit, die man sieht."
   },
   "sub": {
-    "en": "Selected websites and applications – up close.",
-    "de": "Ausgewählte Websites und Anwendungen – im Detail."
+    "en": "Concept projects you can click through – real, working websites for fictional brands.",
+    "de": "Konzeptprojekte zum Durchklicken – echte, funktionierende Websites für fiktive Marken."
   },
   "ctaHeading": {
     "en": "Your project next?",
@@ -32,7 +32,15 @@
     "de": "Portfolio – TMX"
   },
   "metaDescription": {
-    "en": "Selected projects by TMX.",
-    "de": "Ausgewählte Projekte von TMX."
+    "en": "Concept projects by TMX: working demo websites for a café, an online shop, a practice, real estate and a 3D product page.",
+    "de": "Konzeptprojekte von TMX: funktionierende Demo-Websites für Café, Onlineshop, Praxis, Immobilien und eine 3D-Produktseite."
+  },
+  "conceptBadge": {
+    "en": "Concept project · fictional brand",
+    "de": "Konzeptprojekt · fiktive Marke"
+  },
+  "demoLabel": {
+    "en": "Open live demo",
+    "de": "Live-Demo ansehen"
   }
 }

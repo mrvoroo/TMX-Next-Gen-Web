@@ -5,6 +5,7 @@ import sharp from 'sharp';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 import { PILLARS, type PillarKey } from '@/config/pillars';
+import { demoPath, isDemoSlug } from '@/config/demos';
 import {
   isServiceExample,
   type ServiceExampleName,
@@ -325,6 +326,10 @@ export interface PortfolioProjectData {
   url: string | null;
   techTags: string[];
   founder: boolean;
+  /** Concept project: fictional brand, built by TMX as a demo. */
+  concept: boolean;
+  /** Path of the built-in demo site for this locale, e.g. /demo/de/nordwind. */
+  demoHref: string | null;
   year: number | null;
   accent: 'violet' | 'cyan' | 'mixed';
 }
@@ -337,6 +342,8 @@ export interface PortfolioPageData {
   ctaButton: string;
   linkLabel: string;
   founderBadge: string;
+  conceptBadge: string;
+  demoLabel: string;
   metaTitle: string;
   metaDescription: string;
   projects: PortfolioProjectData[];
@@ -346,7 +353,13 @@ export interface PortfolioPageData {
 const getShownProjects = cache(async () => {
   const entries = await reader.collections.projects.all();
   return entries
-    .filter((e) => e.entry.visible && e.entry.clientPermission && e.entry.image)
+    .filter(
+      (e) =>
+        e.entry.visible &&
+        // Concept projects are TMX's own work – no client permission needed.
+        (e.entry.clientPermission || e.entry.origin === 'concept') &&
+        e.entry.image,
+    )
     .sort(
       (a, b) =>
         (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
@@ -391,6 +404,11 @@ export async function getPortfolioPage(
       url: entry.url.trim().startsWith('https://') ? entry.url.trim() : null,
       techTags: entry.techTags.filter((tag) => tag.trim() !== ''),
       founder: entry.origin === 'founder',
+      concept: entry.origin === 'concept',
+      demoHref:
+        entry.origin === 'concept' && isDemoSlug(entry.demo)
+          ? demoPath(locale, entry.demo)
+          : null,
       year: entry.year,
       accent: entry.accent,
     })),
