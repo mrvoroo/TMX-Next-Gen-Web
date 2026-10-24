@@ -95,7 +95,7 @@ export const examplesText: Record<Locale, ExamplesText> = {
       brand: 'Grünraum',
       products: [
         { name: 'Monstera', detail: 'Topf Ø 17 cm', price: 29.9 },
-        { name: 'Olivenbaum', detail: 'Höhe ca. 80 cm', price: 54.0 },
+        { name: 'Kolbenfaden', detail: 'Höhe ca. 50 cm', price: 34.9 },
         { name: 'Bogenhanf', detail: 'pflegeleicht', price: 19.5 },
       ],
       add: 'In den Warenkorb',
@@ -176,7 +176,7 @@ export const examplesText: Record<Locale, ExamplesText> = {
       brand: 'Grünraum',
       products: [
         { name: 'Monstera', detail: 'Pot Ø 17 cm', price: 29.9 },
-        { name: 'Olive tree', detail: 'Approx. 80 cm tall', price: 54.0 },
+        { name: 'Chinese evergreen', detail: 'Approx. 50 cm tall', price: 34.9 },
         { name: 'Snake plant', detail: 'Easy care', price: 19.5 },
       ],
       add: 'Add to cart',

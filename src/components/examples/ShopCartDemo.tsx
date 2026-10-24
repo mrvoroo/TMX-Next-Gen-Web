@@ -3,7 +3,8 @@
 /**
  * Interactive example for "E-Commerce-Shops": a small plant shop with a
  * working cart (add, quantity, remove, subtotal). Fictional brand, sample
- * prices, no real checkout and no network requests.
+ * prices, real product photos (Unsplash licence, self-hosted), no real
+ * checkout and no third-party requests.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -14,43 +15,22 @@ import { currencyFormatter, useExamplesText } from '@/lib/i18n/examples';
 import type { Locale } from '@/lib/i18n/translations';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import { BrowserChrome } from './ExampleFrame';
 
-const PLANT_COLORS = [
-  { bg: 'linear-gradient(160deg,#1f3b2d,#0f1f17)', leaf: '#4ade80', pot: '#e7d8c9' },
-  { bg: 'linear-gradient(160deg,#2c3324,#141a10)', leaf: '#a3b18a', pot: '#c08457' },
-  { bg: 'linear-gradient(160deg,#1c2f33,#0c1a1d)', leaf: '#5eead4', pot: '#f1f5f9' },
-];
+/** Product photos (Unsplash licence, self-hosted – see docs/legal/image-credits.md). */
+const PHOTOS = ['monstera', 'kolbenfaden', 'bogenhanf'];
+const PHOTO_BG = ['#e6dfd3', '#e4dccd', '#eef0ee'];
 
-function PlantArt({ variant }: { variant: number }) {
-  const c = PLANT_COLORS[variant % PLANT_COLORS.length];
+function PlantPhoto({ i, sizes }: { i: number; sizes: string }) {
   return (
-    <svg viewBox="0 0 120 120" className="h-full w-full" aria-hidden="true">
-      {variant === 0 && (
-        <g fill={c.leaf}>
-          <path d="M60 70C40 60 30 38 42 22c10 14 18 30 18 48z" />
-          <path d="M60 70c20-10 30-32 18-48-10 14-18 30-18 48z" opacity="0.85" />
-          <path d="M60 72C44 72 24 62 20 44c16 2 32 12 40 28z" opacity="0.7" />
-        </g>
-      )}
-      {variant === 1 && (
-        <g>
-          <rect x="58" y="34" width="4" height="40" fill="#6b4f3a" />
-          <circle cx="60" cy="34" r="22" fill={c.leaf} />
-          <circle cx="46" cy="40" r="12" fill={c.leaf} opacity="0.8" />
-          <circle cx="74" cy="42" r="13" fill={c.leaf} opacity="0.75" />
-        </g>
-      )}
-      {variant === 2 && (
-        <g fill={c.leaf}>
-          <path d="M52 74c-4-20-2-40 4-56 4 18 4 38 2 56z" />
-          <path d="M62 74c0-22 6-40 14-50 0 20-6 38-10 50z" opacity="0.85" />
-          <path d="M46 74c-8-14-12-28-10-42 8 12 12 28 14 42z" opacity="0.7" />
-        </g>
-      )}
-      <path d="M38 72h44l-5 30a6 6 0 0 1-6 5H49a6 6 0 0 1-6-5z" fill={c.pot} />
-      <rect x="35" y="68" width="50" height="8" rx="3" fill={c.pot} opacity="0.85" />
-    </svg>
+    <Image
+      src={`/images/demos/plants/${PHOTOS[i % PHOTOS.length]}.webp`}
+      alt=""
+      fill
+      sizes={sizes}
+      className="object-cover object-[50%_85%]"
+    />
   );
 }
 
@@ -134,11 +114,10 @@ export function ShopCartDemo() {
               key={p.name}
               className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02]"
             >
-              <div
-                className="aspect-[4/3] w-full p-4 transition-transform duration-500 group-hover:scale-[1.03]"
-                style={{ background: PLANT_COLORS[i % PLANT_COLORS.length].bg }}
-              >
-                <PlantArt variant={i} />
+              <div className="relative aspect-square w-full overflow-hidden" style={{ background: PHOTO_BG[i % PHOTO_BG.length] }}>
+                <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-[1.04]">
+                  <PlantPhoto i={i} sizes="(min-width: 640px) 240px, 90vw" />
+                </div>
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <p className="text-sm font-semibold text-white">{p.name}</p>
@@ -218,11 +197,8 @@ export function ShopCartDemo() {
                       const p = t.products[i];
                       return (
                         <li key={key} className="flex items-center gap-3 rounded-xl bg-white/[0.03] p-2.5">
-                          <div
-                            className="h-11 w-11 shrink-0 rounded-lg p-1"
-                            style={{ background: PLANT_COLORS[i % PLANT_COLORS.length].bg }}
-                          >
-                            <PlantArt variant={i} />
+                          <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg" style={{ background: PHOTO_BG[i % PHOTO_BG.length] }}>
+                            <PlantPhoto i={i} sizes="44px" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-xs font-semibold text-white">{p.name}</p>
