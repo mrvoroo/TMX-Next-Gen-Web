@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -78,26 +79,47 @@ export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   }, [reducedMotion]);
 
   /*
-   * Arriving on home with a hash (e.g. from /impressum via /#services): Next
-   * scrolls to the target before the AboutSection pin-spacer exists, so it
-   * lands short once layout settles. Re-apply the hash on every ScrollTrigger
-   * refresh during the short settle window, then stop.
+   * Arriving on a page with a hash (e.g. /leistungen/entwicklung → /#services).
+   * This provider lives in the (site) layout, so it stays mounted between
+   * pillar pages, portfolio and home – the effect therefore re-runs on every
+   * pathname change, not only on first mount. Next scrolls to the target
+   * before the new page's ScrollTriggers (AboutSection pin-spacer) exist and
+   * Lenis keeps its old position, so the jump is lost or lands short. Re-apply
+   * the hash through Lenis (keeps its internal position in sync) after the
+   * first frame and on every ScrollTrigger refresh in a short settle window.
    */
+  const pathname = usePathname();
   useEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1));
     if (!id) return;
-    const toHash = () =>
-      document.getElementById(id)?.scrollIntoView({ behavior: 'instant' });
+    const toHash = () => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const lenis = (window as unknown as { lenis?: Lenis }).lenis;
+      if (lenis) {
+        lenis.resize();
+        lenis.scrollTo(el, { immediate: true, force: true });
+      } else {
+        el.scrollIntoView({ behavior: 'instant' });
+      }
+    };
     ScrollTrigger.addEventListener('refresh', toHash);
+    const raf = requestAnimationFrame(() => {
+      toHash();
+      ScrollTrigger.refresh();
+    });
+    const late = setTimeout(toHash, 400);
     const stop = setTimeout(
       () => ScrollTrigger.removeEventListener('refresh', toHash),
-      800,
+      1500,
     );
     return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(late);
       clearTimeout(stop);
       ScrollTrigger.removeEventListener('refresh', toHash);
     };
-  }, []);
+  }, [pathname]);
 
   return <>{children}</>;
 }
